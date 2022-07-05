@@ -14,7 +14,8 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/users")
-    public ResponseEntity<UserResponse> getUser(String klaytnAddress) {
+    public ResponseEntity<UserResponse> getUser() {
+        String klaytnAddress = "0x1234";
         UserResponse userResponse = userService.getUserByWalletAddress(klaytnAddress);
         return ResponseEntity.ok(userResponse);
     }
