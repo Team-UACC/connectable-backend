@@ -1,0 +1,20 @@
+spring:
+  profiles:
+    active: local
+---
+spring:
+   config:
+     activate:
+       on-profile: local
+   jpa:
+     hibernate:
+       ddl-auto: create
+     properties:
+       hibernate:
+         format_sql: true
+         dialect: org.hibernate.dialect.H2Dialect
+   datasource:
+     driver-class-name: org.h2.Driver
+     url: jdbc:h2:mem:connectable
+     username: sa
+     password:
