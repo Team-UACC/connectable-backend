@@ -15,22 +15,18 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "wallet_address")
-    private String walletAddress;
+    private String klaytnAddress;
 
-    @Column(name = "nickname")
     private String nickname;
 
-    @Column(name = "phone_number")
     private String phoneNumber;
 
-    @Column(name = "privacy_agreement")
     private boolean privacyAgreement;
 
     @Builder
-    public User(Long id, String walletAddress, String nickname, String phoneNumber, boolean privacyAgreement) {
+    public User(Long id, String klaytnAddress, String nickname, String phoneNumber, boolean privacyAgreement) {
         this.id = id;
-        this.walletAddress = walletAddress;
+        this.klaytnAddress = klaytnAddress;
         this.nickname = nickname;
         this.phoneNumber = phoneNumber;
         this.privacyAgreement = privacyAgreement;

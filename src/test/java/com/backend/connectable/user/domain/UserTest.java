@@ -13,7 +13,7 @@ class UserTest {
     void createUser() {
         // given
         Long id = 1L;
-        String walletAddress = "0x1234";
+        String klaytnAddress = "0x1234";
         String nickname = "Joel";
         String phoneNumber = "010-1234-5678";
         boolean privacyAgreement = true;
@@ -21,7 +21,7 @@ class UserTest {
         // when
         User joel = User.builder()
                 .id(id)
-                .walletAddress(walletAddress)
+                .klaytnAddress(klaytnAddress)
                 .nickname(nickname)
                 .phoneNumber(phoneNumber)
                 .privacyAgreement(privacyAgreement)
@@ -29,7 +29,7 @@ class UserTest {
 
         // then
         assertThat(joel.getId()).isEqualTo(id);
-        assertThat(joel.getWalletAddress()).isEqualTo(walletAddress);
+        assertThat(joel.getKlaytnAddress()).isEqualTo(klaytnAddress);
         assertThat(joel.getNickname()).isEqualTo(nickname);
         assertThat(joel.getPhoneNumber()).isEqualTo(phoneNumber);
         assertThat(joel.isPrivacyAgreement()).isEqualTo(privacyAgreement);
