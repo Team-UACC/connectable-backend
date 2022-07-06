@@ -2,6 +2,7 @@ package com.backend.connectable.user.service;
 
 import com.backend.connectable.user.domain.User;
 import com.backend.connectable.user.domain.UserRepository;
+import com.backend.connectable.user.ui.dto.UserDeleteResponse;
 import com.backend.connectable.user.ui.dto.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,5 +22,10 @@ public class UserService {
         }
         User user = foundUser.get();
         return UserResponse.of(user);
+    }
+
+    public UserDeleteResponse deleteUserByKlaytnAddress(String klaytnAddress) {
+        userRepository.deleteUser(klaytnAddress);
+        return UserDeleteResponse.ofSuccess();
     }
 }

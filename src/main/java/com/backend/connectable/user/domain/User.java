@@ -26,12 +26,15 @@ public class User {
 
     private boolean privacyAgreement;
 
+    private boolean isActive;
+
     @Builder
-    public User(Long id, String klaytnAddress, String nickname, String phoneNumber, boolean privacyAgreement) {
+    public User(Long id, String klaytnAddress, String nickname, String phoneNumber, boolean privacyAgreement, boolean isActive) {
         this.id = id;
         this.klaytnAddress = klaytnAddress;
         this.nickname = nickname;
         this.phoneNumber = phoneNumber;
         this.privacyAgreement = privacyAgreement;
+        this.isActive = isActive;
     }
 }
