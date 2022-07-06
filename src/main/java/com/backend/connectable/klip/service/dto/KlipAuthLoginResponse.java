@@ -13,17 +13,18 @@ import lombok.Setter;
 public class KlipAuthLoginResponse {
 
     private String status;
+    private String klaytnAddress;
 
     public static KlipAuthLoginResponse ofPrepared() {
-        return new KlipAuthLoginResponse("prepared");
+        return new KlipAuthLoginResponse("prepared", "");
     }
 
-    public static KlipAuthLoginResponse ofCompleted() {
-        return new KlipAuthLoginResponse("completed");
+    public static KlipAuthLoginResponse ofCompleted(String klaytnAddress) {
+        return new KlipAuthLoginResponse("completed", klaytnAddress);
     }
 
     public static KlipAuthLoginResponse ofFailed() {
-        return new KlipAuthLoginResponse("failed");
+        return new KlipAuthLoginResponse("failed", "");
     }
 
     public boolean isPrepared() {

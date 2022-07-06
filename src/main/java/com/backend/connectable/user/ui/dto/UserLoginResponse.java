@@ -1,13 +1,10 @@
 package com.backend.connectable.user.ui.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
 @NoArgsConstructor
+@Getter
 public class UserLoginResponse {
 
     private static final String PREPARED = "prepared";
@@ -27,7 +24,7 @@ public class UserLoginResponse {
         return new UserLoginResponse(FAILED);
     }
 
-    public boolean isFailed() {
+    public boolean checkStatusFailed() {
         return FAILED.equals(status);
     }
 }

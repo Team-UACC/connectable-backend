@@ -1,5 +1,6 @@
 package com.backend.connectable.user.ui.dto;
 
+import com.backend.connectable.user.domain.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,5 +19,14 @@ public class UserLoginSuccessResponse extends UserLoginResponse {
         this.klaytnAddress = klaytnAddress;
         this.jwt = jwt;
         this.isNew = isNew;
+    }
+
+    public static UserLoginSuccessResponse of(User user, String jwtToken, Boolean isNew) {
+        return new UserLoginSuccessResponse(
+                "completed",
+                user.getKlaytnAddress(),
+                jwtToken,
+                isNew
+        );
     }
 }

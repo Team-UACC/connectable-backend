@@ -19,7 +19,7 @@ public class UserController {
     @PostMapping("/users/login")
     public ResponseEntity<UserLoginResponse> loginUser(@RequestBody UserLoginRequest userLoginRequest) {
         UserLoginResponse userLoginResponse = userService.login(userLoginRequest);
-        if (userLoginResponse.isFailed()) {
+        if (userLoginResponse.checkStatusFailed()) {
             return ResponseEntity.badRequest().body(userLoginResponse);
         }
         return ResponseEntity.ok(userLoginResponse);

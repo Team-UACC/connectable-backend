@@ -23,7 +23,9 @@ public class KlipService {
             if (klipAuthHandleResponse.isPrepared()) {
                 return KlipAuthLoginResponse.ofPrepared();
             }
-            return KlipAuthLoginResponse.ofCompleted();
+            String klaytnAddress = klipAuthHandleResponse.getResult()
+                    .getKlaytn_address();
+            return KlipAuthLoginResponse.ofCompleted(klaytnAddress);
         } catch (RestClientException | NullPointerException e) {
             return KlipAuthLoginResponse.ofFailed();
         }
