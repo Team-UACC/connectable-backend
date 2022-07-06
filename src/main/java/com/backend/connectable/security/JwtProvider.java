@@ -2,15 +2,14 @@ package com.backend.connectable.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.Collections;
-import java.util.Date;
+import java.time.Instant;
 
 @Component
 @RequiredArgsConstructor
@@ -24,21 +23,16 @@ public class JwtProvider {
 
     private Algorithm algorithm;
 
-    private static final String PAYLOAD_KEY = "klaytnAddress";
-
     @PostConstruct
     public void initializeAlgorithm() {
         algorithm = Algorithm.HMAC256(secretKey);
     }
 
-    public String generateToken(String payload) {
-        Date now = new Date();
-        Date validity = new Date(now.getTime() + duration);
-
+    public String generateToken(String claim) {
         return JWT.create()
-                .withPayload(Collections.singletonMap(PAYLOAD_KEY, payload))
-                .withExpiresAt(validity)
-                .sign(algorithm);
+            .withSubject(claim)
+            .withClaim("expire", Instant.now().getEpochSecond() + duration)
+            .sign(algorithm);
     }
 
     public Boolean verify(String token) {
@@ -52,5 +46,12 @@ public class JwtProvider {
         return true;
     }
 
-    // ToDo payload 추출
+    public String exportClaim(String token) {
+        try {
+             return JWT.decode(token)
+                .getSubject();
+        } catch (JWTDecodeException e) {
+            throw new IllegalArgumentException("토큰 디코딩에 실패하였습니다.");
+        }
+    }
 }
