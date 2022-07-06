@@ -18,3 +18,6 @@ spring:
      url: jdbc:h2:mem:connectable
      username: sa
      password:
+jwt:
+   secret: uacc-to-the-moon
+   expire-time: 14400000
