@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
 class JwtProviderTest {
@@ -23,6 +23,33 @@ class JwtProviderTest {
         String token = jwtProvider.generateToken(payload);
 
         // then
-        System.out.println(token);
+        assertThat(token).isNotBlank();
+    }
+
+    @Test
+    @DisplayName("생성된 jwt 토큰을 검증한다.")
+    void verifyToken() {
+        // given
+        String payload = "0x1234abcd";
+        String token = jwtProvider.generateToken(payload);
+
+        // when
+        Boolean result = jwtProvider.verify(token);
+
+        // then
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    @DisplayName("유효하지 않은 jwt 토큰을 검증할 수 있다.")
+    void verifyInvalidToken() {
+        // given
+        String token = "invalid.token.connectable";
+
+        // when
+        Boolean result = jwtProvider.verify(token);
+
+        // then
+        assertThat(result).isFalse();
     }
 }
