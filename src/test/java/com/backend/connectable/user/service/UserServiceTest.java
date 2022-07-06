@@ -2,7 +2,9 @@ package com.backend.connectable.user.service;
 
 import com.backend.connectable.user.domain.User;
 import com.backend.connectable.user.domain.UserRepository;
+import com.backend.connectable.user.ui.dto.UserDeleteResponse;
 import com.backend.connectable.user.ui.dto.UserResponse;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,12 +30,14 @@ class UserServiceTest {
         String nickname = "Joel";
         String phoneNumber = "010-1234-5678";
         boolean privacyAgreement = true;
+        boolean isActive = true;
 
         user = User.builder()
                 .klaytnAddress(klaytnAddress)
                 .nickname(nickname)
                 .phoneNumber(phoneNumber)
                 .privacyAgreement(privacyAgreement)
+                .isActive(isActive)
                 .build();
 
         userRepository.save(user);
@@ -49,5 +53,20 @@ class UserServiceTest {
         assertThat(userResponse.getNickname()).isEqualTo(user.getNickname());
         assertThat(userResponse.getKlaytnAddress()).isEqualTo(user.getKlaytnAddress());
         assertThat(userResponse.getPhoneNumber()).isEqualTo(user.getPhoneNumber());
+    }
+
+    @DisplayName("클레이튼 지갑 주소로 특정 사용자 회원탈퇴를 실행할 수 있다.")
+    @Test
+    void deleteUserByKlaytnAddress() {
+        // given & when
+        UserDeleteResponse userDeleteResponse = userService.deleteUserByKlaytnAddress("0x1234");
+
+        // then
+        assertThat(userDeleteResponse.getStatus()).isEqualTo("success");
+    }
+
+    @AfterEach
+    void clear() {
+        userRepository.deleteAll();
     }
 }
