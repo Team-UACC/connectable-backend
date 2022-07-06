@@ -32,7 +32,7 @@ public class UserService {
     }
 
     private UserLoginSuccessResponse completeLogin(String klaytnAddress) {
-        Optional<User> optionalUser = userRepository.findByKlaytnAddressAndIsActive(klaytnAddress);
+        Optional<User> optionalUser = userRepository.findByKlaytnAddressAndIsActive(klaytnAddress, true);
         return optionalUser.map(user -> UserLoginSuccessResponse.of(
                 user,
                 jwtProvider.generateToken(klaytnAddress),

@@ -25,13 +25,13 @@ class UserControllerTest {
     @MockBean
     private UserService userService;
 
+    private ObjectMapper mapper = new ObjectMapper();
+
     @DisplayName("사용자의 정보를 가져올 수 있다.")
     @Test
     void getUser() throws Exception {
         // given
         UserResponse mockedUserResponse = new UserResponse("nickname", "phonenumber", "klaytnAddress");
-
-        ObjectMapper mapper = new ObjectMapper();
         String mockedUserResponseAsString = mapper.writeValueAsString(mockedUserResponse);
         given(userService.getUserByWalletAddress(any())).willReturn(mockedUserResponse);
 

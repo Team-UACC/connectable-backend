@@ -2,8 +2,6 @@ package com.backend.connectable.klip.service;
 
 import com.backend.connectable.klip.service.dto.KlipAuthHandleResponse;
 import com.backend.connectable.klip.service.dto.KlipAuthLoginResponse;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;

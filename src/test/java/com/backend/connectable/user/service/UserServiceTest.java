@@ -1,17 +1,19 @@
 package com.backend.connectable.user.service;
 
+import com.backend.connectable.klip.service.KlipService;
+import com.backend.connectable.klip.service.dto.KlipAuthLoginResponse;
 import com.backend.connectable.user.domain.User;
 import com.backend.connectable.user.domain.UserRepository;
-import com.backend.connectable.user.ui.dto.UserDeleteResponse;
-import com.backend.connectable.user.ui.dto.UserResponse;
-import org.junit.jupiter.api.AfterEach;
+import com.backend.connectable.user.ui.dto.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.BDDMockito.given;
 
 @SpringBootTest
 class UserServiceTest {
@@ -22,15 +24,19 @@ class UserServiceTest {
     @Autowired
     UserService userService;
 
+    @MockBean
+    KlipService klipService;
+
     private User user;
+    private final String klaytnAddress = "0x1234";
+    private final String nickname = "Joel";
+    private final String phoneNumber = "010-1234-5678";
+    private final boolean privacyAgreement = true;
+    private final boolean isActive = true;
 
     @BeforeEach
     void setUp() {
-        String klaytnAddress = "0x1234";
-        String nickname = "Joel";
-        String phoneNumber = "010-1234-5678";
-        boolean privacyAgreement = true;
-        boolean isActive = true;
+        userRepository.deleteAll();
 
         user = User.builder()
                 .klaytnAddress(klaytnAddress)
@@ -47,7 +53,7 @@ class UserServiceTest {
     @Test
     void getUserByWalletAddress() {
         // given & when
-        UserResponse userResponse = userService.getUserByWalletAddress("0x1234");
+        UserResponse userResponse = userService.getUserByWalletAddress(klaytnAddress);
 
         // then
         assertThat(userResponse.getNickname()).isEqualTo(user.getNickname());
@@ -59,14 +65,75 @@ class UserServiceTest {
     @Test
     void deleteUserByKlaytnAddress() {
         // given & when
-        UserDeleteResponse userDeleteResponse = userService.deleteUserByKlaytnAddress("0x1234");
+        UserDeleteResponse userDeleteResponse = userService.deleteUserByKlaytnAddress(klaytnAddress);
 
         // then
         assertThat(userDeleteResponse.getStatus()).isEqualTo("success");
     }
 
-    @AfterEach
-    void clear() {
-        userRepository.deleteAll();
+    @DisplayName("Klip에서 로그인이 completed 되었고, 이미 가입된 회원이라면 completed, klaytnAddress, jwt, isNew=False 를 받게된다")
+    @Test
+    void loginExistingUser() {
+        // given
+        KlipAuthLoginResponse klipAuthLoginResponse = KlipAuthLoginResponse.ofCompleted(klaytnAddress);
+        given(klipService.authLogin("properKey")).willReturn(klipAuthLoginResponse);
+
+        // when
+        UserLoginResponse userLoginResponse = userService.login(new UserLoginRequest("properKey"));
+        UserLoginSuccessResponse userLoginSuccessResponse = (UserLoginSuccessResponse) userLoginResponse;
+
+        // then
+        assertThat(userLoginSuccessResponse.getStatus()).isEqualTo("completed");
+        assertThat(userLoginSuccessResponse.getKlaytnAddress()).isEqualTo(klaytnAddress);
+        assertThat(userLoginSuccessResponse.getIsNew()).isFalse();
+        assertThat(userLoginSuccessResponse.getJwt()).isNotEmpty();
+    }
+
+    @DisplayName("Klip에서 로그인이 completed 되었고, 새로 가입한 회원이라면 completed, klaytnAddress, jwt, isNew=True 를 받게된다")
+    @Test
+    void loginNewUser() {
+        // given
+        String newKlaytnAddress = "0x9dsf8xc12x9c0v";
+        KlipAuthLoginResponse klipAuthLoginResponse = KlipAuthLoginResponse.ofCompleted(newKlaytnAddress);
+        given(klipService.authLogin("properKey")).willReturn(klipAuthLoginResponse);
+
+        // when
+        UserLoginResponse userLoginResponse = userService.login(new UserLoginRequest("properKey"));
+        UserLoginSuccessResponse userLoginSuccessResponse = (UserLoginSuccessResponse) userLoginResponse;
+
+        // then
+        assertThat(userLoginSuccessResponse.getStatus()).isEqualTo("completed");
+        assertThat(userLoginSuccessResponse.getKlaytnAddress()).isEqualTo(newKlaytnAddress);
+        assertThat(userLoginSuccessResponse.getIsNew()).isTrue();
+        assertThat(userLoginSuccessResponse.getJwt()).isNotEmpty();
+    }
+
+
+    @DisplayName("Klip에서 로그인이 prepared 라면, status=prepared 를 받게된다")
+    @Test
+    void loginPrepared() {
+        // given
+        KlipAuthLoginResponse klipAuthLoginResponse = KlipAuthLoginResponse.ofPrepared();
+        given(klipService.authLogin("properKey")).willReturn(klipAuthLoginResponse);
+
+        // when
+        UserLoginResponse userLoginResponse = userService.login(new UserLoginRequest("properKey"));
+
+        // then
+        assertThat(userLoginResponse.getStatus()).isEqualTo("prepared");
+    }
+
+    @DisplayName("Klip에서 로그인이 prepared 라면, status=failed 를 받게된다")
+    @Test
+    void loginFailed() {
+        // given
+        KlipAuthLoginResponse klipAuthLoginResponse = KlipAuthLoginResponse.ofFailed();
+        given(klipService.authLogin("properKey")).willReturn(klipAuthLoginResponse);
+
+        // when
+        UserLoginResponse userLoginResponse = userService.login(new UserLoginRequest("properKey"));
+
+        // then
+        assertThat(userLoginResponse.getStatus()).isEqualTo("failed");
     }
 }
