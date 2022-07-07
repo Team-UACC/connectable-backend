@@ -1,4 +1,4 @@
-package com.f5.resumerry.security;
+package com.backend.connectable.security;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
