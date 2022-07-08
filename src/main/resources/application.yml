@@ -21,3 +21,30 @@ spring:
 jwt:
    secret: uacc-to-the-moon
    expire-time: 14400000
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+    show-sql: true
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${jdbc.url}
+    username: ${jdbc.username}
+    password: ${jdbc.password}
+aws:
+  paramstore:
+    enabled: true
+    prefix: /config
+    profile-separator: _
+    name: connectable
+jwt:
+  secret: uacc-to-the-moon
+  expire-time: 14400000
