@@ -33,11 +33,15 @@ public class UserService {
 
     private UserLoginSuccessResponse completeLogin(String klaytnAddress) {
         Optional<User> optionalUser = userRepository.findByKlaytnAddressAndIsActive(klaytnAddress, true);
-        return optionalUser.map(user -> UserLoginSuccessResponse.of(
-                user,
-                jwtProvider.generateToken(klaytnAddress),
-                false
-        )).orElseGet(() -> completeNewUserLogin(klaytnAddress));
+        return optionalUser.map(user -> completeRegisteredUserLogin(klaytnAddress, user))
+                .orElseGet(() -> completeNewUserLogin(klaytnAddress));
+    }
+
+    private UserLoginSuccessResponse completeRegisteredUserLogin(String klaytnAddress, User user) {
+        if (user.hasNickname() && user.hasPhoneNumber()) {
+            return UserLoginSuccessResponse.of(user, jwtProvider.generateToken(klaytnAddress), false);
+        }
+        return UserLoginSuccessResponse.of(user, jwtProvider.generateToken(klaytnAddress), true);
     }
 
     private UserLoginSuccessResponse completeNewUserLogin(String klaytnAddress) {

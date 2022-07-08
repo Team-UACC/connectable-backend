@@ -33,4 +33,50 @@ class UserTest {
         assertThat(joel.getPhoneNumber()).isEqualTo(phoneNumber);
         assertThat(joel.isPrivacyAgreement()).isEqualTo(privacyAgreement);
     }
+
+    @DisplayName("닉네임을 유저가 가지고 있는지 검증할 수 있다.")
+    @Test
+    void hasNickname() {
+        // given
+        Long id = 1L;
+        String klaytnAddress = "0x1234";
+        String nickname = "";
+        String phoneNumber = "010-1234-5678";
+        boolean privacyAgreement = true;
+
+        // when
+        User noNickNameUser = User.builder()
+                .id(id)
+                .klaytnAddress(klaytnAddress)
+                .nickname(nickname)
+                .phoneNumber(phoneNumber)
+                .privacyAgreement(privacyAgreement)
+                .build();
+
+        // then
+        assertThat(noNickNameUser.hasNickname()).isFalse();
+    }
+
+    @DisplayName("유저가 핸드폰 번호를 가지고 있는지 검증할 수 있다.")
+    @Test
+    void hasPhoneNumber() {
+        // given
+        Long id = 1L;
+        String klaytnAddress = "0x1234";
+        String nickname = "nickname";
+        String phoneNumber = "";
+        boolean privacyAgreement = true;
+
+        // when
+        User noNickNameUser = User.builder()
+                .id(id)
+                .klaytnAddress(klaytnAddress)
+                .nickname(nickname)
+                .phoneNumber(phoneNumber)
+                .privacyAgreement(privacyAgreement)
+                .build();
+
+        // then
+        assertThat(noNickNameUser.hasPhoneNumber()).isFalse();
+    }
 }
