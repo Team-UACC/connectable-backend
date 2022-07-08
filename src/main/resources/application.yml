@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: local
+    active: dev
 ---
 spring:
    config:
@@ -26,6 +26,7 @@ spring:
   config:
     activate:
       on-profile: dev
+    import: 'aws-parameterstore:'
   jpa:
     hibernate:
       ddl-auto: create
