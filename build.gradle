@@ -25,6 +25,12 @@ repositories {
     mavenCentral()
 }
 
+dependencyManagement {
+    imports {
+        mavenBom "io.awspring.cloud:spring-cloud-aws-dependencies:2.3.3"
+    }
+}
+
 dependencies {
     // Spring
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -33,13 +39,11 @@ dependencies {
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
     // DB
-//    implementation 'org.flywaydb:flyway-core'
     runtimeOnly 'mysql:mysql-connector-java'
     runtimeOnly 'com.h2database:h2:1.4.199'
 
     // Cloud
-    compile("org.springframework.cloud:spring-cloud-starter:2.1.3.RELEASE")
-    compile("org.springframework.cloud:spring-cloud-starter-aws-parameter-store-config:2.1.3.RELEASE")
+    implementation group: 'io.awspring.cloud', name: 'spring-cloud-starter-aws-parameter-store-config'
 
     // QueryDsl
     implementation 'com.querydsl:querydsl-jpa'
