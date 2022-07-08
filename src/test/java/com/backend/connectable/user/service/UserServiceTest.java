@@ -27,45 +27,57 @@ class UserServiceTest {
     @MockBean
     KlipService klipService;
 
-    private User user;
-    private final String klaytnAddress = "0x1234";
-    private final String nickname = "Joel";
-    private final String phoneNumber = "010-1234-5678";
-    private final boolean privacyAgreement = true;
-    private final boolean isActive = true;
+    private User user1;
+    private final String user1KlaytnAddress = "0x1234";
+    private final String user1Nickname = "Joel";
+    private final String user1PhoneNumber = "010-1234-5678";
+    private final boolean user1PrivacyAgreement = true;
+    private final boolean user1IsActive = true;
+
+
+    private User noNicknameUser;
+    private final String noNicknameUserKlaytnAddress = "0x8876";
 
     @BeforeEach
     void setUp() {
         userRepository.deleteAll();
 
-        user = User.builder()
-                .klaytnAddress(klaytnAddress)
-                .nickname(nickname)
-                .phoneNumber(phoneNumber)
-                .privacyAgreement(privacyAgreement)
-                .isActive(isActive)
+        user1 = User.builder()
+                .klaytnAddress(user1KlaytnAddress)
+                .nickname(user1Nickname)
+                .phoneNumber(user1PhoneNumber)
+                .privacyAgreement(user1PrivacyAgreement)
+                .isActive(user1IsActive)
                 .build();
 
-        userRepository.save(user);
+        noNicknameUser = User.builder()
+                        .klaytnAddress(noNicknameUserKlaytnAddress)
+                        .nickname("")
+                        .phoneNumber("010-0939-8822")
+                        .privacyAgreement(true)
+                        .isActive(true)
+                        .build();
+
+        userRepository.save(user1);
     }
 
     @DisplayName("클레이튼 지갑 주소로 특정 사용자를 조회할 수 있다.")
     @Test
     void getUserByWalletAddress() {
         // given & when
-        UserResponse userResponse = userService.getUserByWalletAddress(klaytnAddress);
+        UserResponse userResponse = userService.getUserByWalletAddress(user1KlaytnAddress);
 
         // then
-        assertThat(userResponse.getNickname()).isEqualTo(user.getNickname());
-        assertThat(userResponse.getKlaytnAddress()).isEqualTo(user.getKlaytnAddress());
-        assertThat(userResponse.getPhoneNumber()).isEqualTo(user.getPhoneNumber());
+        assertThat(userResponse.getNickname()).isEqualTo(user1.getNickname());
+        assertThat(userResponse.getKlaytnAddress()).isEqualTo(user1.getKlaytnAddress());
+        assertThat(userResponse.getPhoneNumber()).isEqualTo(user1.getPhoneNumber());
     }
 
     @DisplayName("클레이튼 지갑 주소로 특정 사용자 회원탈퇴를 실행할 수 있다.")
     @Test
     void deleteUserByKlaytnAddress() {
         // given & when
-        UserDeleteResponse userDeleteResponse = userService.deleteUserByKlaytnAddress(klaytnAddress);
+        UserDeleteResponse userDeleteResponse = userService.deleteUserByKlaytnAddress(user1KlaytnAddress);
 
         // then
         assertThat(userDeleteResponse.getStatus()).isEqualTo("success");
@@ -75,7 +87,7 @@ class UserServiceTest {
     @Test
     void loginExistingUser() {
         // given
-        KlipAuthLoginResponse klipAuthLoginResponse = KlipAuthLoginResponse.ofCompleted(klaytnAddress);
+        KlipAuthLoginResponse klipAuthLoginResponse = KlipAuthLoginResponse.ofCompleted(user1KlaytnAddress);
         given(klipService.authLogin("properKey")).willReturn(klipAuthLoginResponse);
 
         // when
@@ -84,8 +96,26 @@ class UserServiceTest {
 
         // then
         assertThat(userLoginSuccessResponse.getStatus()).isEqualTo("completed");
-        assertThat(userLoginSuccessResponse.getKlaytnAddress()).isEqualTo(klaytnAddress);
+        assertThat(userLoginSuccessResponse.getKlaytnAddress()).isEqualTo(user1KlaytnAddress);
         assertThat(userLoginSuccessResponse.getIsNew()).isFalse();
+        assertThat(userLoginSuccessResponse.getJwt()).isNotEmpty();
+    }
+
+    @DisplayName("Klip에서 로그인이 completed 되었지만, 등록만 된 회원이라면 completed, klaytnAddress, jwt, isNew=True 를 받게된다")
+    @Test
+    void loginOnlyRegisteredUser() {
+        // given
+        KlipAuthLoginResponse klipAuthLoginResponse = KlipAuthLoginResponse.ofCompleted(noNicknameUserKlaytnAddress);
+        given(klipService.authLogin("properKey")).willReturn(klipAuthLoginResponse);
+
+        // when
+        UserLoginResponse userLoginResponse = userService.login(new UserLoginRequest("properKey"));
+        UserLoginSuccessResponse userLoginSuccessResponse = (UserLoginSuccessResponse) userLoginResponse;
+
+        // then
+        assertThat(userLoginSuccessResponse.getStatus()).isEqualTo("completed");
+        assertThat(userLoginSuccessResponse.getKlaytnAddress()).isEqualTo(noNicknameUserKlaytnAddress);
+        assertThat(userLoginSuccessResponse.getIsNew()).isTrue();
         assertThat(userLoginSuccessResponse.getJwt()).isNotEmpty();
     }
 

@@ -37,4 +37,12 @@ public class User {
         this.privacyAgreement = privacyAgreement;
         this.isActive = isActive;
     }
+
+    public boolean hasNickname() {
+        return !nickname.isEmpty();
+    }
+
+    public boolean hasPhoneNumber() {
+        return !phoneNumber.isEmpty();
+    }
 }
