@@ -45,3 +45,6 @@ aws:
     prefix: /config
     profile-separator: _
     name: connectable
+jwt:
+  secret: uacc-to-the-moon
+  expire-time: 14400000
