@@ -17,15 +17,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable();
-        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        http.httpBasic().disable()
+                .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .formLogin().disable()
-                .httpBasic().disable()
-                .authorizeRequests()
-                .antMatchers("/users")
-                .authenticated()
-                .anyRequest().permitAll();
+                    .authorizeRequests()
+                        .antMatchers("/users/login").permitAll()
+                        .antMatchers("/users").authenticated()
+                        .anyRequest().permitAll()
+                .and()
+                    .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }

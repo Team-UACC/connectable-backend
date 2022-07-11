@@ -36,7 +36,7 @@ class UserControllerTest {
         // given
         UserResponse mockedUserResponse = new UserResponse("nickname", "phonenumber", "klaytnAddress");
         String mockedUserResponseAsString = mapper.writeValueAsString(mockedUserResponse);
-        given(userService.getUserByWalletAddress(any())).willReturn(mockedUserResponse);
+        given(userService.getUserByKlaytnAddress(any())).willReturn(mockedUserResponse);
 
         // when & then
         mockMvc.perform(get("/users"))

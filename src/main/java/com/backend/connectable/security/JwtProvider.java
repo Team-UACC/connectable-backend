@@ -6,6 +6,10 @@ import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -22,6 +26,8 @@ public class JwtProvider {
     private Long duration;
 
     private Algorithm algorithm;
+
+    private final UserDetailsService userDetailsService;
 
     @PostConstruct
     public void initializeAlgorithm() {
@@ -52,5 +58,10 @@ public class JwtProvider {
         } catch (JWTDecodeException e) {
             throw new IllegalArgumentException("토큰 디코딩에 실패하였습니다.");
         }
+    }
+
+    public Authentication getAuthentication(String token) {
+        UserDetails userDetails = userDetailsService.loadUserByUsername(exportClaim(token));
+        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 }

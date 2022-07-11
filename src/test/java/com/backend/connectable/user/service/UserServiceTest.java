@@ -65,7 +65,7 @@ class UserServiceTest {
     @Test
     void getUserByWalletAddress() {
         // given & when
-        UserResponse userResponse = userService.getUserByWalletAddress(user1KlaytnAddress);
+        UserResponse userResponse = userService.getUserByKlaytnAddress(user1KlaytnAddress);
 
         // then
         assertThat(userResponse.getNickname()).isEqualTo(user1.getNickname());
