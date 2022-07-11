@@ -40,7 +40,7 @@ class UserTest {
         // given
         Long id = 1L;
         String klaytnAddress = "0x1234";
-        String nickname = "";
+        String nickname = null;
         String phoneNumber = "010-1234-5678";
         boolean privacyAgreement = true;
 
@@ -64,7 +64,7 @@ class UserTest {
         Long id = 1L;
         String klaytnAddress = "0x1234";
         String nickname = "nickname";
-        String phoneNumber = "";
+        String phoneNumber = null;
         boolean privacyAgreement = true;
 
         // when
