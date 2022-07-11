@@ -2,6 +2,7 @@ package com.backend.connectable.user.service;
 
 import com.backend.connectable.klip.service.KlipService;
 import com.backend.connectable.klip.service.dto.KlipAuthLoginResponse;
+import com.backend.connectable.security.ConnectableUserDetails;
 import com.backend.connectable.user.domain.User;
 import com.backend.connectable.user.domain.UserRepository;
 import com.backend.connectable.user.ui.dto.*;
@@ -61,11 +62,14 @@ class UserServiceTest {
         userRepository.save(user1);
     }
 
-    @DisplayName("클레이튼 지갑 주소로 특정 사용자를 조회할 수 있다.")
+    @DisplayName("ConnectableUserDetails로 특정 사용자를 조회할 수 있다.")
     @Test
-    void getUserByWalletAddress() {
-        // given & when
-        UserResponse userResponse = userService.getUserByKlaytnAddress(user1KlaytnAddress);
+    void getUserByUserDetails() {
+        // given
+        ConnectableUserDetails connectableUserDetails = new ConnectableUserDetails(user1);
+
+        // when
+        UserResponse userResponse = userService.getUserByUserDetails(connectableUserDetails);
 
         // then
         assertThat(userResponse.getNickname()).isEqualTo(user1.getNickname());
@@ -73,11 +77,14 @@ class UserServiceTest {
         assertThat(userResponse.getPhoneNumber()).isEqualTo(user1.getPhoneNumber());
     }
 
-    @DisplayName("클레이튼 지갑 주소로 특정 사용자 회원탈퇴를 실행할 수 있다.")
+    @DisplayName("ConnectableUserDetails로 특정 사용자 회원탈퇴를 실행할 수 있다.")
     @Test
     void deleteUserByKlaytnAddress() {
-        // given & when
-        UserDeleteResponse userDeleteResponse = userService.deleteUserByKlaytnAddress(user1KlaytnAddress);
+        // given
+        ConnectableUserDetails connectableUserDetails = new ConnectableUserDetails(user1);
+
+        // when
+        UserDeleteResponse userDeleteResponse = userService.deleteUserByUserDetails(connectableUserDetails);
 
         // then
         assertThat(userDeleteResponse.getStatus()).isEqualTo("success");

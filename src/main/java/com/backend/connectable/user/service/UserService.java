@@ -59,26 +59,13 @@ public class UserService {
     }
 
     public UserResponse getUserByUserDetails(ConnectableUserDetails userDetails) {
-        String klaytnAddress = userDetails.getUser().getKlaytnAddress();
-        return getUserByKlaytnAddress(klaytnAddress);
-    }
-
-    public UserResponse getUserByKlaytnAddress(String klaytnAddress) {
-        Optional<User> foundUser = userRepository.findByKlaytnAddress(klaytnAddress);
-        if (foundUser.isEmpty()) {
-            throw new IllegalArgumentException("해당 지갑에 대응되는 사용자가 없습니다.");
-        }
-        User user = foundUser.get();
+        User user = userDetails.getUser();
         return UserResponse.of(user);
     }
 
     public UserDeleteResponse deleteUserByUserDetails(ConnectableUserDetails userDetails) {
-        String klaytnAddress = userDetails.getUser().getKlaytnAddress();
-        return deleteUserByKlaytnAddress(klaytnAddress);
-    }
-
-    public UserDeleteResponse deleteUserByKlaytnAddress(String klaytnAddress) {
-        userRepository.deleteUser(klaytnAddress);
+        User user = userDetails.getUser();
+        userRepository.delete(user);
         return UserDeleteResponse.ofSuccess();
     }
 }
