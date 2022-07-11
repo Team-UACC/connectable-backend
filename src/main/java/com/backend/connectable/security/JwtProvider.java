@@ -35,15 +35,14 @@ public class JwtProvider {
             .sign(algorithm);
     }
 
-    public Boolean verify(String token) {
+    public void verify(String token) {
         try {
             JWT.require(algorithm)
                 .build()
                 .verify(token);
         } catch (JWTVerificationException e) {
-            return false;
+            throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
         }
-        return true;
     }
 
     public String exportClaim(String token) {
