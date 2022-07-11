@@ -12,6 +12,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.BDDMockito.given;
@@ -24,6 +27,9 @@ class UserServiceTest {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    EntityManager em;
 
     @MockBean
     KlipService klipService;
@@ -79,15 +85,35 @@ class UserServiceTest {
 
     @DisplayName("ConnectableUserDetails로 특정 사용자 회원탈퇴를 실행할 수 있다.")
     @Test
-    void deleteUserByKlaytnAddress() {
+    void deleteUser() {
         // given
         ConnectableUserDetails connectableUserDetails = new ConnectableUserDetails(user1);
 
         // when
-        UserDeleteResponse userDeleteResponse = userService.deleteUserByUserDetails(connectableUserDetails);
+        UserModifyResponse userModifyResponse = userService.deleteUserByUserDetails(connectableUserDetails);
 
         // then
-        assertThat(userDeleteResponse.getStatus()).isEqualTo("success");
+        assertThat(userModifyResponse.getStatus()).isEqualTo("success");
+    }
+    
+    @DisplayName("ConnectableUserDetails로 특정 사용자 수정을 실행할 수 있다.")
+    @Test
+    @Transactional
+    void modifyUser() {
+        // given
+        ConnectableUserDetails connectableUserDetails = new ConnectableUserDetails(user1);
+        UserModifyRequest userModifyRequest = new UserModifyRequest("mrlee7", "01085161399");
+
+        // when
+        UserModifyResponse userModifyResponse = userService.modifyUserByUserDetails(connectableUserDetails, userModifyRequest);
+        em.flush();
+        em.clear();
+
+        // then
+        assertThat(userModifyResponse.getStatus()).isEqualTo("success");
+        User user = userRepository.getReferenceById(user1.getId());
+        assertThat(user.getNickname()).isEqualTo("mrlee7");
+        assertThat(user.getPhoneNumber()).isEqualTo("01085161399");
     }
 
     @DisplayName("Klip에서 로그인이 completed 되었고, 이미 가입된 회원이라면 completed, klaytnAddress, jwt, isNew=False 를 받게된다")

@@ -9,6 +9,7 @@ import com.backend.connectable.user.domain.UserRepository;
 import com.backend.connectable.user.ui.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -63,9 +64,16 @@ public class UserService {
         return UserResponse.of(user);
     }
 
-    public UserDeleteResponse deleteUserByUserDetails(ConnectableUserDetails userDetails) {
+    public UserModifyResponse deleteUserByUserDetails(ConnectableUserDetails userDetails) {
         User user = userDetails.getUser();
-        userRepository.delete(user);
-        return UserDeleteResponse.ofSuccess();
+        userRepository.deleteUser(user.getKlaytnAddress());
+        return UserModifyResponse.ofSuccess();
+    }
+
+    public UserModifyResponse modifyUserByUserDetails(ConnectableUserDetails userDetails, UserModifyRequest userModifyRequest) {
+        User user = userDetails.getUser();
+        user.modifyNickname(userModifyRequest.getNickname());
+        user.modifyPhoneNumber(userModifyRequest.getPhoneNumber());
+        return UserModifyResponse.ofSuccess();
     }
 }

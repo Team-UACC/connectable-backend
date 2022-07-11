@@ -2,10 +2,7 @@ package com.backend.connectable.user.ui;
 
 import com.backend.connectable.security.ConnectableUserDetails;
 import com.backend.connectable.user.service.UserService;
-import com.backend.connectable.user.ui.dto.UserDeleteResponse;
-import com.backend.connectable.user.ui.dto.UserLoginRequest;
-import com.backend.connectable.user.ui.dto.UserLoginResponse;
-import com.backend.connectable.user.ui.dto.UserResponse;
+import com.backend.connectable.user.ui.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,8 +31,15 @@ public class UserController {
     }
 
     @DeleteMapping("/users")
-    public ResponseEntity<UserDeleteResponse> deleteUser(@AuthenticationPrincipal ConnectableUserDetails userDetails) {
-        UserDeleteResponse userDeleteResponse = userService.deleteUserByUserDetails(userDetails);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(userDeleteResponse);
+    public ResponseEntity<UserModifyResponse> deleteUser(@AuthenticationPrincipal ConnectableUserDetails userDetails) {
+        UserModifyResponse userModifyResponse = userService.deleteUserByUserDetails(userDetails);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(userModifyResponse);
+    }
+
+    @PutMapping("/users")
+    public ResponseEntity<UserModifyResponse> modifyUser(@AuthenticationPrincipal ConnectableUserDetails userDetails,
+                                                         @RequestBody UserModifyRequest userModifyRequest) {
+        UserModifyResponse userModifyResponse = userService.modifyUserByUserDetails(userDetails, userModifyRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(userModifyResponse);
     }
 }

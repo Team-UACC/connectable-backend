@@ -9,11 +9,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class UserDeleteResponse {
+public class UserModifyResponse {
 
     private String status;
 
-    public static UserDeleteResponse ofSuccess() {
-        return new UserDeleteResponse("success");
+    public static UserModifyResponse ofSuccess() {
+        return new UserModifyResponse("success");
     }
 }
