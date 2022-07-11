@@ -3,30 +3,29 @@ package com.backend.connectable.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private static final String[] AUTH_WHITELIST = {};
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Override
-    public void configure(WebSecurity web) {
-        web.ignoring().antMatchers(AUTH_WHITELIST);
-    }
-
-    @Override
-    protected void configure(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.csrf()
-                .disable()
-                .authorizeRequests()
-                .antMatchers("/users", "/users/login")
-                .permitAll()
-                .anyRequest()
-                .authenticated();
+    protected void configure(HttpSecurity http) throws Exception {
+        http.httpBasic().disable()
+                .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                    .authorizeRequests()
+                        .antMatchers("/users/login").permitAll()
+                        .antMatchers("/users").authenticated()
+                        .anyRequest().permitAll()
+                .and()
+                    .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }

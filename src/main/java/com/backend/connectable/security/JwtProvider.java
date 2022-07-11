@@ -6,6 +6,10 @@ import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -23,6 +27,8 @@ public class JwtProvider {
 
     private Algorithm algorithm;
 
+    private final UserDetailsService userDetailsService;
+
     @PostConstruct
     public void initializeAlgorithm() {
         algorithm = Algorithm.HMAC256(secretKey);
@@ -35,15 +41,14 @@ public class JwtProvider {
             .sign(algorithm);
     }
 
-    public Boolean verify(String token) {
+    public void verify(String token) {
         try {
             JWT.require(algorithm)
                 .build()
                 .verify(token);
         } catch (JWTVerificationException e) {
-            return false;
+            throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
         }
-        return true;
     }
 
     public String exportClaim(String token) {
@@ -53,5 +58,10 @@ public class JwtProvider {
         } catch (JWTDecodeException e) {
             throw new IllegalArgumentException("토큰 디코딩에 실패하였습니다.");
         }
+    }
+
+    public Authentication getAuthentication(String token) {
+        UserDetails userDetails = userDetailsService.loadUserByUsername(exportClaim(token));
+        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 }

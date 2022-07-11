@@ -1,5 +1,6 @@
 package com.backend.connectable.user.ui;
 
+import com.backend.connectable.security.ConnectableUserDetails;
 import com.backend.connectable.user.service.UserService;
 import com.backend.connectable.user.ui.dto.UserDeleteResponse;
 import com.backend.connectable.user.ui.dto.UserLoginRequest;
@@ -8,6 +9,7 @@ import com.backend.connectable.user.ui.dto.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,16 +28,14 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<UserResponse> getUser() {
-        String klaytnAddress = "0x1234";
-        UserResponse userResponse = userService.getUserByWalletAddress(klaytnAddress);
+    public ResponseEntity<UserResponse> getUser(@AuthenticationPrincipal ConnectableUserDetails userDetails) {
+        UserResponse userResponse = userService.getUserByUserDetails(userDetails);
         return ResponseEntity.ok(userResponse);
     }
 
     @DeleteMapping("/users")
-    public ResponseEntity<UserDeleteResponse> deleteUser() {
-        String klaytnAddress = "0x1234";
-        UserDeleteResponse userDeleteResponse = userService.deleteUserByKlaytnAddress(klaytnAddress);
+    public ResponseEntity<UserDeleteResponse> deleteUser(@AuthenticationPrincipal ConnectableUserDetails userDetails) {
+        UserDeleteResponse userDeleteResponse = userService.deleteUserByUserDetails(userDetails);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(userDeleteResponse);
     }
 }

@@ -5,8 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.assertj.core.api.AssertionsForClassTypes.*;
 
 @SpringBootTest
 class JwtProviderTest {
@@ -35,11 +34,9 @@ class JwtProviderTest {
         String claim = "0x1234abcd";
         String token = jwtProvider.generateToken(claim);
 
-        // when
-        Boolean result = jwtProvider.verify(token);
-
-        // then
-        assertThat(result).isTrue();
+        // when & then
+        assertThatCode(() -> jwtProvider.verify(token))
+                .doesNotThrowAnyException();
     }
 
     @Test
@@ -48,11 +45,9 @@ class JwtProviderTest {
         // given
         String token = "invalid.token.connectable";
 
-        // when
-        Boolean result = jwtProvider.verify(token);
-
-        // then
-        assertThat(result).isFalse();
+        // when & then
+        assertThatThrownBy(() -> jwtProvider.verify(token))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test

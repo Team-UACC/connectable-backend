@@ -2,6 +2,7 @@ package com.backend.connectable.user.service;
 
 import com.backend.connectable.klip.service.KlipService;
 import com.backend.connectable.klip.service.dto.KlipAuthLoginResponse;
+import com.backend.connectable.security.ConnectableUserDetails;
 import com.backend.connectable.security.JwtProvider;
 import com.backend.connectable.user.domain.User;
 import com.backend.connectable.user.domain.UserRepository;
@@ -57,17 +58,14 @@ public class UserService {
         );
     }
 
-    public UserResponse getUserByWalletAddress(String klaytnAddress) {
-        Optional<User> foundUser = userRepository.findByKlaytnAddress(klaytnAddress);
-        if (foundUser.isEmpty()) {
-            throw new IllegalArgumentException("해당 지갑에 대응되는 사용자가 없습니다.");
-        }
-        User user = foundUser.get();
+    public UserResponse getUserByUserDetails(ConnectableUserDetails userDetails) {
+        User user = userDetails.getUser();
         return UserResponse.of(user);
     }
 
-    public UserDeleteResponse deleteUserByKlaytnAddress(String klaytnAddress) {
-        userRepository.deleteUser(klaytnAddress);
+    public UserDeleteResponse deleteUserByUserDetails(ConnectableUserDetails userDetails) {
+        User user = userDetails.getUser();
+        userRepository.delete(user);
         return UserDeleteResponse.ofSuccess();
     }
 }
