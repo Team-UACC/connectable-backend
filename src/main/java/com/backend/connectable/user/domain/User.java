@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -47,10 +48,10 @@ public class User {
     }
 
     public boolean hasNickname() {
-        return !nickname.isEmpty();
+        return !Objects.isNull(nickname);
     }
 
     public boolean hasPhoneNumber() {
-        return !phoneNumber.isEmpty();
+        return !Objects.isNull(phoneNumber);
     }
 }
