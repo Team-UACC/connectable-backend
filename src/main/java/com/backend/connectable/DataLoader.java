@@ -1,10 +1,10 @@
 package com.backend.connectable;
 
 import com.backend.connectable.event.domain.Event;
+import com.backend.connectable.event.domain.SalesOption;
 import com.backend.connectable.event.domain.Ticket;
 import com.backend.connectable.event.domain.TicketMetadata;
 import com.backend.connectable.event.domain.repository.EventRepository;
-import com.backend.connectable.event.domain.SalesOption;
 import com.backend.connectable.event.domain.repository.TicketRepository;
 import com.backend.connectable.user.domain.User;
 import com.backend.connectable.user.domain.repository.UserRepository;
@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 
-@Profile({"local", "dev"})
+@Profile("dev")
 @Transactional
 @Component
 @RequiredArgsConstructor
