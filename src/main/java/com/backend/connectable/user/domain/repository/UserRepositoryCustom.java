@@ -1,4 +1,4 @@
-package com.backend.connectable.user.domain;
+package com.backend.connectable.user.domain.repository;
 
 public interface UserRepositoryCustom {
 

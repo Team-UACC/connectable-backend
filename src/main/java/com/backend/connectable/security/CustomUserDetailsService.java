@@ -1,7 +1,7 @@
 package com.backend.connectable.security;
 
 import com.backend.connectable.user.domain.User;
-import com.backend.connectable.user.domain.UserRepository;
+import com.backend.connectable.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
