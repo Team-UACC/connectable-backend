@@ -15,7 +15,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
@@ -48,18 +47,18 @@ class EventControllerTest {
                 1L,
                 "test1",
                 "/connectable-events/image_0xtest.jpeg",
-                LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().getEpochSecond(),
+                LocalDateTime.now(),
                 "description1",
-                LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().getEpochSecond(),
-                LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().getEpochSecond()
+                LocalDateTime.now(),
+                LocalDateTime.now()
             ),
             new EventResponse(2L,
                 "test2",
                 "/connectable-events/image_0xtest.jpeg",
-                LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().getEpochSecond(),
+                LocalDateTime.now(),
                 "description2",
-                LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().getEpochSecond(),
-                LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().getEpochSecond()
+                LocalDateTime.now(),
+                LocalDateTime.now()
             )
         );
 

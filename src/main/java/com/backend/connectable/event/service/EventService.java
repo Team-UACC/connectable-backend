@@ -5,7 +5,6 @@ import com.backend.connectable.event.ui.dto.EventResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,10 +20,10 @@ public class EventService {
                 .id(event.getId())
                 .name(event.getEventName())
                 .image(event.getEventImage())
-                .date(event.getStartTime().atZone(ZoneId.systemDefault()).toInstant().getEpochSecond())
+                .date(event.getStartTime())
                 .description(event.getDescription())
-                .salesFrom(event.getSalesFrom().atZone(ZoneId.systemDefault()).toInstant().getEpochSecond())
-                .salesTo(event.getSalesTo().atZone(ZoneId.systemDefault()).toInstant().getEpochSecond())
+                .salesFrom(event.getSalesFrom())
+                .salesTo(event.getSalesTo())
                 .build())
             .collect(Collectors.toList());
     }
