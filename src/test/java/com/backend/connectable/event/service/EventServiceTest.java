@@ -1,7 +1,7 @@
 package com.backend.connectable.event.service;
 
 import com.backend.connectable.event.domain.Event;
-import com.backend.connectable.event.domain.EventRepository;
+import com.backend.connectable.event.domain.repository.EventRepository;
 import com.backend.connectable.event.ui.dto.EventResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

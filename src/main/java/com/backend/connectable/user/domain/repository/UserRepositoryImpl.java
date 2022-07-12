@@ -1,4 +1,4 @@
-package com.backend.connectable.user.domain;
+package com.backend.connectable.user.domain.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
