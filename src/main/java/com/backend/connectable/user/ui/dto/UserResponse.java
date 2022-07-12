@@ -12,12 +12,14 @@ import lombok.Setter;
 @Setter
 public class UserResponse {
 
+    private String status;
     private String nickname;
     private String phoneNumber;
     private String klaytnAddress;
 
     public static UserResponse of(User user) {
         return new UserResponse(
+                "success",
                 user.getNickname(),
                 user.getPhoneNumber(),
                 user.getKlaytnAddress()

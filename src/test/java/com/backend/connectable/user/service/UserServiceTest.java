@@ -78,6 +78,7 @@ class UserServiceTest {
         UserResponse userResponse = userService.getUserByUserDetails(connectableUserDetails);
 
         // then
+        assertThat(userResponse.getStatus()).isEqualTo("success");
         assertThat(userResponse.getNickname()).isEqualTo(user1.getNickname());
         assertThat(userResponse.getKlaytnAddress()).isEqualTo(user1.getKlaytnAddress());
         assertThat(userResponse.getPhoneNumber()).isEqualTo(user1.getPhoneNumber());
