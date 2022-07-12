@@ -15,7 +15,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class UserService {
 
     private final UserRepository userRepository;
@@ -71,7 +71,6 @@ public class UserService {
         return UserModifyResponse.ofSuccess();
     }
 
-    @Transactional
     public UserModifyResponse modifyUserByUserDetails(ConnectableUserDetails userDetails, UserModifyRequest userModifyRequest) {
         User user = userDetails.getUser();
         user.modifyNickname(userModifyRequest.getNickname());
