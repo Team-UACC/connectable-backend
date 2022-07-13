@@ -71,6 +71,7 @@ public class UserService {
         return UserModifyResponse.ofSuccess();
     }
 
+    @Transactional
     public UserModifyResponse modifyUserByUserDetails(ConnectableUserDetails userDetails, UserModifyRequest userModifyRequest) {
         User user = userDetails.getUser();
         user.modifyNickname(userModifyRequest.getNickname());
