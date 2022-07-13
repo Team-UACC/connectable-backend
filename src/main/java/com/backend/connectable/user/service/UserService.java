@@ -8,6 +8,7 @@ import com.backend.connectable.user.domain.User;
 import com.backend.connectable.user.domain.repository.UserRepository;
 import com.backend.connectable.user.ui.dto.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +17,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class UserService {
 
     private final UserRepository userRepository;
@@ -71,11 +73,10 @@ public class UserService {
         return UserModifyResponse.ofSuccess();
     }
 
-    @Transactional
     public UserModifyResponse modifyUserByUserDetails(ConnectableUserDetails userDetails, UserModifyRequest userModifyRequest) {
         User user = userDetails.getUser();
-        user.modifyNickname(userModifyRequest.getNickname());
-        user.modifyPhoneNumber(userModifyRequest.getPhoneNumber());
+        log.info("@@USER_DETAILS_USER_OBJECT::{}", user);
+        userRepository.modifyUser(user.getKlaytnAddress(), userModifyRequest.getNickname(), userModifyRequest.getPhoneNumber());
         return UserModifyResponse.ofSuccess();
     }
 }

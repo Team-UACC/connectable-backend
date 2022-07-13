@@ -25,4 +25,14 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
             .where(user.klaytnAddress.eq(klaytnAddress))
             .execute();
     }
+
+    @Transactional
+    public void modifyUser(String klaytnAddress, String nickname, String phoneNumber) {
+        queryFactory
+            .update(user)
+            .set(user.nickname, nickname)
+            .set(user.phoneNumber, phoneNumber)
+            .where(user.klaytnAddress.eq(klaytnAddress))
+            .execute();
+    }
 }
