@@ -99,7 +99,6 @@ class UserServiceTest {
     
     @DisplayName("ConnectableUserDetails로 특정 사용자 수정을 실행할 수 있다.")
     @Test
-    @Transactional
     void modifyUser() {
         // given
         ConnectableUserDetails connectableUserDetails = new ConnectableUserDetails(user1);
@@ -107,14 +106,9 @@ class UserServiceTest {
 
         // when
         UserModifyResponse userModifyResponse = userService.modifyUserByUserDetails(connectableUserDetails, userModifyRequest);
-        em.flush();
-        em.clear();
 
         // then
         assertThat(userModifyResponse.getStatus()).isEqualTo("success");
-        User user = userRepository.getReferenceById(user1.getId());
-        assertThat(user.getNickname()).isEqualTo("mrlee7");
-        assertThat(user.getPhoneNumber()).isEqualTo("01085161399");
     }
 
     @DisplayName("Klip에서 로그인이 completed 되었고, 이미 가입된 회원이라면 completed, klaytnAddress, jwt, isNew=False 를 받게된다")
