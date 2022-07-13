@@ -28,6 +28,8 @@ public class Event {
 
     private String eventName;
 
+    private String location;
+
     private String eventImage;
 
     private String twitterUrl;
@@ -44,13 +46,14 @@ public class Event {
     private SalesOption salesOption;
 
     @Builder
-    public Event(Long id, String description, LocalDateTime salesFrom, LocalDateTime salesTo, String contractAddress, String eventName, String eventImage, String twitterUrl, String instagramUrl, String webpageUrl, LocalDateTime startTime, LocalDateTime endTime, SalesOption salesOption) {
+    public Event(Long id, String description, LocalDateTime salesFrom, LocalDateTime salesTo, String contractAddress, String eventName, String location, String eventImage, String twitterUrl, String instagramUrl, String webpageUrl, LocalDateTime startTime, LocalDateTime endTime, SalesOption salesOption) {
         this.id = id;
         this.description = description;
         this.salesFrom = salesFrom;
         this.salesTo = salesTo;
         this.contractAddress = contractAddress;
         this.eventName = eventName;
+        this.location = location;
         this.eventImage = eventImage;
         this.twitterUrl = twitterUrl;
         this.instagramUrl = instagramUrl;

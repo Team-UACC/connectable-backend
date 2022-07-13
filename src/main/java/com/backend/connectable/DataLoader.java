@@ -57,6 +57,8 @@ public class DataLoader implements ApplicationRunner {
                 .startTime(LocalDateTime.of(2022, 8, 1, 18, 0))
                 .endTime(LocalDateTime.of(2022, 8, 1, 19, 0))
                 .salesOption(SalesOption.FLAT_PRICE)
+                .location("서울특별시 강남구 테헤란로 311 아남타워빌딩 7층")
+                .salesOption(SalesOption.FLAT_PRICE)
                 .build();
         eventRepository.save(joelEvent);
 
@@ -96,7 +98,7 @@ public class DataLoader implements ApplicationRunner {
                 .event(joelEvent)
                 .tokenUri("https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/2.json")
                 .price(100000)
-                .onSale(true)
+                .onSale(false)
                 .ticketMetadata(joelTicket2Metadata)
                 .build();
 
