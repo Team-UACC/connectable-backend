@@ -1,7 +1,7 @@
 package com.backend.connectable.event.domain.repository;
 
 import com.backend.connectable.event.domain.dto.EventDetail;
-import com.backend.connectable.event.domain.dto.EventTickets;
+import com.backend.connectable.event.domain.dto.EventTicket;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPAExpressions;
@@ -58,9 +58,9 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
     }
 
     @Override
-    public List<EventTickets> findAllTickets(Long eventId) {
-        List<EventTickets> eventTickets = queryFactory.select(Projections.bean(
-            EventTickets.class,
+    public List<EventTicket> findAllTickets(Long eventId) {
+        List<EventTicket> eventTickets = queryFactory.select(Projections.bean(
+            EventTicket.class,
             ticket.id,
             ticket.price,
             artist.artistName,
@@ -78,5 +78,28 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
             .groupBy(ticket.id)
             .fetch();
         return eventTickets;
+    }
+
+    @Override
+    public EventTicket findTicketByEventIdAndTicketId(Long eventId, Long ticketId) {
+        return queryFactory.select(Projections.bean(
+            EventTicket.class,
+            ticket.id,
+            ticket.price,
+            artist.artistName,
+            event.startTime.as("eventDate"),
+            event.eventName,
+            ticket.onSale,
+            ticket.tokenId,
+            ticket.tokenUri,
+            ticket.ticketMetadata,
+            event.contractAddress
+            ))
+            .from(event)
+            .innerJoin(ticket).on(ticket.event.id.eq(event.id))
+            .innerJoin(artist).on(event.artist.id.eq(artist.id))
+            .where(ticket.event.id.eq(eventId)
+                .and(ticket.id.eq(ticketId)))
+            .fetchOne();
     }
 }

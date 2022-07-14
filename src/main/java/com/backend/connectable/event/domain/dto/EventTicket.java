@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class EventTickets {
+public class EventTicket {
 
     private Long id;
     private int price;
@@ -22,4 +22,5 @@ public class EventTickets {
     private int tokenId;
     private String tokenUri;
     private String metadata;
+    private String contractAddress;
 }

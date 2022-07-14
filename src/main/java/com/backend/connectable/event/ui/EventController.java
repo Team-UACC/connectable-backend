@@ -36,4 +36,10 @@ public class EventController {
         List<TicketResponse> ticketResponse = eventService.getTicketList(eventId);
         return ticketResponse;
     }
+
+    @GetMapping("/{event-id}/tickets/{ticket-id}")
+    public TicketResponse getTicketInfo(@PathVariable("event-id") Long eventId, @PathVariable("ticket-id") Long ticketId) {
+        TicketResponse ticketResponse = eventService.getTicketInfo(eventId, ticketId);
+        return ticketResponse;
+    }
 }

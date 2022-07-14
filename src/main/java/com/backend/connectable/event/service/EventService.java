@@ -1,7 +1,7 @@
 package com.backend.connectable.event.service;
 
 import com.backend.connectable.event.domain.dto.EventDetail;
-import com.backend.connectable.event.domain.dto.EventTickets;
+import com.backend.connectable.event.domain.dto.EventTicket;
 import com.backend.connectable.event.domain.repository.EventRepository;
 import com.backend.connectable.event.ui.dto.EventDetailResponse;
 import com.backend.connectable.event.ui.dto.EventResponse;
@@ -59,7 +59,7 @@ public class EventService {
     }
 
     public List<TicketResponse> getTicketList(Long eventId) {
-        List<EventTickets> eventTickets = eventRepository.findAllTickets(eventId);
+        List<EventTicket> eventTickets = eventRepository.findAllTickets(eventId);
         return eventTickets.stream()
             .map(ticket -> TicketResponse.builder()
                 .id(ticket.getId())
@@ -73,5 +73,20 @@ public class EventService {
                 .metadata(ticket.getMetadata())
                 .build())
             .collect(Collectors.toList());
+    }
+
+    public TicketResponse getTicketInfo(Long eventId, Long ticketId) {
+        EventTicket eventTicket = eventRepository.findTicketByEventIdAndTicketId(eventId, ticketId);
+        return TicketResponse.builder()
+            .id(eventTicket.getId())
+            .price(eventTicket.getPrice())
+            .artistName(eventTicket.getArtistName())
+            .eventDate(eventTicket.getEventDate())
+            .eventName(eventTicket.getEventName())
+            .tokenId(eventTicket.getTokenId())
+            .tokenUri(eventTicket.getTokenUri())
+            .metadata(eventTicket.getMetadata())
+            .contractAddress(eventTicket.getContractAddress())
+            .build();
     }
 }

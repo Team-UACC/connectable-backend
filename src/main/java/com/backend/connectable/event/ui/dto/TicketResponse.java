@@ -20,9 +20,10 @@ public class TicketResponse {
     private int tokenId;
     private String tokenUri;
     private String metadata;
+    private String contractAddress;
 
     @Builder
-    public TicketResponse(Long id, int price, String artistName, LocalDateTime eventDate, String eventName, boolean onSale, int tokenId, String tokenUri, String metadata) {
+    public TicketResponse(Long id, int price, String artistName, LocalDateTime eventDate, String eventName, boolean onSale, int tokenId, String tokenUri, String metadata, String contractAddress) {
         this.id = id;
         this.price = price;
         this.artistName = artistName;
@@ -32,5 +33,6 @@ public class TicketResponse {
         this.tokenId = tokenId;
         this.tokenUri = tokenUri;
         this.metadata = metadata;
+        this.contractAddress = contractAddress;
     }
 }
