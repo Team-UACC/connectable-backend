@@ -1,9 +1,7 @@
 package com.backend.connectable.event.domain.repository;
 
-import com.backend.connectable.event.domain.Event;
-import com.backend.connectable.event.domain.SalesOption;
-import com.backend.connectable.event.domain.Ticket;
-import com.backend.connectable.event.domain.TicketMetadata;
+import com.backend.connectable.artist.domain.repository.ArtistRepository;
+import com.backend.connectable.event.domain.*;
 import com.backend.connectable.user.domain.User;
 import com.backend.connectable.user.domain.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,6 +29,9 @@ class TicketRepositoryTest {
     EventRepository eventRepository;
 
     @Autowired
+    ArtistRepository artistRepository;
+
+    @Autowired
     EntityManager em;
 
     User joel = User.builder()
@@ -39,6 +40,16 @@ class TicketRepositoryTest {
             .phoneNumber("010-1234-5678")
             .privacyAgreement(true)
             .isActive(true)
+            .build();
+
+    Artist artist = Artist.builder()
+            .bankCompany("NH")
+            .bankAccount("9000000000099")
+            .artistName("빅나티")
+            .email("bignaughty@gmail.com")
+            .password("temptemp1234")
+            .phoneNumber("01012345678")
+            .artistImage("https://image.url")
             .build();
 
     Event joelEvent = Event.builder()
@@ -54,6 +65,7 @@ class TicketRepositoryTest {
             .startTime(LocalDateTime.of(2022, 8, 1, 18, 0))
             .endTime(LocalDateTime.of(2022, 8, 1, 19, 0))
             .salesOption(SalesOption.FLAT_PRICE)
+            .artist(artist)
             .build();
 
     TicketMetadata joelTicket1Metadata = TicketMetadata.builder()
@@ -79,6 +91,7 @@ class TicketRepositoryTest {
     @BeforeEach
     void setUp() {
         userRepository.save(joel);
+        artistRepository.save(artist);
         eventRepository.save(joelEvent);
     }
 

@@ -1,5 +1,7 @@
 package com.backend.connectable.event.service;
 
+import com.backend.connectable.artist.domain.repository.ArtistRepository;
+import com.backend.connectable.event.domain.Artist;
 import com.backend.connectable.event.domain.Event;
 import com.backend.connectable.event.domain.repository.EventRepository;
 import com.backend.connectable.event.ui.dto.EventResponse;
@@ -20,12 +22,26 @@ class EventServiceTest {
     EventRepository eventRepository;
 
     @Autowired
+    ArtistRepository artistRepository;
+
+    @Autowired
     EventService eventService;
 
     @DisplayName("이벤트 목록을 여러개 조회한다.")
     @Test
     void getEvents() {
         // given
+        Artist artist = Artist.builder()
+            .bankCompany("NH")
+            .bankAccount("9000000000099")
+            .artistName("빅나티")
+            .email("bignaughty@gmail.com")
+            .password("temptemp1234")
+            .phoneNumber("01012345678")
+            .artistImage("https://image.url")
+            .build();
+        artistRepository.save(artist);
+
         Event requestEvent1 = Event.builder()
             .eventName("test1")
             .eventImage("/connectable-events/image_0xtest.jpeg")
@@ -33,6 +49,7 @@ class EventServiceTest {
             .description("description1")
             .salesFrom(LocalDateTime.now())
             .salesTo(LocalDateTime.now())
+            .artist(artist)
             .build();
         eventRepository.save(requestEvent1);
 
@@ -43,6 +60,7 @@ class EventServiceTest {
             .description("description2")
             .salesFrom(LocalDateTime.now())
             .salesTo(LocalDateTime.now())
+            .artist(artist)
             .build();
         eventRepository.save(requestEvent2);
 
