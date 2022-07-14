@@ -1,6 +1,7 @@
 package com.backend.connectable.event.domain.repository;
 
 import com.backend.connectable.event.domain.dto.EventDetail;
+import com.backend.connectable.event.domain.dto.EventTickets;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPAExpressions;
@@ -8,8 +9,9 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import java.util.List;
 
-import static com.backend.connectable.event.domain.QArtist.artist;
+import static com.backend.connectable.artist.domain.QArtist.artist;
 import static com.backend.connectable.event.domain.QEvent.event;
 import static com.backend.connectable.event.domain.QTicket.ticket;
 
@@ -53,5 +55,28 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
             .groupBy(event.id)
             .limit(1)
             .fetchOne();
+    }
+
+    @Override
+    public List<EventTickets> findAllTickets(Long eventId) {
+        List<EventTickets> eventTickets = queryFactory.select(Projections.bean(
+            EventTickets.class,
+            ticket.id,
+            ticket.price,
+            artist.artistName,
+            event.startTime.as("eventDate"),
+            event.eventName,
+            ticket.onSale,
+            ticket.tokenId,
+            ticket.tokenUri,
+            ticket.ticketMetadata
+        ))
+            .from(event)
+            .innerJoin(ticket).on(ticket.event.id.eq(event.id))
+            .innerJoin(artist).on(event.artist.id.eq(artist.id))
+            .where(ticket.event.id.eq(eventId))
+            .groupBy(ticket.id)
+            .fetch();
+        return eventTickets;
     }
 }

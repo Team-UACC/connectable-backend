@@ -1,9 +1,11 @@
 package com.backend.connectable.event.service;
 
-import com.backend.connectable.event.domain.repository.EventRepository;
 import com.backend.connectable.event.domain.dto.EventDetail;
+import com.backend.connectable.event.domain.dto.EventTickets;
+import com.backend.connectable.event.domain.repository.EventRepository;
 import com.backend.connectable.event.ui.dto.EventDetailResponse;
 import com.backend.connectable.event.ui.dto.EventResponse;
+import com.backend.connectable.event.ui.dto.TicketResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -54,5 +56,22 @@ public class EventService {
                 .build();
 
         return result;
+    }
+
+    public List<TicketResponse> getTicketList(Long eventId) {
+        List<EventTickets> eventTickets = eventRepository.findAllTickets(eventId);
+        return eventTickets.stream()
+            .map(ticket -> TicketResponse.builder()
+                .id(ticket.getId())
+                .price(ticket.getPrice())
+                .artistName(ticket.getArtistName())
+                .eventDate(ticket.getEventDate())
+                .eventName(ticket.getEventName())
+                .onSale(ticket.isOnSale())
+                .tokenId(ticket.getTokenId())
+                .tokenUri(ticket.getTokenUri())
+                .metadata(ticket.getMetadata())
+                .build())
+            .collect(Collectors.toList());
     }
 }

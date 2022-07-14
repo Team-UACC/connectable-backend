@@ -1,5 +1,6 @@
 package com.backend.connectable.event.domain;
 
+import com.backend.connectable.artist.domain.Artist;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
