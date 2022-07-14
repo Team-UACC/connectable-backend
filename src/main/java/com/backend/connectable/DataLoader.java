@@ -1,9 +1,7 @@
 package com.backend.connectable;
 
-import com.backend.connectable.event.domain.Event;
-import com.backend.connectable.event.domain.SalesOption;
-import com.backend.connectable.event.domain.Ticket;
-import com.backend.connectable.event.domain.TicketMetadata;
+import com.backend.connectable.artist.domain.repository.ArtistRepository;
+import com.backend.connectable.event.domain.*;
 import com.backend.connectable.event.domain.repository.EventRepository;
 import com.backend.connectable.event.domain.repository.TicketRepository;
 import com.backend.connectable.user.domain.User;
@@ -28,6 +26,7 @@ public class DataLoader implements ApplicationRunner {
     private final UserRepository userRepository;
     private final EventRepository eventRepository;
     private final TicketRepository ticketRepository;
+    private final ArtistRepository artistRepository;
 
     private static final String EVENT_IMG_URL = "https://connectable-events.s3.ap-northeast-2.amazonaws.com/image_0xtest.jpeg";
     private static final String EVENT_CONTRACT_ADDRESS = "0xda8E2cdEB663Aa3c3DCf729A2937002C27aA1a81";
@@ -44,6 +43,17 @@ public class DataLoader implements ApplicationRunner {
                 .build();
         userRepository.save(joel);
 
+        Artist artist = Artist.builder()
+            .bankCompany("NH")
+            .bankAccount("9000000000099")
+            .artistName("빅나티")
+            .email("bignaughty@gmail.com")
+            .password("temptemp1234")
+            .phoneNumber("01012345678")
+            .artistImage(EVENT_IMG_URL)
+            .build();
+        artistRepository.save(artist);
+
         Event joelEvent = Event.builder()
                 .description("조엘의 콘서트 at Connectable")
                 .salesFrom(LocalDateTime.of(2022, 7, 12, 0, 0))
@@ -59,6 +69,7 @@ public class DataLoader implements ApplicationRunner {
                 .salesOption(SalesOption.FLAT_PRICE)
                 .location("서울특별시 강남구 테헤란로 311 아남타워빌딩 7층")
                 .salesOption(SalesOption.FLAT_PRICE)
+                .artist(artist)
                 .build();
         eventRepository.save(joelEvent);
 

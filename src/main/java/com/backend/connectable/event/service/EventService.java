@@ -36,6 +36,7 @@ public class EventService {
                 .id(eventDetail.getId())
                 .name(eventDetail.getEventName())
                 .image(eventDetail.getEventImage())
+                .artistName(eventDetail.getArtistName())
                 .date(eventDetail.getEndTime())
                 .description(eventDetail.getDescription())
                 .salesFrom(eventDetail.getSalesFrom())

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 
+import static com.backend.connectable.event.domain.QArtist.artist;
 import static com.backend.connectable.event.domain.QEvent.event;
 import static com.backend.connectable.event.domain.QTicket.ticket;
 
@@ -28,6 +29,7 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
                 event.id,
                 event.eventName,
                 event.eventImage,
+                artist.artistName,
                 event.startTime,
                 event.endTime,
                 event.description,
@@ -46,6 +48,7 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
             ))
             .from(event)
             .innerJoin(ticket).on(ticket.event.id.eq(event.id))
+            .innerJoin(artist).on(event.artist.id.eq(artist.id))
             .where(ticket.event.id.eq(eventId))
             .groupBy(event.id)
             .limit(1)

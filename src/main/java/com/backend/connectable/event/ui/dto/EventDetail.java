@@ -17,7 +17,7 @@ public class EventDetail {
     private Long id;
     private String eventName;
     private String eventImage;
-//    private String artistName;
+    private String artistName;
     private String description;
     private LocalDateTime salesFrom;
     private LocalDateTime salesTo;

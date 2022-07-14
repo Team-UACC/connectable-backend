@@ -16,6 +16,10 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private Artist artist;
+
     @Lob
     @Column(nullable = false)
     private String description;
@@ -46,8 +50,9 @@ public class Event {
     private SalesOption salesOption;
 
     @Builder
-    public Event(Long id, String description, LocalDateTime salesFrom, LocalDateTime salesTo, String contractAddress, String eventName, String location, String eventImage, String twitterUrl, String instagramUrl, String webpageUrl, LocalDateTime startTime, LocalDateTime endTime, SalesOption salesOption) {
+    public Event(Long id, Artist artist, String description, LocalDateTime salesFrom, LocalDateTime salesTo, String contractAddress, String eventName, String location, String eventImage, String twitterUrl, String instagramUrl, String webpageUrl, LocalDateTime startTime, LocalDateTime endTime, SalesOption salesOption) {
         this.id = id;
+        this.artist = artist;
         this.description = description;
         this.salesFrom = salesFrom;
         this.salesTo = salesTo;

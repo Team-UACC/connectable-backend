@@ -17,7 +17,7 @@ public class EventDetailResponse {
     private Long id;
     private String name;
     private String image;
-//    private String artistName;
+    private String artistName;
     private Long date;
     private String description;
     private Long salesFrom;
@@ -34,10 +34,11 @@ public class EventDetailResponse {
     private SalesOption salesOption;
 
     @Builder
-    public EventDetailResponse(Long id, String name, String image, LocalDateTime date, String description, LocalDateTime salesFrom, LocalDateTime salesTo, String twitterUrl, String instagramUrl, String webpageUrl, int totalTicketCount, int onSaleTicketCount, LocalDateTime startTime, LocalDateTime endTime, int price, String location, SalesOption salesOption) {
+    public EventDetailResponse(Long id, String name, String image, String artistName, LocalDateTime date, String description, LocalDateTime salesFrom, LocalDateTime salesTo, String twitterUrl, String instagramUrl, String webpageUrl, int totalTicketCount, int onSaleTicketCount, LocalDateTime startTime, LocalDateTime endTime, int price, String location, SalesOption salesOption) {
         this.id = id;
         this.name = name;
         this.image = image;
+        this.artistName = artistName;
         this.date = date.atZone(ZoneId.systemDefault()).toInstant().getEpochSecond();
         this.description = description;
         this.salesFrom = salesFrom.atZone(ZoneId.systemDefault()).toInstant().getEpochSecond();
