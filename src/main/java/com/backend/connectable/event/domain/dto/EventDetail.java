@@ -1,4 +1,4 @@
-package com.backend.connectable.event.ui.dto;
+package com.backend.connectable.event.domain.dto;
 
 import com.backend.connectable.event.domain.SalesOption;
 import lombok.AllArgsConstructor;

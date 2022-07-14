@@ -1,7 +1,7 @@
 package com.backend.connectable.event.service;
 
 import com.backend.connectable.event.domain.repository.EventRepository;
-import com.backend.connectable.event.ui.dto.EventDetail;
+import com.backend.connectable.event.domain.dto.EventDetail;
 import com.backend.connectable.event.ui.dto.EventDetailResponse;
 import com.backend.connectable.event.ui.dto.EventResponse;
 import lombok.RequiredArgsConstructor;

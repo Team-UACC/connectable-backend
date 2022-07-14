@@ -1,6 +1,6 @@
 package com.backend.connectable.event.domain.repository;
 
-import com.backend.connectable.event.ui.dto.EventDetail;
+import com.backend.connectable.event.domain.dto.EventDetail;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPAExpressions;
