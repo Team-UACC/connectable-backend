@@ -4,6 +4,7 @@ import com.backend.connectable.event.domain.SalesOption;
 import com.backend.connectable.event.service.EventService;
 import com.backend.connectable.event.ui.dto.EventDetailResponse;
 import com.backend.connectable.event.ui.dto.EventResponse;
+import com.backend.connectable.event.ui.dto.TicketResponse;
 import com.backend.connectable.security.JwtAuthenticationFilter;
 import com.backend.connectable.security.SecurityConfiguration;
 import org.junit.jupiter.api.DisplayName;
@@ -33,11 +34,35 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
     })
 class EventControllerTest {
 
-    private static final Long EVENT_ID = 1L;
-    private static final Long ARTIST_ID = 1L;
+    private static final Long EVENT_ID_1 = 1L;
+    private static final Long EVENT_ID_2 = 2L;
+    private static final Long ARTIST_ID_1 = 1L;
+    private static final Long TICKET_ID_1 = 1L;
+    private static final Long TICKET_ID_2 = 2L;
+
+
+    private static final EventResponse EVENT_RESPONSE_1 = new EventResponse(
+        EVENT_ID_1,
+        "test1",
+        "/connectable-events/image_0xtest.jpeg",
+        LocalDateTime.now(),
+        "description1",
+        LocalDateTime.now(),
+        LocalDateTime.now()
+    );
+
+    private static final EventResponse EVENT_RESPONSE_2 = new EventResponse(
+        EVENT_ID_2,
+        "test2",
+        "/connectable-events/image_0xtest.jpeg",
+        LocalDateTime.now(),
+        "description2",
+        LocalDateTime.now(),
+        LocalDateTime.now()
+    );
 
     private static final EventDetailResponse EVENT_DETAIL_RESPONSE = new EventDetailResponse(
-        EVENT_ID,
+        EVENT_ID_1,
         "이씨 콘서트",
         "https://connectable-events.s3.ap-northeast-2.amazonaws.com/image_0xtest.jpeg",
         "빅나티",
@@ -57,6 +82,32 @@ class EventControllerTest {
         SalesOption.FLAT_PRICE
     );
 
+    private static final TicketResponse TICKET_RESPONSE_1 = new TicketResponse(
+        TICKET_ID_1,
+        10000,
+        "빅나티",
+        LocalDateTime.of(2022, 8, 1, 18, 0),
+        "이씨 콘서트 at Connectable",
+        true,
+        0,
+        "https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/1.json",
+        null,
+        "0x123456"
+    );
+
+    private static final TicketResponse TICKET_RESPONSE_2 = new TicketResponse(
+        TICKET_ID_2,
+        10000,
+        "빅나티",
+        1672412400000L,
+        "이씨 콘서트 at Connectable",
+        true,
+        1,
+        "https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/2.json",
+        null,
+        "0x123456"
+    );
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -68,25 +119,7 @@ class EventControllerTest {
     @Test
     void getEventsList() throws Exception {
         // given
-        List<EventResponse> mockedEventResponseList = List.of(
-            new EventResponse(
-                1L,
-                "test1",
-                "/connectable-events/image_0xtest.jpeg",
-                LocalDateTime.now(),
-                "description1",
-                LocalDateTime.now(),
-                LocalDateTime.now()
-            ),
-            new EventResponse(2L,
-                "test2",
-                "/connectable-events/image_0xtest.jpeg",
-                LocalDateTime.now(),
-                "description2",
-                LocalDateTime.now(),
-                LocalDateTime.now()
-            )
-        );
+        List<EventResponse> mockedEventResponseList = List.of(EVENT_RESPONSE_1, EVENT_RESPONSE_2);
 
         given(eventService.getList()).willReturn(mockedEventResponseList);
 
@@ -108,12 +141,51 @@ class EventControllerTest {
     @Test
     void getEventDetail() throws Exception {
         // given
-        given(eventService.getEventDetail(EVENT_ID)).willReturn(EVENT_DETAIL_RESPONSE);
+        given(eventService.getEventDetail(EVENT_ID_1)).willReturn(EVENT_DETAIL_RESPONSE);
 
-        mockMvc.perform(get("/events/{eventId}", EVENT_ID)
+        // expected
+        mockMvc.perform(get("/events/{event-id}", EVENT_ID_1)
             .contentType(APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.artistName").value("빅나티"))
+            .andDo(print());
+    }
+
+    @DisplayName("이벤트 번호를 사용하여 특정 이벤트에 귀속된 티켓 목록을 조회할 수 있다.")
+    @WithMockUser
+    @Test
+    void getTicketList() throws Exception {
+        // given
+        given(eventService.getTicketList(EVENT_ID_1)).willReturn(List.of(TICKET_RESPONSE_1, TICKET_RESPONSE_2));
+
+        // expected
+        mockMvc.perform(get("/events/{event-id}/tickets", EVENT_ID_1)
+            .contentType(APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$[0].id").value(1L))
+            .andExpect(jsonPath("$[0].tokenUri")
+                .value("https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/1.json"))
+            .andExpect(jsonPath("$[0].artistName").value("빅나티"))
+            .andExpect(jsonPath("$[1].id").value(2L))
+            .andExpect(jsonPath("$[1].tokenUri")
+                .value("https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/2.json"))
+            .andExpect(jsonPath("$[1].artistName").value("빅나티"))
+            .andDo(print());
+    }
+
+    @DisplayName("이벤트 번호와 티켓 번호를 이용하여 티켓의 상세정보를 조회할 수 있다.")
+    @WithMockUser
+    @Test
+    void getTicketInfo() throws Exception {
+        // given
+        given(eventService.getTicketInfo(EVENT_ID_1, TICKET_ID_1)).willReturn(TICKET_RESPONSE_1);
+
+        // expected
+        mockMvc.perform(get("/events/{event-id}/tickets/{ticket-id}", EVENT_ID_1, TICKET_ID_1)
+                .contentType(APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.price").value(10000))
+            .andExpect(jsonPath("$.onSale").value(true))
             .andDo(print());
     }
 }
