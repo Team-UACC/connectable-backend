@@ -1,7 +1,7 @@
 package com.backend.connectable.event.service;
 
+import com.backend.connectable.artist.domain.Artist;
 import com.backend.connectable.artist.domain.repository.ArtistRepository;
-import com.backend.connectable.event.domain.Artist;
 import com.backend.connectable.event.domain.Event;
 import com.backend.connectable.event.domain.repository.EventRepository;
 import com.backend.connectable.event.ui.dto.EventResponse;

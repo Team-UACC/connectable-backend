@@ -1,7 +1,11 @@
 package com.backend.connectable;
 
+import com.backend.connectable.artist.domain.Artist;
 import com.backend.connectable.artist.domain.repository.ArtistRepository;
-import com.backend.connectable.event.domain.*;
+import com.backend.connectable.event.domain.Event;
+import com.backend.connectable.event.domain.SalesOption;
+import com.backend.connectable.event.domain.Ticket;
+import com.backend.connectable.event.domain.TicketMetadata;
 import com.backend.connectable.event.domain.repository.EventRepository;
 import com.backend.connectable.event.domain.repository.TicketRepository;
 import com.backend.connectable.user.domain.User;
