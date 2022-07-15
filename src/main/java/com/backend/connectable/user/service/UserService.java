@@ -5,6 +5,7 @@ import com.backend.connectable.klip.service.dto.KlipAuthLoginResponse;
 import com.backend.connectable.security.ConnectableUserDetails;
 import com.backend.connectable.security.JwtProvider;
 import com.backend.connectable.user.domain.User;
+import com.backend.connectable.user.domain.dto.UserTicket;
 import com.backend.connectable.user.domain.repository.UserRepository;
 import com.backend.connectable.user.ui.dto.*;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -78,5 +81,24 @@ public class UserService {
         log.info("@@USER_DETAILS_USER_OBJECT::{}", user);
         userRepository.modifyUser(user.getKlaytnAddress(), userModifyRequest.getNickname(), userModifyRequest.getPhoneNumber());
         return UserModifyResponse.ofSuccess();
+    }
+
+    public List<UserTicketResponse> getUserTicketsByUserDetails(ConnectableUserDetails userDetails) {
+        User user = userDetails.getUser();
+        List<UserTicket> userTickets = userRepository.getOwnTicketsByUser(user.getId());
+        return userTickets.stream()
+            .map(ticket -> UserTicketResponse.builder()
+                .id(ticket.getId())
+                .price(ticket.getPrice())
+                .eventDate(ticket.getEventDate())
+                .eventName(ticket.getEventName())
+                .tokenId(ticket.getTokenId())
+                .tokenUri(ticket.getTokenUri())
+                .metadata(ticket.getMetadata())
+                .contractAddress(ticket.getContractAddress())
+                .eventId(ticket.getEventId())
+                .build()
+            )
+            .collect(Collectors.toList());
     }
 }

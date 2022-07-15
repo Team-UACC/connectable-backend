@@ -1,5 +1,13 @@
 package com.backend.connectable.user.service;
 
+import com.backend.connectable.artist.domain.Artist;
+import com.backend.connectable.artist.domain.repository.ArtistRepository;
+import com.backend.connectable.event.domain.Event;
+import com.backend.connectable.event.domain.SalesOption;
+import com.backend.connectable.event.domain.Ticket;
+import com.backend.connectable.event.domain.TicketMetadata;
+import com.backend.connectable.event.domain.repository.EventRepository;
+import com.backend.connectable.event.domain.repository.TicketRepository;
 import com.backend.connectable.klip.service.KlipService;
 import com.backend.connectable.klip.service.dto.KlipAuthLoginResponse;
 import com.backend.connectable.security.ConnectableUserDetails;
@@ -14,8 +22,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import javax.persistence.EntityManager;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
 
 @SpringBootTest
@@ -23,6 +36,15 @@ class UserServiceTest {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    ArtistRepository artistRepository;
+
+    @Autowired
+    EventRepository eventRepository;
+
+    @Autowired
+    TicketRepository ticketRepository;
 
     @Autowired
     UserService userService;
@@ -34,6 +56,13 @@ class UserServiceTest {
     KlipService klipService;
 
     private User user1;
+    private Artist artist1;
+    private Event event1;
+    private TicketMetadata ticket1Metadata;
+    private Ticket ticket1;
+    private TicketMetadata ticket2Metadata;
+    private Ticket ticket2;
+
     private final String user1KlaytnAddress = "0x1234";
     private final String user1Nickname = "Joel";
     private final String user1PhoneNumber = "010-1234-5678";
@@ -46,6 +75,9 @@ class UserServiceTest {
 
     @BeforeEach
     void setUp() {
+        ticketRepository.deleteAll();
+        eventRepository.deleteAll();
+        artistRepository.deleteAll();
         userRepository.deleteAll();
 
         user1 = User.builder()
@@ -64,7 +96,76 @@ class UserServiceTest {
                         .isActive(true)
                         .build();
 
+        artist1 = Artist.builder()
+            .bankCompany("NH")
+            .bankAccount("9000000000099")
+            .artistName("빅나티")
+            .email("bignaughty@gmail.com")
+            .password("temptemp1234")
+            .phoneNumber("01012345678")
+            .artistImage("https://image.url")
+            .build();
+
+        event1 = Event.builder()
+            .description("조엘의 콘서트 at Connectable")
+            .salesFrom(LocalDateTime.of(2022, 7, 12, 0, 0))
+            .salesTo(LocalDateTime.of(2022, 7, 30, 0, 0))
+            .contractAddress("0x123456")
+            .eventName("조엘의 콘서트")
+            .eventImage("https://image.url")
+            .twitterUrl("https://github.com/joelonsw")
+            .instagramUrl("https://www.instagram.com/jyoung_with/")
+            .webpageUrl("https://papimon.tistory.com/")
+            .startTime(LocalDateTime.of(2022, 8, 1, 18, 0))
+            .endTime(LocalDateTime.of(2022, 8, 1, 19, 0))
+            .salesOption(SalesOption.FLAT_PRICE)
+            .artist(artist1)
+            .build();
+
+        ticket1Metadata = TicketMetadata.builder()
+            .name("조엘 콘서트 #1")
+            .description("조엘의 콘서트 at Connectable")
+            .image("https://connectable-events.s3.ap-northeast-2.amazonaws.com/ticket_test1.png")
+            .attributes(new HashMap<>(){{
+                put("Background", "Yellow");
+                put("Artist", "Joel");
+                put("Seat", "A6");
+            }})
+            .build();
+
+        ticket1 = Ticket.builder()
+            .user(user1)
+            .event(event1)
+            .tokenUri("https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/1.json")
+            .price(100000)
+            .onSale(true)
+            .ticketMetadata(ticket1Metadata)
+            .build();
+
+        ticket2Metadata = TicketMetadata.builder()
+            .name("조엘 콘서트 #2")
+            .description("조엘의 콘서트 at Connectable")
+            .image("https://connectable-events.s3.ap-northeast-2.amazonaws.com/ticket_test2.png")
+            .attributes(new HashMap<>(){{
+                put("Background", "Yellow");
+                put("Artist", "Joel");
+                put("Seat", "A5");
+            }})
+            .build();
+
+        ticket2 = Ticket.builder()
+            .user(user1)
+            .event(event1)
+            .tokenUri("https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/2.json")
+            .price(100000)
+            .onSale(false)
+            .ticketMetadata(ticket2Metadata)
+            .build();
+
         userRepository.save(user1);
+        artistRepository.save(artist1);
+        eventRepository.save(event1);
+        ticketRepository.saveAll(Arrays.asList(ticket1, ticket2));
     }
 
     @DisplayName("ConnectableUserDetails로 특정 사용자를 조회할 수 있다.")
@@ -192,5 +293,23 @@ class UserServiceTest {
 
         // then
         assertThat(userLoginResponse.getStatus()).isEqualTo("failed");
+    }
+
+    @DisplayName("ConnectableUserDetails로 특정 사용자의 티켓목록을 조회할 수 있다.")
+    @Test
+    void getUserTicketsByUserDetails() {
+        // given
+        ConnectableUserDetails connectableUserDetails = new ConnectableUserDetails(user1);
+
+        // when
+        List<UserTicketResponse> userTicketResponses = userService.getUserTicketsByUserDetails(connectableUserDetails);
+
+        // then
+        assertEquals(2L, userTicketResponses.size());
+        assertThat(userTicketResponses.get(0).getContractAddress()).isEqualTo("0x123456");
+        assertThat(userTicketResponses.get(0).getTokenUri())
+            .isEqualTo("https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/1.json");
+        assertThat(userTicketResponses.get(1).getTokenUri())
+            .isEqualTo("https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/2.json");
     }
 }
