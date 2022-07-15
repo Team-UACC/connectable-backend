@@ -35,25 +35,26 @@ public class EventService {
     public EventDetailResponse getEventDetail(Long eventId) {
         EventDetail eventDetail = eventRepository.findEventDetailByEventId(eventId);
         EventDetailResponse result = EventDetailResponse.builder()
-                .id(eventDetail.getId())
-                .name(eventDetail.getEventName())
-                .image(eventDetail.getEventImage())
-                .artistName(eventDetail.getArtistName())
-                .date(eventDetail.getEndTime())
-                .description(eventDetail.getDescription())
-                .salesFrom(eventDetail.getSalesFrom())
-                .salesTo(eventDetail.getSalesTo())
-                .twitterUrl(eventDetail.getTwitterUrl())
-                .instagramUrl(eventDetail.getInstagramUrl())
-                .webpageUrl(eventDetail.getWebpageUrl())
-                .totalTicketCount(eventDetail.getTotalTicketCount())
-                .onSaleTicketCount(eventDetail.getOnSaleTicketCount())
-                .startTime(eventDetail.getStartTime())
-                .endTime(eventDetail.getEndTime())
-                .price(eventDetail.getPrice())
-                .location(eventDetail.getLocation())
-                .salesOption(eventDetail.getSalesOption())
-                .build();
+            .id(eventDetail.getId())
+            .name(eventDetail.getEventName())
+            .image(eventDetail.getEventImage())
+            .artistName(eventDetail.getArtistName())
+            .artistImage(eventDetail.getArtistImage())
+            .date(eventDetail.getEndTime())
+            .description(eventDetail.getDescription())
+            .salesFrom(eventDetail.getSalesFrom())
+            .salesTo(eventDetail.getSalesTo())
+            .twitterUrl(eventDetail.getTwitterUrl())
+            .instagramUrl(eventDetail.getInstagramUrl())
+            .webpageUrl(eventDetail.getWebpageUrl())
+            .totalTicketCount(eventDetail.getTotalTicketCount())
+            .onSaleTicketCount(eventDetail.getOnSaleTicketCount())
+            .startTime(eventDetail.getStartTime())
+            .endTime(eventDetail.getEndTime())
+            .price(eventDetail.getPrice())
+            .location(eventDetail.getLocation())
+            .salesOption(eventDetail.getSalesOption())
+            .build();
 
         return result;
     }
@@ -71,6 +72,7 @@ public class EventService {
                 .tokenId(ticket.getTokenId())
                 .tokenUri(ticket.getTokenUri())
                 .metadata(ticket.getMetadata())
+                .contractAddress(ticket.getContractAddress())
                 .build())
             .collect(Collectors.toList());
     }

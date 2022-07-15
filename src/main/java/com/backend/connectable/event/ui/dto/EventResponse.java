@@ -1,9 +1,9 @@
 package com.backend.connectable.event.ui.dto;
 
+import com.backend.connectable.global.common.util.DateTimeUtil;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,9 +24,9 @@ public class EventResponse {
         this.id = id;
         this.name = name;
         this.image = image;
-        this.date = date.atZone(ZoneId.systemDefault()).toInstant().getEpochSecond();
+        this.date = DateTimeUtil.toEpochMilliSeconds(date);
         this.description = description;
-        this.salesFrom = salesFrom.atZone(ZoneId.systemDefault()).toInstant().getEpochSecond();
-        this.salesTo = salesTo.atZone(ZoneId.systemDefault()).toInstant().getEpochSecond();
+        this.salesFrom = DateTimeUtil.toEpochMilliSeconds(salesFrom);
+        this.salesTo = DateTimeUtil.toEpochMilliSeconds(salesTo);
     }
 }

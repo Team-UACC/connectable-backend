@@ -1,9 +1,9 @@
 package com.backend.connectable.user.ui.dto;
 
+import com.backend.connectable.global.common.util.DateTimeUtil;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,7 +26,7 @@ public class UserTicketResponse {
     public UserTicketResponse(Long id, int price, LocalDateTime eventDate, String eventName, boolean onSale, int tokenId, String tokenUri, String metadata, String contractAddress, Long eventId) {
         this.id = id;
         this.price = price;
-        this.eventDate = eventDate.atZone(ZoneId.systemDefault()).toInstant().getEpochSecond() * 1000L;
+        this.eventDate = DateTimeUtil.toEpochMilliSeconds(eventDate);
         this.eventName = eventName;
         this.onSale = onSale;
         this.tokenId = tokenId;
