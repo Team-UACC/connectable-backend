@@ -25,7 +25,6 @@ import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -302,14 +301,15 @@ class UserServiceTest {
         ConnectableUserDetails connectableUserDetails = new ConnectableUserDetails(user1);
 
         // when
-        List<UserTicketResponse> userTicketResponses = userService.getUserTicketsByUserDetails(connectableUserDetails);
+        UserTicketListResponse userTicketListResponse = userService.getUserTicketsByUserDetails(connectableUserDetails);
 
         // then
-        assertEquals(2L, userTicketResponses.size());
-        assertThat(userTicketResponses.get(0).getContractAddress()).isEqualTo("0x123456");
-        assertThat(userTicketResponses.get(0).getTokenUri())
+        assertEquals("success", userTicketListResponse.getStatus());
+        assertEquals(2L, userTicketListResponse.getTickets().size());
+        assertThat(userTicketListResponse.getTickets().get(0).getContractAddress()).isEqualTo("0x123456");
+        assertThat(userTicketListResponse.getTickets().get(0).getTokenUri())
             .isEqualTo("https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/1.json");
-        assertThat(userTicketResponses.get(1).getTokenUri())
+        assertThat(userTicketListResponse.getTickets().get(1).getTokenUri())
             .isEqualTo("https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/2.json");
     }
 }

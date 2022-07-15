@@ -5,7 +5,6 @@ import com.backend.connectable.klip.service.dto.KlipAuthLoginResponse;
 import com.backend.connectable.security.ConnectableUserDetails;
 import com.backend.connectable.security.JwtProvider;
 import com.backend.connectable.user.domain.User;
-import com.backend.connectable.user.domain.dto.UserTicket;
 import com.backend.connectable.user.domain.repository.UserRepository;
 import com.backend.connectable.user.ui.dto.*;
 import lombok.RequiredArgsConstructor;
@@ -83,10 +82,9 @@ public class UserService {
         return UserModifyResponse.ofSuccess();
     }
 
-    public List<UserTicketResponse> getUserTicketsByUserDetails(ConnectableUserDetails userDetails) {
+    public UserTicketListResponse getUserTicketsByUserDetails(ConnectableUserDetails userDetails) {
         User user = userDetails.getUser();
-        List<UserTicket> userTickets = userRepository.getOwnTicketsByUser(user.getId());
-        return userTickets.stream()
+        List<UserTicketResponse> userTickets = userRepository.getOwnTicketsByUser(user.getId()).stream()
             .map(ticket -> UserTicketResponse.builder()
                 .id(ticket.getId())
                 .price(ticket.getPrice())
@@ -100,5 +98,6 @@ public class UserService {
                 .build()
             )
             .collect(Collectors.toList());
+        return UserTicketListResponse.of(userTickets);
     }
 }
