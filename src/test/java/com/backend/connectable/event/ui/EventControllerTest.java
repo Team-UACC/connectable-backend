@@ -66,6 +66,7 @@ class EventControllerTest {
         "이씨 콘서트",
         "https://connectable-events.s3.ap-northeast-2.amazonaws.com/image_0xtest.jpeg",
         "빅나티",
+        "https://user-images.githubusercontent.com/54073761/179218800-dda72067-3b25-4ca3-b53b-4895c5e49213.jpeg",
         LocalDateTime.of(2022, 7, 12, 0, 0),
         "이씨 콘서트 at Connectable",
         LocalDateTime.of(2022, 7, 12, 0, 0),

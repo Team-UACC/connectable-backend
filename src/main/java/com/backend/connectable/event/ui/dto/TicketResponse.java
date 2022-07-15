@@ -1,9 +1,9 @@
 package com.backend.connectable.event.ui.dto;
 
+import com.backend.connectable.global.common.util.DateTimeUtil;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 @Getter
 @Setter
@@ -27,7 +27,7 @@ public class TicketResponse {
         this.id = id;
         this.price = price;
         this.artistName = artistName;
-        this.eventDate = eventDate.atZone(ZoneId.systemDefault()).toInstant().getEpochSecond() * 1000L;
+        this.eventDate = DateTimeUtil.toEpochMilliSeconds(eventDate);
         this.eventName = eventName;
         this.onSale = onSale;
         this.tokenId = tokenId;

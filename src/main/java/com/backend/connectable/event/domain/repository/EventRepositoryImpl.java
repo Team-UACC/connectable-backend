@@ -32,6 +32,7 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
                 event.eventName,
                 event.eventImage,
                 artist.artistName,
+                artist.artistImage,
                 event.startTime,
                 event.endTime,
                 event.description,
@@ -69,7 +70,8 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
             ticket.onSale,
             ticket.tokenId,
             ticket.tokenUri,
-            ticket.ticketMetadata
+            ticket.ticketMetadata,
+            event.contractAddress.as("contractAddress")
         ))
             .from(event)
             .innerJoin(ticket).on(ticket.event.id.eq(event.id))
