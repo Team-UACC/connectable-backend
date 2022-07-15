@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 
-import static com.backend.connectable.event.domain.QArtist.artist;
+import static com.backend.connectable.artist.domain.QArtist.artist;
 import static com.backend.connectable.event.domain.QEvent.event;
 import static com.backend.connectable.event.domain.QTicket.ticket;
 

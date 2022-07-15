@@ -1,4 +1,4 @@
-package com.backend.connectable.event.domain;
+package com.backend.connectable.artist.domain;
 
 import lombok.Builder;
 import lombok.Getter;
