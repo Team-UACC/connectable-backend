@@ -9,8 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/users")
@@ -47,8 +45,8 @@ public class UserController {
     }
 
     @GetMapping("/tickets")
-    public ResponseEntity<List<UserTicketResponse>> getUserTickets(@AuthenticationPrincipal ConnectableUserDetails userDetails) {
-        List<UserTicketResponse> userTicketsResponse = userService.getUserTicketsByUserDetails(userDetails);
-        return ResponseEntity.ok(userTicketsResponse);
+    public ResponseEntity<UserTicketListResponse> getUserTickets(@AuthenticationPrincipal ConnectableUserDetails userDetails) {
+        UserTicketListResponse userTicketListResponse = userService.getUserTicketsByUserDetails(userDetails);
+        return ResponseEntity.ok(userTicketListResponse);
     }
 }
