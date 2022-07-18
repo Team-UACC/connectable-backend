@@ -204,9 +204,9 @@ public class KasService {
     private void handleKasException(Object responseObject) {
         if (responseObject instanceof KasExceptionResponse) {
             KasExceptionResponse kasExceptionResponse = (KasExceptionResponse) responseObject;
-            log.info(kasExceptionResponse.getRequestId());
-            log.info(kasExceptionResponse.getCode());
-            log.info(kasExceptionResponse.getMessage());
+            log.error("KAS Request ID: " + kasExceptionResponse.getRequestId());
+            log.error("KAS Code: " + kasExceptionResponse.getCode());
+            log.error("KAS Message: " + kasExceptionResponse.getMessage());
             throw new KasException(kasExceptionResponse);
         }
     }
