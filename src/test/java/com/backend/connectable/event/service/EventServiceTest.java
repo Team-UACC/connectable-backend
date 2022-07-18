@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -51,7 +52,6 @@ class EventServiceTest {
             .salesTo(LocalDateTime.now())
             .artist(artist)
             .build();
-        eventRepository.save(requestEvent1);
 
         Event requestEvent2 = Event.builder()
             .eventName("test2")
@@ -62,7 +62,7 @@ class EventServiceTest {
             .salesTo(LocalDateTime.now())
             .artist(artist)
             .build();
-        eventRepository.save(requestEvent2);
+        eventRepository.saveAll(Arrays.asList(requestEvent1, requestEvent2));
 
         // when
         List<EventResponse> events = eventService.getList();

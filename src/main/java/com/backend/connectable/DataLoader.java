@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 
-@Profile("local")
+@Profile("dev")
 @Transactional
 @Component
 @RequiredArgsConstructor
