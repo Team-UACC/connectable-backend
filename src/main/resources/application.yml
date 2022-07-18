@@ -75,3 +75,12 @@ logging:
           descriptor:
             sql:
               BasicBinder: TRACE
+kas:
+  settings:
+    enable-global-fee-payer: true
+    chain-id: 8217
+    my-address: ${kas.my_address}
+    user-fee-payer-krn: ${kas.user_fee_payer_krn}
+    user-fee-payer-address: ${kas.user_fee_payer_address}
+    access-key-id: ${kas.access_key_id}
+    secret-access-key: ${kas.secret_access_key}
