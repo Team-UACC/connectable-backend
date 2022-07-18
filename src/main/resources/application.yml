@@ -30,6 +30,15 @@ logging:
           descriptor:
             sql:
               BasicBinder: TRACE
+kas:
+  settings:
+    enable-global-fee-payer: false
+    my-address: "0xEa06ee0577795e39A0465b46d509168ff6302973"
+    user-fee-payer-krn: krn:1001:wallet:664d1c4f-76cc-4664-84cd-f93bd28e3256:feepayer-pool:default
+    user-fee-payer-address: "0xDFAD470f307CC3C524A96Ea86442F012f1DEF4d6"
+    access-key-id: KASKOOU7SCEQTOSZ2FV0E9UQ
+    secret-access-key: t-gAxJ_10sf7iqvo7qKxRIY6qUsyXMksMS6y0iY7
+    chain-id: 1001
 ---
 spring:
   config:
