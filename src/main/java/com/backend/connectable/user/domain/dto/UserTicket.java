@@ -1,10 +1,13 @@
 package com.backend.connectable.user.domain.dto;
 
+import com.backend.connectable.event.domain.TicketMetadata;
+import com.backend.connectable.event.domain.TicketMetadataConverter;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.Convert;
 import java.time.LocalDateTime;
 
 @Getter
@@ -20,7 +23,8 @@ public class UserTicket {
     private boolean onSale;
     private int tokenId;
     private String tokenUri;
-    private String metadata;
+    @Convert(converter = TicketMetadataConverter.class)
+    private TicketMetadata metadata;
     private String contractAddress;
     private Long eventId;
 }
