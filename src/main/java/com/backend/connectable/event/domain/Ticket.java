@@ -1,8 +1,6 @@
 package com.backend.connectable.event.domain;
 
 import com.backend.connectable.user.domain.User;
-import com.querydsl.core.annotations.PropertyType;
-import com.querydsl.core.annotations.QueryType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,7 +32,6 @@ public class Ticket {
 
     private boolean onSale;
 
-    @QueryType(PropertyType.STRING)
     @Convert(converter = TicketMetadataConverter.class)
     @Column(columnDefinition = "TEXT")
     private TicketMetadata ticketMetadata;

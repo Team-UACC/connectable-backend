@@ -60,7 +60,7 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
 
     @Override
     public List<EventTicket> findAllTickets(Long eventId) {
-        List<EventTicket> eventTickets = queryFactory.select(Projections.bean(
+        List<EventTicket> eventTickets = queryFactory.select(Projections.constructor(
             EventTicket.class,
             ticket.id,
             ticket.price,
@@ -84,7 +84,7 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
 
     @Override
     public EventTicket findTicketByEventIdAndTicketId(Long eventId, Long ticketId) {
-        return queryFactory.select(Projections.bean(
+        return queryFactory.select(Projections.constructor(
             EventTicket.class,
             ticket.id,
             ticket.price,

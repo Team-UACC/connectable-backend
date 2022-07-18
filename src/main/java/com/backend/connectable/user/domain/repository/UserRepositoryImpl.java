@@ -43,7 +43,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
 
     @Override
     public List<UserTicket> getOwnTicketsByUser(Long userId) {
-        List<UserTicket> userTickets = queryFactory.select(Projections.fields(
+        List<UserTicket> userTickets = queryFactory.select(Projections.constructor(
             UserTicket.class,
             ticket.id,
             ticket.price,
