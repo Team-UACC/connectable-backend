@@ -1,5 +1,6 @@
 package com.backend.connectable.event.ui.dto;
 
+import com.backend.connectable.event.domain.TicketMetadata;
 import com.backend.connectable.global.common.util.DateTimeUtil;
 import lombok.*;
 
@@ -19,11 +20,11 @@ public class TicketResponse {
     private boolean onSale;
     private int tokenId;
     private String tokenUri;
-    private String metadata;
+    private TicketMetadata metadata;
     private String contractAddress;
 
     @Builder
-    public TicketResponse(Long id, int price, String artistName, LocalDateTime eventDate, String eventName, boolean onSale, int tokenId, String tokenUri, String metadata, String contractAddress) {
+    public TicketResponse(Long id, int price, String artistName, LocalDateTime eventDate, String eventName, boolean onSale, int tokenId, String tokenUri, TicketMetadata metadata, String contractAddress) {
         this.id = id;
         this.price = price;
         this.artistName = artistName;

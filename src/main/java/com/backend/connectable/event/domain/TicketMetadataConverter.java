@@ -10,7 +10,7 @@ import java.io.IOException;
 public class TicketMetadataConverter implements AttributeConverter<TicketMetadata, String> {
 
     private static final ObjectMapper objectMapper = new ObjectMapper()
-            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     @Override
     public String convertToDatabaseColumn(TicketMetadata attribute) {
