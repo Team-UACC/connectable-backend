@@ -6,6 +6,8 @@ import com.backend.connectable.event.domain.repository.EventRepository;
 import com.backend.connectable.event.ui.dto.EventDetailResponse;
 import com.backend.connectable.event.ui.dto.EventResponse;
 import com.backend.connectable.event.ui.dto.TicketResponse;
+import com.backend.connectable.kas.service.KasService;
+import com.backend.connectable.kas.service.dto.dto.TokenResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class EventService {
 
+    private final KasService kasService;
     private final EventRepository eventRepository;
 
     public List<EventResponse> getList() {
@@ -34,7 +37,7 @@ public class EventService {
 
     public EventDetailResponse getEventDetail(Long eventId) {
         EventDetail eventDetail = eventRepository.findEventDetailByEventId(eventId);
-        EventDetailResponse result = EventDetailResponse.builder()
+        return EventDetailResponse.builder()
             .id(eventDetail.getId())
             .name(eventDetail.getEventName())
             .image(eventDetail.getEventImage())
@@ -55,8 +58,6 @@ public class EventService {
             .location(eventDetail.getLocation())
             .salesOption(eventDetail.getSalesOption())
             .build();
-
-        return result;
     }
 
     public List<TicketResponse> getTicketList(Long eventId) {
@@ -79,6 +80,7 @@ public class EventService {
 
     public TicketResponse getTicketInfo(Long eventId, Long ticketId) {
         EventTicket eventTicket = eventRepository.findTicketByEventIdAndTicketId(eventId, ticketId);
+        TokenResponse tokenResponse = kasService.getToken(eventTicket.getContractAddress(), ticketId);
         return TicketResponse.builder()
             .id(eventTicket.getId())
             .price(eventTicket.getPrice())
@@ -89,6 +91,7 @@ public class EventService {
             .tokenUri(eventTicket.getTokenUri())
             .metadata(eventTicket.getMetadata())
             .contractAddress(eventTicket.getContractAddress())
+            .ownedBy(tokenResponse.getOwner())
             .build();
     }
 }
