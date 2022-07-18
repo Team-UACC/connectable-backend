@@ -11,4 +11,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ExceptionResponse> handleConnectableException(ConnectableException e) {
         return ResponseEntity.status(e.getHttpStatus()).body(e.getBody());
     }
+
+    @ExceptionHandler(KasException.class)
+    public ResponseEntity<KasExceptionResponse> handleKasException(KasException e) {
+        return ResponseEntity.badRequest().body(e.getKasExceptionResponse());
+    }
 }
