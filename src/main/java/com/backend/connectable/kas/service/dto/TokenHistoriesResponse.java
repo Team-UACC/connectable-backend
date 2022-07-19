@@ -1,4 +1,4 @@
-package com.backend.connectable.kas.service.dto.dto;
+package com.backend.connectable.kas.service.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TokensResponse {
+public class TokenHistoriesResponse {
     private String cursor;
-    private List<TokenResponse> items;
+    private List<TokenHistoryResponse> items;
 }

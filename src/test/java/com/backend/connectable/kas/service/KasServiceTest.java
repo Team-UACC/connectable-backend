@@ -1,6 +1,6 @@
 package com.backend.connectable.kas.service;
 
-import com.backend.connectable.kas.service.dto.dto.*;
+import com.backend.connectable.kas.service.dto.*;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -2,10 +2,11 @@ package com.backend.connectable.kas.service;
 
 import com.backend.connectable.exception.KasException;
 import com.backend.connectable.exception.KasExceptionResponse;
-import com.backend.connectable.kas.service.dto.dto.*;
+import com.backend.connectable.kas.service.dto.*;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Credentials;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -17,12 +18,16 @@ import javax.annotation.PostConstruct;
 public class KasService {
 
     private static final String CONTRACT_API_URL = "https://kip17-api.klaytnapi.com/v2/contract";
+    private static final String TOKEN_ID_PREFIX = "0x";
 
     @Value("${kas.settings.enable-global-fee-payer}")
     private Boolean enableGlobalFeePayer;
 
-    @Value("${kas.settings.my-address}")
-    private String myAddress;
+    @Value("${kas.settings.account-pool-krn}")
+    private String accountPoolKrn;
+
+    @Value("${kas.settings.account-pool-address}")
+    private String accountPoolAddress;
 
     @Value("${kas.settings.user-fee-payer-krn}")
     private String userFeePayerKrn;
@@ -45,59 +50,60 @@ public class KasService {
     @PostConstruct
     private void setRequestOptions() {
         webClient = WebClient.builder()
-                .defaultHeaders(headers -> {
-                    headers.add("x-chain-id", chainId);
-                    headers.add("Content-Type", "application/json");
-                    headers.add("Authorization",  Credentials.basic(accessKeyId, secretAccessKey));
-                })
-                .build();
+            .defaultHeaders(headers -> {
+                headers.add("x-chain-id", chainId);
+                headers.add("Content-Type", "application/json");
+                headers.add("Authorization",  Credentials.basic(accessKeyId, secretAccessKey));
+                headers.add("x-krn", accountPoolKrn);
+            })
+            .build();
 
         if (enableGlobalFeePayer) {
             options = new TransactionOptionRequest(true);
         } else {
             options = new TransactionOptionFeePayerRequest(false,
-                    new UserFeePayerOptionRequest(userFeePayerKrn, userFeePayerAddress));
+                new UserFeePayerOptionRequest(userFeePayerKrn, userFeePayerAddress));
         }
     }
 
     public ContractDeployResponse deployContract(String name, String symbol, String alias, String owner) {
         ContractDeployRequest contractDeployRequest = ContractDeployRequest.builder()
-                .name(name)
-                .symbol(symbol)
-                .alias(alias)
-                .owner(owner)
-                .options(options)
-                .build();
+            .name(name)
+            .symbol(symbol)
+            .alias(alias)
+            .owner(owner)
+            .options(options)
+            .build();
 
         Object responseObject = webClient.post()
-                .uri(CONTRACT_API_URL)
-                .bodyValue(contractDeployRequest)
-                .exchangeToMono(response -> {
-                    if (response.statusCode().equals(HttpStatus.OK)) {
-                        return response.bodyToMono(ContractDeployResponse.class);
-                    }
-                    return response.bodyToMono(KasExceptionResponse.class);
-                })
-                .block();
+            .uri(CONTRACT_API_URL)
+            .bodyValue(contractDeployRequest)
+            .exchangeToMono(response -> {
+                if (response.statusCode().equals(HttpStatus.OK)) {
+                    return response.bodyToMono(ContractDeployResponse.class);
+                }
+                return response.bodyToMono(KasExceptionResponse.class);
+            })
+            .block();
 
         handleKasException(responseObject);
         return (ContractDeployResponse) responseObject;
     }
 
     public ContractDeployResponse deployMyContract(String name, String symbol, String alias) {
-        return deployContract(name, symbol, alias, myAddress);
+        return deployContract(name, symbol, alias, accountPoolAddress);
     }
 
     public ContractItemsResponse getMyContracts() {
         Object responseObject = webClient.get()
-                .uri(CONTRACT_API_URL)
-                .exchangeToMono(response -> {
-                    if (response.statusCode().equals(HttpStatus.OK)) {
-                        return response.bodyToMono(ContractItemsResponse.class);
-                    }
-                    return response.bodyToMono(KasExceptionResponse.class);
-                })
-                .block();
+            .uri(CONTRACT_API_URL)
+            .exchangeToMono(response -> {
+                if (response.statusCode().equals(HttpStatus.OK)) {
+                    return response.bodyToMono(ContractItemsResponse.class);
+                }
+                return response.bodyToMono(KasExceptionResponse.class);
+            })
+            .block();
 
         handleKasException(responseObject);
         return (ContractItemsResponse) responseObject;
@@ -105,14 +111,14 @@ public class KasService {
 
     public ContractItemResponse getMyContract(String contractAddress) {
         Object responseObject = webClient.get()
-                .uri(CONTRACT_API_URL + "/" + contractAddress)
-                .exchangeToMono(response -> {
-                    if (response.statusCode().equals(HttpStatus.OK)) {
-                        return response.bodyToMono(ContractItemResponse.class);
-                    }
-                    return response.bodyToMono(KasExceptionResponse.class);
-                })
-                .block();
+            .uri(CONTRACT_API_URL + "/" + contractAddress)
+            .exchangeToMono(response -> {
+                if (response.statusCode().equals(HttpStatus.OK)) {
+                    return response.bodyToMono(ContractItemResponse.class);
+                }
+                return response.bodyToMono(KasExceptionResponse.class);
+            })
+            .block();
 
         handleKasException(responseObject);
         return (ContractItemResponse) responseObject;
@@ -120,40 +126,44 @@ public class KasService {
 
     public TransactionResponse mintToken(String contractAddress, String tokenId, String tokenUri, String tokenOwner) {
         TokenRequest tokenRequest = TokenRequest.builder()
-                .id(tokenId)
-                .uri(tokenUri)
-                .to(tokenOwner)
-                .build();
+            .id(tokenId)
+            .uri(tokenUri)
+            .to(tokenOwner)
+            .build();
 
         Object responseObject = webClient.post()
-                .uri(CONTRACT_API_URL + "/" + contractAddress + "/token")
-                .bodyValue(tokenRequest)
-                .exchangeToMono(response -> {
-                    if (response.statusCode().equals(HttpStatus.OK)) {
-                        return response.bodyToMono(TransactionResponse.class);
-                    }
-                    return response.bodyToMono(KasExceptionResponse.class);
-                })
-                .block();
+            .uri(CONTRACT_API_URL + "/" + contractAddress + "/token")
+            .bodyValue(tokenRequest)
+            .exchangeToMono(response -> {
+                if (response.statusCode().equals(HttpStatus.OK)) {
+                    return response.bodyToMono(TransactionResponse.class);
+                }
+                return response.bodyToMono(KasExceptionResponse.class);
+            })
+            .block();
 
         handleKasException(responseObject);
         return (TransactionResponse) responseObject;
     }
 
     public TransactionResponse mintMyToken(String contractAddress, String tokenId, String tokenUri) {
-        return mintToken(contractAddress, tokenId, tokenUri, myAddress);
+        return mintToken(contractAddress, tokenId, tokenUri, accountPoolAddress);
+    }
+
+    public TransactionResponse mintMyToken(String contractAddress, int tokenId, String tokenUri) {
+        return mintToken(contractAddress, TOKEN_ID_PREFIX + tokenId, tokenUri, accountPoolAddress);
     }
 
     public TokensResponse getTokens(String contractAddress) {
         Object responseObject = webClient.get()
-                .uri(CONTRACT_API_URL + "/" + contractAddress + "/token")
-                .exchangeToMono(response -> {
-                    if (response.statusCode().equals(HttpStatus.OK)) {
-                        return response.bodyToMono(TokensResponse.class);
-                    }
-                    return response.bodyToMono(KasExceptionResponse.class);
-                })
-                .block();
+            .uri(CONTRACT_API_URL + "/" + contractAddress + "/token")
+            .exchangeToMono(response -> {
+                if (response.statusCode().equals(HttpStatus.OK)) {
+                    return response.bodyToMono(TokensResponse.class);
+                }
+                return response.bodyToMono(KasExceptionResponse.class);
+            })
+            .block();
 
         handleKasException(responseObject);
         return (TokensResponse) responseObject;
@@ -161,49 +171,90 @@ public class KasService {
 
     public TokenResponse getToken(String contractAddress, String tokenId) {
         Object responseObject = webClient.get()
-                .uri(CONTRACT_API_URL + "/" + contractAddress + "/token/" + tokenId)
-                .exchangeToMono(response -> {
-                    if (response.statusCode().equals(HttpStatus.OK)) {
-                        return response.bodyToMono(TokenResponse.class);
-                    }
-                    return response.bodyToMono(KasExceptionResponse.class);
-                })
-                .block();
+            .uri(CONTRACT_API_URL + "/" + contractAddress + "/token/" + tokenId)
+            .exchangeToMono(response -> {
+                if (response.statusCode().equals(HttpStatus.OK)) {
+                    return response.bodyToMono(TokenResponse.class);
+                }
+                return response.bodyToMono(KasExceptionResponse.class);
+            })
+            .block();
 
         handleKasException(responseObject);
         return (TokenResponse) responseObject;
     }
 
-    public TokenResponse getToken(String contractAddress, Long tokenId) {
-        String tokenIdAsString = "0x" + Long.toString(tokenId);
-        return getToken(contractAddress, tokenIdAsString);
-    }
-
     public TokenResponse getToken(String contractAddress, int tokenId) {
-        String tokenIdAsString = "0x" + Integer.toString(tokenId);
-        return getToken(contractAddress, tokenIdAsString);
+        return getToken(contractAddress, TOKEN_ID_PREFIX + tokenId);
     }
 
     public TransactionResponse sendMyToken(String contractAddress, String tokenId, String receiver) {
         TokenSendRequest tokenRequest = TokenSendRequest.builder()
-                .sender(myAddress)
-                .owner(myAddress)
-                .to(receiver)
-                .build();
+            .sender(accountPoolAddress)
+            .owner(accountPoolAddress)
+            .to(receiver)
+            .build();
 
         Object responseObject = webClient.post()
-                .uri(CONTRACT_API_URL + "/" + contractAddress + "/token/" + tokenId)
-                .bodyValue(tokenRequest)
-                .exchangeToMono(response -> {
-                    if (response.statusCode().equals(HttpStatus.OK)) {
-                        return response.bodyToMono(TransactionResponse.class);
-                    }
-                    return response.bodyToMono(KasExceptionResponse.class);
-                })
-                .block();
+            .uri(CONTRACT_API_URL + "/" + contractAddress + "/token/" + tokenId)
+            .bodyValue(tokenRequest)
+            .exchangeToMono(response -> {
+                if (response.statusCode().equals(HttpStatus.OK)) {
+                    return response.bodyToMono(TransactionResponse.class);
+                }
+                return response.bodyToMono(KasExceptionResponse.class);
+            })
+            .block();
 
         handleKasException(responseObject);
         return (TransactionResponse) responseObject;
+    }
+
+    public TransactionResponse sendMyToken(String contractAddress, int tokenId, String receiver) {
+        return sendMyToken(contractAddress, TOKEN_ID_PREFIX + tokenId, receiver);
+    }
+
+    public TransactionResponse burnMyToken(String contractAddress, String tokenId) {
+        TokenDeleteRequest tokenDeleteRequest = TokenDeleteRequest.builder()
+            .from(accountPoolAddress)
+            .build();
+
+        Object responseObject = webClient.method(HttpMethod.DELETE)
+            .uri(CONTRACT_API_URL + "/" + contractAddress + "/token/" + tokenId)
+            .bodyValue(tokenDeleteRequest)
+            .exchangeToMono(response -> {
+                if (response.statusCode().equals(HttpStatus.OK)) {
+                    return response.bodyToMono(TransactionResponse.class);
+                }
+                return response.bodyToMono(KasExceptionResponse.class);
+            })
+            .block();
+
+        handleKasException(responseObject);
+        return (TransactionResponse) responseObject;
+    }
+
+    public TransactionResponse burnMyToken(String contractAddress, int tokenId) {
+        return burnMyToken(contractAddress, TOKEN_ID_PREFIX + tokenId);
+    }
+
+    public TokenHistoriesResponse getTokenHistory(String contractAddress, String tokenId) {
+        Object responseObject = webClient.get()
+            .uri(CONTRACT_API_URL + "/" + contractAddress + "/token/" + tokenId + "/history")
+            .exchangeToMono(response -> {
+                if (response.statusCode().equals(HttpStatus.OK)) {
+                    return response.bodyToMono(TokenHistoriesResponse.class);
+                }
+                return response.bodyToMono(KasExceptionResponse.class);
+            })
+            .block();
+
+        handleKasException(responseObject);
+        return (TokenHistoriesResponse) responseObject;
+    }
+
+    public TokenHistoriesResponse getTokenHistory(String contractAddress, int tokenId) {
+        return getTokenHistory(contractAddress, TOKEN_ID_PREFIX + tokenId);
     }
 
     private void handleKasException(Object responseObject) {
