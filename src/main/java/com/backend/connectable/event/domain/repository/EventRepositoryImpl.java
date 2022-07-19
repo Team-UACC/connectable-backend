@@ -2,6 +2,7 @@ package com.backend.connectable.event.domain.repository;
 
 import com.backend.connectable.event.domain.dto.EventDetail;
 import com.backend.connectable.event.domain.dto.EventTicket;
+import com.backend.connectable.event.domain.dto.QEventTicket;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPAExpressions;
@@ -27,27 +28,27 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
     @Override
     public EventDetail findEventDetailByEventId(Long eventId) {
         return queryFactory.select(Projections.bean(
-                EventDetail.class,
-                event.id,
-                event.eventName,
-                event.eventImage,
-                artist.artistName,
-                artist.artistImage,
-                event.startTime,
-                event.endTime,
-                event.description,
-                event.salesFrom,
-                event.salesTo,
-                event.twitterUrl,
-                event.instagramUrl,
-                event.webpageUrl,
-                ticket.count().intValue().as("totalTicketCount"),
-                ExpressionUtils.as(
-                    JPAExpressions.select(ticket.count().intValue()).from(ticket).where(ticket.onSale.eq(true))
-                , "onSaleTicketCount"),
-                ticket.price,
-                event.location,
-                event.salesOption
+            EventDetail.class,
+            event.id,
+            event.eventName,
+            event.eventImage,
+            artist.artistName,
+            artist.artistImage,
+            event.startTime,
+            event.endTime,
+            event.description,
+            event.salesFrom,
+            event.salesTo,
+            event.twitterUrl,
+            event.instagramUrl,
+            event.webpageUrl,
+            ticket.count().intValue().as("totalTicketCount"),
+            ExpressionUtils.as(
+                JPAExpressions.select(ticket.count().intValue()).from(ticket).where(ticket.onSale.eq(true))
+            , "onSaleTicketCount"),
+            ticket.price,
+            event.location,
+            event.salesOption
             ))
             .from(event)
             .innerJoin(ticket).on(ticket.event.id.eq(event.id))
@@ -60,8 +61,7 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
 
     @Override
     public List<EventTicket> findAllTickets(Long eventId) {
-        List<EventTicket> eventTickets = queryFactory.select(Projections.constructor(
-            EventTicket.class,
+        return queryFactory.select(new QEventTicket(
             ticket.id,
             ticket.price,
             artist.artistName,
@@ -72,20 +72,18 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
             ticket.tokenUri,
             ticket.ticketMetadata,
             event.contractAddress.as("contractAddress")
-        ))
+            ))
             .from(event)
             .innerJoin(ticket).on(ticket.event.id.eq(event.id))
             .innerJoin(artist).on(event.artist.id.eq(artist.id))
             .where(ticket.event.id.eq(eventId))
             .groupBy(ticket.id)
             .fetch();
-        return eventTickets;
     }
 
     @Override
     public EventTicket findTicketByEventIdAndTicketId(Long eventId, Long ticketId) {
-        return queryFactory.select(Projections.constructor(
-            EventTicket.class,
+        return queryFactory.select(new QEventTicket(
             ticket.id,
             ticket.price,
             artist.artistName,

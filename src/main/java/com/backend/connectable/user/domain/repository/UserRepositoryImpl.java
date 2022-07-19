@@ -43,7 +43,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
 
     @Override
     public List<UserTicket> getOwnTicketsByUser(Long userId) {
-        List<UserTicket> userTickets = queryFactory.select(Projections.constructor(
+        return queryFactory.select(Projections.constructor(
             UserTicket.class,
             ticket.id,
             ticket.price,
@@ -55,12 +55,11 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
             ticket.ticketMetadata,
             event.contractAddress,
             event.id.as("eventId")
-        ))
+            ))
             .from(ticket)
             .leftJoin(user).on(user.id.eq(ticket.user.id))
             .innerJoin(event).on(ticket.event.id.eq(event.id))
             .where(user.id.eq(userId))
             .fetch();
-        return userTickets;
     }
 }
