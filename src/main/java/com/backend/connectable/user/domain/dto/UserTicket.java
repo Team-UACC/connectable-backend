@@ -27,4 +27,5 @@ public class UserTicket {
     private TicketMetadata metadata;
     private String contractAddress;
     private Long eventId;
+    private String artistName;
 }

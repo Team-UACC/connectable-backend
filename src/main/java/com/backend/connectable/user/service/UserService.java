@@ -95,6 +95,7 @@ public class UserService {
                 .metadata(ticket.getMetadata())
                 .contractAddress(ticket.getContractAddress())
                 .eventId(ticket.getEventId())
+                .artistName(ticket.getArtistName())
                 .build()
             )
             .collect(Collectors.toList());
