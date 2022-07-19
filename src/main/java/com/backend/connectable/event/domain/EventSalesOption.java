@@ -1,5 +1,5 @@
 package com.backend.connectable.event.domain;
 
-public enum SalesOption {
+public enum EventSalesOption {
     FLAT_PRICE, FLEXIBLE_PRICE
 }

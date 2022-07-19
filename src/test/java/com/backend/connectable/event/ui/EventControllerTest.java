@@ -1,7 +1,8 @@
 package com.backend.connectable.event.ui;
 
-import com.backend.connectable.event.domain.SalesOption;
+import com.backend.connectable.event.domain.EventSalesOption;
 import com.backend.connectable.event.domain.TicketMetadata;
+import com.backend.connectable.event.domain.TicketSalesStatus;
 import com.backend.connectable.event.service.EventService;
 import com.backend.connectable.event.ui.dto.EventDetailResponse;
 import com.backend.connectable.event.ui.dto.EventResponse;
@@ -82,7 +83,7 @@ class EventControllerTest {
         LocalDateTime.of(2022, 8, 1, 19, 0),
         100000,
         "서울특별시 강남구 테헤란로 311 아남타워빌딩 7층",
-        SalesOption.FLAT_PRICE
+        EventSalesOption.FLAT_PRICE
     );
 
     private static final TicketMetadata SAMPLE_TICKET_METADATA = TicketMetadata.builder()
@@ -103,7 +104,7 @@ class EventControllerTest {
         "빅나티",
         LocalDateTime.of(2022, 8, 1, 18, 0),
         "이씨 콘서트 at Connectable",
-        true,
+        TicketSalesStatus.ON_SALE,
         0,
         "https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/1.json",
         SAMPLE_TICKET_METADATA,
@@ -117,7 +118,7 @@ class EventControllerTest {
         "빅나티",
         LocalDateTime.of(2022, 8, 1, 18, 0),
         "이씨 콘서트 at Connectable",
-        true,
+        TicketSalesStatus.ON_SALE,
         1,
         "https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/2.json",
         SAMPLE_TICKET_METADATA,
@@ -202,7 +203,7 @@ class EventControllerTest {
                 .contentType(APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.price").value(10000))
-            .andExpect(jsonPath("$.onSale").value(true))
+            .andExpect(jsonPath("$.ticketSalesStatus").value("ON_SALE"))
             .andDo(print());
     }
 }

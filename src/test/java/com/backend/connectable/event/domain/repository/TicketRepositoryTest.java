@@ -2,10 +2,7 @@ package com.backend.connectable.event.domain.repository;
 
 import com.backend.connectable.artist.domain.Artist;
 import com.backend.connectable.artist.domain.repository.ArtistRepository;
-import com.backend.connectable.event.domain.Event;
-import com.backend.connectable.event.domain.SalesOption;
-import com.backend.connectable.event.domain.Ticket;
-import com.backend.connectable.event.domain.TicketMetadata;
+import com.backend.connectable.event.domain.*;
 import com.backend.connectable.user.domain.User;
 import com.backend.connectable.user.domain.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -68,7 +65,7 @@ class TicketRepositoryTest {
             .webpageUrl("https://papimon.tistory.com/")
             .startTime(LocalDateTime.of(2022, 8, 1, 18, 0))
             .endTime(LocalDateTime.of(2022, 8, 1, 19, 0))
-            .salesOption(SalesOption.FLAT_PRICE)
+            .eventSalesOption(EventSalesOption.FLAT_PRICE)
             .artist(artist)
             .build();
 
@@ -88,7 +85,7 @@ class TicketRepositoryTest {
             .event(joelEvent)
             .tokenUri("https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/1.json")
             .price(100000)
-            .onSale(true)
+            .ticketSalesStatus(TicketSalesStatus.ON_SALE)
             .ticketMetadata(joelTicket1Metadata)
             .build();
 
@@ -109,7 +106,7 @@ class TicketRepositoryTest {
         assertThat(savedTicket.getUser()).isEqualTo(joel);
         assertThat(savedTicket.getEvent()).isEqualTo(joelEvent);
         assertThat(savedTicket.getPrice()).isEqualTo(100000);
-        assertThat(savedTicket.isOnSale()).isEqualTo(true);
+        assertThat(savedTicket.getTicketSalesStatus()).isEqualTo(TicketSalesStatus.ON_SALE);
         assertThat(savedTicket.getTicketMetadata().getName()).isEqualTo("조엘 콘서트 #1");
         assertThat(savedTicket.getTicketMetadata().getAttributes()).hasSize(3);
     }

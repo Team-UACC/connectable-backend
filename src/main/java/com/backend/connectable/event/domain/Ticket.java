@@ -30,21 +30,23 @@ public class Ticket {
 
     private int price;
 
-    private boolean onSale;
+    @Enumerated(EnumType.STRING)
+    private TicketSalesStatus ticketSalesStatus;
 
     @Convert(converter = TicketMetadataConverter.class)
     @Column(columnDefinition = "TEXT")
     private TicketMetadata ticketMetadata;
 
     @Builder
-    public Ticket(Long id, User user, Event event, int tokenId, String tokenUri, int price, boolean onSale, TicketMetadata ticketMetadata) {
+    public Ticket(Long id, User user, Event event, int tokenId, String tokenUri, int price,
+                  TicketSalesStatus ticketSalesStatus, TicketMetadata ticketMetadata) {
         this.id = id;
         this.user = user;
         this.event = event;
         this.tokenId = tokenId;
         this.tokenUri = tokenUri;
         this.price = price;
-        this.onSale = onSale;
+        this.ticketSalesStatus = ticketSalesStatus;
         this.ticketMetadata = ticketMetadata;
     }
 }

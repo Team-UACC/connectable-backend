@@ -2,6 +2,7 @@ package com.backend.connectable.user.domain.dto;
 
 import com.backend.connectable.event.domain.TicketMetadata;
 import com.backend.connectable.event.domain.TicketMetadataConverter;
+import com.backend.connectable.event.domain.TicketSalesStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,7 +21,7 @@ public class UserTicket {
     private int price;
     private LocalDateTime eventDate;
     private String eventName;
-    private boolean onSale;
+    private TicketSalesStatus ticketSalesStatus;
     private int tokenId;
     private String tokenUri;
     @Convert(converter = TicketMetadataConverter.class)
