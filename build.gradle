@@ -31,6 +31,12 @@ dependencyManagement {
     }
 }
 
+allprojects {
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+}
+
 dependencies {
     // Spring
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -61,6 +67,16 @@ dependencies {
     // Testing
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+
+    // Caver-Java & KAS
+    implementation 'com.klaytn.caver:core:1.6.2'
+    implementation 'xyz.groundx.caver:caver-java-ext-kas:1.1.1'
+
+    // Webflux
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-webflux', version: '2.7.0'
+
+    // String-Utils
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
 }
 
 tasks.named('test') {

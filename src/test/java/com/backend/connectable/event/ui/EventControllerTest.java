@@ -93,7 +93,8 @@ class EventControllerTest {
         0,
         "https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/1.json",
         null,
-        "0x123456"
+        "0x123456",
+        "0xabcd"
     );
 
     private static final TicketResponse TICKET_RESPONSE_2 = new TicketResponse(
@@ -106,7 +107,8 @@ class EventControllerTest {
         1,
         "https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/2.json",
         null,
-        "0x123456"
+        "0x123456",
+        "0xabcd"
     );
 
     @Autowired

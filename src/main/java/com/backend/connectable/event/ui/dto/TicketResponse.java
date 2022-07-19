@@ -23,8 +23,11 @@ public class TicketResponse {
     private TicketMetadata metadata;
     private String contractAddress;
 
+    private String ownedBy;
+
     @Builder
-    public TicketResponse(Long id, int price, String artistName, LocalDateTime eventDate, String eventName, boolean onSale, int tokenId, String tokenUri, TicketMetadata metadata, String contractAddress) {
+    public TicketResponse(Long id, int price, String artistName, LocalDateTime eventDate, String eventName, boolean onSale,
+                          int tokenId, String tokenUri, String metadata, String contractAddress, String ownedBy) {
         this.id = id;
         this.price = price;
         this.artistName = artistName;
@@ -35,5 +38,6 @@ public class TicketResponse {
         this.tokenUri = tokenUri;
         this.metadata = metadata;
         this.contractAddress = contractAddress;
+        this.ownedBy = ownedBy;
     }
 }
