@@ -101,4 +101,12 @@ public class UserService {
             .collect(Collectors.toList());
         return UserTicketListResponse.of(userTickets);
     }
+
+    public UserValidationResponse validateNickname(String nickname) {
+        boolean isExistingNickname = userRepository.existsByNickname(nickname);
+        if (isExistingNickname) {
+            return UserValidationResponse.ofUnavailable();
+        }
+        return UserValidationResponse.ofAvailable();
+    }
 }

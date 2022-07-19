@@ -11,4 +11,6 @@ public interface UserRepository extends JpaRepository<User, Long>, UserRepositor
     Optional<User> findByKlaytnAddress(String klaytnAddress);
 
     Optional<User> findByKlaytnAddressAndIsActive(String klaytnAddress, boolean isActive);
+
+    boolean existsByNickname(String nickname);
 }
