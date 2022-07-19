@@ -80,7 +80,7 @@ public class EventService {
 
     public TicketResponse getTicketInfo(Long eventId, Long ticketId) {
         EventTicket eventTicket = eventRepository.findTicketByEventIdAndTicketId(eventId, ticketId);
-        TokenResponse tokenResponse = kasService.getToken(eventTicket.getContractAddress(), ticketId);
+        TokenResponse tokenResponse = kasService.getToken(eventTicket.getContractAddress(), eventTicket.getTokenId());
         return TicketResponse.builder()
             .id(eventTicket.getId())
             .price(eventTicket.getPrice())

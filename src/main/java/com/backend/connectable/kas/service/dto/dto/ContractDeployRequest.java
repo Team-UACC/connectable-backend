@@ -1,6 +1,9 @@
 package com.backend.connectable.kas.service.dto.dto;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
