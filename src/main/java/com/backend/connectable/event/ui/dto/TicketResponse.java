@@ -1,5 +1,6 @@
 package com.backend.connectable.event.ui.dto;
 
+import com.backend.connectable.event.domain.TicketMetadata;
 import com.backend.connectable.global.common.util.DateTimeUtil;
 import lombok.*;
 
@@ -19,7 +20,7 @@ public class TicketResponse {
     private boolean onSale;
     private int tokenId;
     private String tokenUri;
-    private String metadata;
+    private TicketMetadata metadata;
     private String contractAddress;
 
     private String ownedBy;
