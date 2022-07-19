@@ -33,7 +33,8 @@ logging:
 kas:
   settings:
     enable-global-fee-payer: false
-    my-address: "0xEa06ee0577795e39A0465b46d509168ff6302973"
+    account-pool-krn: krn:1001:wallet:664d1c4f-76cc-4664-84cd-f93bd28e3256:account-pool:default
+    account-pool-address: "0xEa06ee0577795e39A0465b46d509168ff6302973"
     user-fee-payer-krn: krn:1001:wallet:664d1c4f-76cc-4664-84cd-f93bd28e3256:feepayer-pool:default
     user-fee-payer-address: "0xDFAD470f307CC3C524A96Ea86442F012f1DEF4d6"
     access-key-id: KASKOOU7SCEQTOSZ2FV0E9UQ
@@ -77,9 +78,10 @@ logging:
               BasicBinder: TRACE
 kas:
   settings:
-    enable-global-fee-payer: true
+    enable-global-fee-payer: false
     chain-id: 8217
-    my-address: ${kas.my_address}
+    account-pool-krn: ${kas.account_pool_krn}
+    account-pool-address: ${kas.account_pool_address}
     user-fee-payer-krn: ${kas.user_fee_payer_krn}
     user-fee-payer-address: ${kas.user_fee_payer_address}
     access-key-id: ${kas.access_key_id}
