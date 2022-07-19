@@ -28,8 +28,8 @@ import java.util.HashMap;
 @RequiredArgsConstructor
 public class DataLoader implements ApplicationRunner {
 
-    @Value("${kas.settings.my-address}")
-    private String connectableAddress;
+    @Value("${kas.settings.account-pool-address}")
+    private String accountPoolAddress;
 
     private final UserRepository userRepository;
     private final EventRepository eventRepository;
@@ -49,7 +49,7 @@ public class DataLoader implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) {
         User admin = User.builder()
-            .klaytnAddress(connectableAddress)
+            .klaytnAddress(accountPoolAddress)
             .nickname("어드민")
             .phoneNumber("000-0000-0000")
             .privacyAgreement(true)
