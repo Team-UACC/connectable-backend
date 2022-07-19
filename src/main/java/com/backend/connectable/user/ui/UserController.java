@@ -51,4 +51,10 @@ public class UserController {
         UserTicketListResponse userTicketListResponse = userService.getUserTicketsByUserDetails(userDetails);
         return ResponseEntity.ok(userTicketListResponse);
     }
+
+    @GetMapping("/validation")
+    public ResponseEntity<UserValidationResponse> validateNickname(@RequestParam String nickname) {
+        UserValidationResponse userValidationResponse = userService.validateNickname(nickname);
+        return ResponseEntity.ok(userValidationResponse);
+    }
 }

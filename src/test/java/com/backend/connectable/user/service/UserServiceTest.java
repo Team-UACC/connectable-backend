@@ -68,8 +68,6 @@ class UserServiceTest {
     private final boolean user1PrivacyAgreement = true;
     private final boolean user1IsActive = true;
 
-
-    private User noNicknameUser;
     private final String noNicknameUserKlaytnAddress = "0x8876";
 
     @BeforeEach
@@ -86,14 +84,6 @@ class UserServiceTest {
                 .privacyAgreement(user1PrivacyAgreement)
                 .isActive(user1IsActive)
                 .build();
-
-        noNicknameUser = User.builder()
-                        .klaytnAddress(noNicknameUserKlaytnAddress)
-                        .nickname("")
-                        .phoneNumber("010-0939-8822")
-                        .privacyAgreement(true)
-                        .isActive(true)
-                        .build();
 
         artist1 = Artist.builder()
             .bankCompany("NH")
@@ -311,5 +301,17 @@ class UserServiceTest {
             .isEqualTo("https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/1.json");
         assertThat(userTicketListResponse.getTickets().get(1).getTokenUri())
             .isEqualTo("https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/2.json");
+    }
+
+    @DisplayName("ValidateNickname을 통해 특정 사용자의 닉네임을 사용가능한지를 검증할 수 있다.")
+    @Test
+    void validateNickname() {
+        // given & when
+        UserValidationResponse unavailable = userService.validateNickname(user1Nickname);
+        UserValidationResponse available = userService.validateNickname("available");
+
+        // then
+        assertThat(unavailable.getAvailable()).isFalse();
+        assertThat(available.getAvailable()).isTrue();
     }
 }

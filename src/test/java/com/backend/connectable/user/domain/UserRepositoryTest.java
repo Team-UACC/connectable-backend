@@ -66,4 +66,14 @@ class UserRepositoryTest {
         // then
         assertThat(user.isActive()).isFalse();
     }
+
+    @DisplayName("유저의 닉네임으로 존재하는 유저인지 확인할 수 있다.")
+    @Test
+    void existsByNickname() {
+        boolean joelExist = userRepository.existsByNickname("Joel");
+        assertThat(joelExist).isTrue();
+
+        boolean sallyExist = userRepository.existsByNickname("sally");
+        assertThat(sallyExist).isFalse();
+    }
 }
