@@ -7,7 +7,7 @@ import com.backend.connectable.event.ui.dto.EventDetailResponse;
 import com.backend.connectable.event.ui.dto.EventResponse;
 import com.backend.connectable.event.ui.dto.TicketResponse;
 import com.backend.connectable.kas.service.KasService;
-import com.backend.connectable.kas.service.dto.dto.TokenResponse;
+import com.backend.connectable.kas.service.dto.TokenResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

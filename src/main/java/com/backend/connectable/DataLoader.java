@@ -51,7 +51,7 @@ public class DataLoader implements ApplicationRunner {
         User admin = User.builder()
             .klaytnAddress(connectableAddress)
             .nickname("어드민")
-            .phoneNumber("00000000000")
+            .phoneNumber("000-0000-0000")
             .privacyAgreement(true)
             .isActive(true)
             .build();
@@ -59,7 +59,7 @@ public class DataLoader implements ApplicationRunner {
         User joel = User.builder()
             .klaytnAddress(JOEL_KLIP)
             .nickname("조엘")
-            .phoneNumber("01012345678")
+            .phoneNumber("010-1234-5678")
             .privacyAgreement(true)
             .isActive(true)
             .build();
@@ -67,7 +67,7 @@ public class DataLoader implements ApplicationRunner {
         User ihh = User.builder()
             .klaytnAddress(IHH_KLIP)
             .nickname("호현")
-            .phoneNumber("01098988989")
+            .phoneNumber("010-9898-8989")
             .privacyAgreement(true)
             .isActive(true)
             .build();

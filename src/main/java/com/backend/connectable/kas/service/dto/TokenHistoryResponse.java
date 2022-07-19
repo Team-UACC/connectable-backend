@@ -1,4 +1,4 @@
-package com.backend.connectable.kas.service.dto.dto;
+package com.backend.connectable.kas.service.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserFeePayerOptionRequest {
-    private String krn;
-    private String address;
+public class TokenHistoryResponse {
+    private String from;
+    private String timestamp;
+    private String to;
 }

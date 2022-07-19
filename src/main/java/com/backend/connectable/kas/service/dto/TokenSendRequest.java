@@ -1,4 +1,4 @@
-package com.backend.connectable.kas.service.dto.dto;
+package com.backend.connectable.kas.service.dto;
 
 import lombok.Builder;
 import lombok.Getter;
