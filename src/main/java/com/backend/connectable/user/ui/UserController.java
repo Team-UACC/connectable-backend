@@ -1,5 +1,6 @@
 package com.backend.connectable.user.ui;
 
+import com.backend.connectable.exception.sequence.ValidationSequence;
 import com.backend.connectable.security.ConnectableUserDetails;
 import com.backend.connectable.user.service.UserService;
 import com.backend.connectable.user.ui.dto.*;
@@ -7,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -39,7 +41,7 @@ public class UserController {
 
     @PutMapping
     public ResponseEntity<UserModifyResponse> modifyUser(@AuthenticationPrincipal ConnectableUserDetails userDetails,
-                                                         @RequestBody UserModifyRequest userModifyRequest) {
+                                                         @RequestBody @Validated(ValidationSequence.class) UserModifyRequest userModifyRequest) {
         UserModifyResponse userModifyResponse = userService.modifyUserByUserDetails(userDetails, userModifyRequest);
         return ResponseEntity.status(HttpStatus.OK).body(userModifyResponse);
     }
