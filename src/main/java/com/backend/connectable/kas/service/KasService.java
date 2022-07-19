@@ -179,6 +179,11 @@ public class KasService {
         return getToken(contractAddress, tokenIdAsString);
     }
 
+    public TokenResponse getToken(String contractAddress, int tokenId) {
+        String tokenIdAsString = "0x" + Integer.toString(tokenId);
+        return getToken(contractAddress, tokenIdAsString);
+    }
+
     public TransactionResponse sendMyToken(String contractAddress, String tokenId, String receiver) {
         TokenSendRequest tokenRequest = TokenSendRequest.builder()
                 .sender(myAddress)
