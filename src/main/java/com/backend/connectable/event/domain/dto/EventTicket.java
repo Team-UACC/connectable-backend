@@ -1,6 +1,7 @@
 package com.backend.connectable.event.domain.dto;
 
 import com.backend.connectable.event.domain.TicketMetadata;
+import com.backend.connectable.event.domain.TicketSalesStatus;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +20,7 @@ public class EventTicket {
     private String artistName;
     private LocalDateTime eventDate;
     private String eventName;
-    private boolean onSale;
+    private TicketSalesStatus ticketSalesStatus;
     private int tokenId;
     private String tokenUri;
     @Convert(converter = TicketMetadata.class)
@@ -27,13 +28,13 @@ public class EventTicket {
     private String contractAddress;
 
     @QueryProjection
-    public EventTicket(Long id, int price, String artistName, LocalDateTime eventDate, String eventName, boolean onSale, int tokenId, String tokenUri, TicketMetadata metadata, String contractAddress) {
+    public EventTicket(Long id, int price, String artistName, LocalDateTime eventDate, String eventName, TicketSalesStatus ticketSalesStatus, int tokenId, String tokenUri, TicketMetadata metadata, String contractAddress) {
         this.id = id;
         this.price = price;
         this.artistName = artistName;
         this.eventDate = eventDate;
         this.eventName = eventName;
-        this.onSale = onSale;
+        this.ticketSalesStatus = ticketSalesStatus;
         this.tokenId = tokenId;
         this.tokenUri = tokenUri;
         this.metadata = metadata;

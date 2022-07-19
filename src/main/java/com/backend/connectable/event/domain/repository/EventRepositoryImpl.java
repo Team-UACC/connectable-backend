@@ -1,5 +1,6 @@
 package com.backend.connectable.event.domain.repository;
 
+import com.backend.connectable.event.domain.TicketSalesStatus;
 import com.backend.connectable.event.domain.dto.EventDetail;
 import com.backend.connectable.event.domain.dto.EventTicket;
 import com.backend.connectable.event.domain.dto.QEventTicket;
@@ -44,11 +45,11 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
             event.webpageUrl,
             ticket.count().intValue().as("totalTicketCount"),
             ExpressionUtils.as(
-                JPAExpressions.select(ticket.count().intValue()).from(ticket).where(ticket.onSale.eq(true))
+                JPAExpressions.select(ticket.count().intValue()).from(ticket).where(ticket.ticketSalesStatus.eq(TicketSalesStatus.ON_SALE))
             , "onSaleTicketCount"),
             ticket.price,
             event.location,
-            event.salesOption
+            event.eventSalesOption
             ))
             .from(event)
             .innerJoin(ticket).on(ticket.event.id.eq(event.id))
@@ -67,7 +68,7 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
             artist.artistName,
             event.startTime.as("eventDate"),
             event.eventName,
-            ticket.onSale,
+            ticket.ticketSalesStatus,
             ticket.tokenId,
             ticket.tokenUri,
             ticket.ticketMetadata,
@@ -89,7 +90,7 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
             artist.artistName,
             event.startTime.as("eventDate"),
             event.eventName,
-            ticket.onSale,
+            ticket.ticketSalesStatus,
             ticket.tokenId,
             ticket.tokenUri,
             ticket.ticketMetadata,

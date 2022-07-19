@@ -50,7 +50,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
             ticket.price,
             event.startTime.as("eventDate"),
             event.eventName,
-            ticket.onSale,
+            ticket.ticketSalesStatus,
             ticket.tokenId,
             ticket.tokenUri,
             ticket.ticketMetadata,

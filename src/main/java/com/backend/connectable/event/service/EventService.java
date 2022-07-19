@@ -56,7 +56,7 @@ public class EventService {
             .endTime(eventDetail.getEndTime())
             .price(eventDetail.getPrice())
             .location(eventDetail.getLocation())
-            .salesOption(eventDetail.getEventSalesOption())
+            .eventSalesOption(eventDetail.getEventSalesOption())
             .build();
     }
 
@@ -69,7 +69,7 @@ public class EventService {
                 .artistName(ticket.getArtistName())
                 .eventDate(ticket.getEventDate())
                 .eventName(ticket.getEventName())
-                .onSale(ticket.isOnSale())
+                .ticketSalesStatus(ticket.getTicketSalesStatus())
                 .tokenId(ticket.getTokenId())
                 .tokenUri(ticket.getTokenUri())
                 .metadata(ticket.getMetadata())
