@@ -1,6 +1,7 @@
 package com.backend.connectable.event.ui;
 
 import com.backend.connectable.event.domain.SalesOption;
+import com.backend.connectable.event.domain.TicketMetadata;
 import com.backend.connectable.event.service.EventService;
 import com.backend.connectable.event.ui.dto.EventDetailResponse;
 import com.backend.connectable.event.ui.dto.EventResponse;
@@ -18,6 +19,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
@@ -83,6 +85,18 @@ class EventControllerTest {
         SalesOption.FLAT_PRICE
     );
 
+    private static final TicketMetadata SAMPLE_TICKET_METADATA = TicketMetadata.builder()
+        .name("메타데이터")
+        .description("메타데이터 at Connectable")
+        .image("https://connectable-events.s3.ap-northeast-2.amazonaws.com/ticket_test2.png")
+        .attributes(new HashMap<>(){{
+            put("Background", "Yellow");
+            put("Artist", "Joel");
+            put("Seat", "A5");
+        }})
+        .build();
+
+
     private static final TicketResponse TICKET_RESPONSE_1 = new TicketResponse(
         TICKET_ID_1,
         10000,
@@ -92,7 +106,7 @@ class EventControllerTest {
         true,
         0,
         "https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/1.json",
-        null,
+        SAMPLE_TICKET_METADATA,
         "0x123456",
         "0xabcd"
     );
@@ -101,12 +115,12 @@ class EventControllerTest {
         TICKET_ID_2,
         10000,
         "빅나티",
-        1672412400000L,
+        LocalDateTime.of(2022, 8, 1, 18, 0),
         "이씨 콘서트 at Connectable",
         true,
         1,
         "https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/2.json",
-        null,
+        SAMPLE_TICKET_METADATA,
         "0x123456",
         "0xabcd"
     );
@@ -128,7 +142,7 @@ class EventControllerTest {
 
         // expected
         mockMvc.perform(get("/events")
-            .contentType(APPLICATION_JSON))
+                .contentType(APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$[0]").exists())
             .andExpect(jsonPath("$[1]").exists())
@@ -148,7 +162,7 @@ class EventControllerTest {
 
         // expected
         mockMvc.perform(get("/events/{event-id}", EVENT_ID_1)
-            .contentType(APPLICATION_JSON))
+                .contentType(APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.artistName").value("빅나티"))
             .andDo(print());
@@ -163,7 +177,7 @@ class EventControllerTest {
 
         // expected
         mockMvc.perform(get("/events/{event-id}/tickets", EVENT_ID_1)
-            .contentType(APPLICATION_JSON))
+                .contentType(APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$[0].id").value(1L))
             .andExpect(jsonPath("$[0].tokenUri")
