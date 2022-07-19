@@ -16,7 +16,11 @@ public enum ErrorType {
     DUPLICATED_NICKNAME_ERROR("USER-003", "중복된 닉네임입니다."),
     DUPLICATED_EMAIL_ERROR("USER-004", "중복된 이메일입니다."),
 
-    SERVICE_BEING_CHECKED("SERVICE-001", "서비스가 점검중입니다.")
+    SERVICE_BEING_CHECKED("SERVICE-001", "서비스가 점검중입니다."),
+
+    EVENT_NOT_EXISTS("EVENT-001", "존재하지 않는 이벤트입니다."),
+
+    TICKET_NOT_EXISTS("TICKET-001", "존재하지 않는 티켓입니다.")
     ;
 
     private final String errorCode;

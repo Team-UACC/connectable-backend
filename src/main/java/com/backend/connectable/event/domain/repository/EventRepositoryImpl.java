@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 import static com.backend.connectable.artist.domain.QArtist.artist;
 import static com.backend.connectable.event.domain.QEvent.event;
@@ -27,8 +28,8 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
     }
 
     @Override
-    public EventDetail findEventDetailByEventId(Long eventId) {
-        return queryFactory.select(Projections.bean(
+    public Optional<EventDetail> findEventDetailByEventId(Long eventId) {
+        return Optional.ofNullable(queryFactory.select(Projections.bean(
             EventDetail.class,
             event.id,
             event.eventName,
@@ -57,7 +58,8 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
             .where(ticket.event.id.eq(eventId))
             .groupBy(event.id)
             .limit(1)
-            .fetchOne();
+            .fetchOne()
+        );
     }
 
     @Override
@@ -83,8 +85,8 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
     }
 
     @Override
-    public EventTicket findTicketByEventIdAndTicketId(Long eventId, Long ticketId) {
-        return queryFactory.select(new QEventTicket(
+    public Optional<EventTicket> findTicketByEventIdAndTicketId(Long eventId, Long ticketId) {
+        return Optional.ofNullable(queryFactory.select(new QEventTicket(
             ticket.id,
             ticket.price,
             artist.artistName,
@@ -101,6 +103,7 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
             .innerJoin(artist).on(event.artist.id.eq(artist.id))
             .where(ticket.event.id.eq(eventId)
                 .and(ticket.id.eq(ticketId)))
-            .fetchOne();
+            .fetchOne()
+        );
     }
 }

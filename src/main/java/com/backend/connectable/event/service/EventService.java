@@ -6,9 +6,12 @@ import com.backend.connectable.event.domain.repository.EventRepository;
 import com.backend.connectable.event.ui.dto.EventDetailResponse;
 import com.backend.connectable.event.ui.dto.EventResponse;
 import com.backend.connectable.event.ui.dto.TicketResponse;
+import com.backend.connectable.exception.ConnectableException;
+import com.backend.connectable.exception.ErrorType;
 import com.backend.connectable.kas.service.KasService;
 import com.backend.connectable.kas.service.dto.TokenResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,7 +39,8 @@ public class EventService {
     }
 
     public EventDetailResponse getEventDetail(Long eventId) {
-        EventDetail eventDetail = eventRepository.findEventDetailByEventId(eventId);
+        EventDetail eventDetail = eventRepository.findEventDetailByEventId(eventId)
+            .orElseThrow(() -> new ConnectableException(HttpStatus.BAD_REQUEST, ErrorType.EVENT_NOT_EXISTS));
         return EventDetailResponse.builder()
             .id(eventDetail.getId())
             .name(eventDetail.getEventName())
@@ -79,7 +83,8 @@ public class EventService {
     }
 
     public TicketResponse getTicketInfo(Long eventId, Long ticketId) {
-        EventTicket eventTicket = eventRepository.findTicketByEventIdAndTicketId(eventId, ticketId);
+        EventTicket eventTicket = eventRepository.findTicketByEventIdAndTicketId(eventId, ticketId)
+            .orElseThrow(() -> new ConnectableException(HttpStatus.BAD_REQUEST, ErrorType.TICKET_NOT_EXISTS));
         TokenResponse tokenResponse = kasService.getToken(eventTicket.getContractAddress(), eventTicket.getTokenId());
         return TicketResponse.builder()
             .id(eventTicket.getId())

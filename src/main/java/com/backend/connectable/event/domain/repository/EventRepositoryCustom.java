@@ -4,12 +4,13 @@ import com.backend.connectable.event.domain.dto.EventDetail;
 import com.backend.connectable.event.domain.dto.EventTicket;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface EventRepositoryCustom {
 
-    EventDetail findEventDetailByEventId(Long eventId);
+    Optional<EventDetail> findEventDetailByEventId(Long eventId);
 
     List<EventTicket> findAllTickets(Long eventId);
 
-    EventTicket findTicketByEventIdAndTicketId(Long eventId, Long ticketId);
+    Optional<EventTicket> findTicketByEventIdAndTicketId(Long eventId, Long ticketId);
 }
