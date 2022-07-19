@@ -22,9 +22,10 @@ public class UserTicketResponse {
     private TicketMetadata metadata;
     private String contractAddress;
     private Long eventId;
+    private String artistName;
 
     @Builder
-    public UserTicketResponse(Long id, int price, LocalDateTime eventDate, String eventName, boolean onSale, int tokenId, String tokenUri, TicketMetadata metadata, String contractAddress, Long eventId) {
+    public UserTicketResponse(Long id, int price, LocalDateTime eventDate, String eventName, boolean onSale, int tokenId, String tokenUri, TicketMetadata metadata, String contractAddress, Long eventId, String artistName) {
         this.id = id;
         this.price = price;
         this.eventDate = DateTimeUtil.toEpochMilliSeconds(eventDate);
@@ -35,5 +36,6 @@ public class UserTicketResponse {
         this.metadata = metadata;
         this.contractAddress = contractAddress;
         this.eventId = eventId;
+        this.artistName = artistName;
     }
 }
