@@ -1,6 +1,6 @@
 package com.backend.connectable.event.ui;
 
-import com.backend.connectable.event.domain.SalesOption;
+import com.backend.connectable.event.domain.EventSalesOption;
 import com.backend.connectable.event.domain.TicketMetadata;
 import com.backend.connectable.event.service.EventService;
 import com.backend.connectable.event.ui.dto.EventDetailResponse;
@@ -82,7 +82,7 @@ class EventControllerTest {
         LocalDateTime.of(2022, 8, 1, 19, 0),
         100000,
         "서울특별시 강남구 테헤란로 311 아남타워빌딩 7층",
-        SalesOption.FLAT_PRICE
+        EventSalesOption.FLAT_PRICE
     );
 
     private static final TicketMetadata SAMPLE_TICKET_METADATA = TicketMetadata.builder()

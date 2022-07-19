@@ -1,6 +1,6 @@
 package com.backend.connectable.event.ui.dto;
 
-import com.backend.connectable.event.domain.SalesOption;
+import com.backend.connectable.event.domain.EventSalesOption;
 import com.backend.connectable.global.common.util.DateTimeUtil;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,10 +32,10 @@ public class EventDetailResponse {
     private Long endTime;
     private int price;
     private String location;
-    private SalesOption salesOption;
+    private EventSalesOption eventSalesOption;
 
     @Builder
-    public EventDetailResponse(Long id, String name, String image, String artistName, String artistImage, LocalDateTime date, String description, LocalDateTime salesFrom, LocalDateTime salesTo, String twitterUrl, String instagramUrl, String webpageUrl, int totalTicketCount, int onSaleTicketCount, LocalDateTime startTime, LocalDateTime endTime, int price, String location, SalesOption salesOption) {
+    public EventDetailResponse(Long id, String name, String image, String artistName, String artistImage, LocalDateTime date, String description, LocalDateTime salesFrom, LocalDateTime salesTo, String twitterUrl, String instagramUrl, String webpageUrl, int totalTicketCount, int onSaleTicketCount, LocalDateTime startTime, LocalDateTime endTime, int price, String location, EventSalesOption eventSalesOption) {
         this.id = id;
         this.name = name;
         this.image = image;
@@ -54,6 +54,6 @@ public class EventDetailResponse {
         this.endTime = DateTimeUtil.toEpochMilliSeconds(endTime);
         this.price = price;
         this.location = location;
-        this.salesOption = salesOption;
+        this.eventSalesOption = eventSalesOption;
     }
 }

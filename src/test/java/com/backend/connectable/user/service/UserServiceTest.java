@@ -3,7 +3,7 @@ package com.backend.connectable.user.service;
 import com.backend.connectable.artist.domain.Artist;
 import com.backend.connectable.artist.domain.repository.ArtistRepository;
 import com.backend.connectable.event.domain.Event;
-import com.backend.connectable.event.domain.SalesOption;
+import com.backend.connectable.event.domain.EventSalesOption;
 import com.backend.connectable.event.domain.Ticket;
 import com.backend.connectable.event.domain.TicketMetadata;
 import com.backend.connectable.event.domain.repository.EventRepository;
@@ -107,7 +107,7 @@ class UserServiceTest {
             .webpageUrl("https://papimon.tistory.com/")
             .startTime(LocalDateTime.of(2022, 8, 1, 18, 0))
             .endTime(LocalDateTime.of(2022, 8, 1, 19, 0))
-            .salesOption(SalesOption.FLAT_PRICE)
+            .salesOption(EventSalesOption.FLAT_PRICE)
             .artist(artist1)
             .build();
 

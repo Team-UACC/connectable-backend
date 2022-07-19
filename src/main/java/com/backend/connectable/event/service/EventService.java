@@ -56,7 +56,7 @@ public class EventService {
             .endTime(eventDetail.getEndTime())
             .price(eventDetail.getPrice())
             .location(eventDetail.getLocation())
-            .salesOption(eventDetail.getSalesOption())
+            .salesOption(eventDetail.getEventSalesOption())
             .build();
     }
 

@@ -3,7 +3,7 @@ package com.backend.connectable;
 import com.backend.connectable.artist.domain.Artist;
 import com.backend.connectable.artist.domain.repository.ArtistRepository;
 import com.backend.connectable.event.domain.Event;
-import com.backend.connectable.event.domain.SalesOption;
+import com.backend.connectable.event.domain.EventSalesOption;
 import com.backend.connectable.event.domain.Ticket;
 import com.backend.connectable.event.domain.TicketMetadata;
 import com.backend.connectable.event.domain.repository.EventRepository;
@@ -96,9 +96,8 @@ public class DataLoader implements ApplicationRunner {
             .webpageUrl("https://papimon.tistory.com/")
             .startTime(LocalDateTime.of(2022, 8, 1, 18, 0))
             .endTime(LocalDateTime.of(2022, 8, 1, 19, 0))
-            .salesOption(SalesOption.FLAT_PRICE)
+            .eventSalesOption(EventSalesOption.FLAT_PRICE)
             .location("서울특별시 강남구 테헤란로 311 아남타워빌딩 7층")
-            .salesOption(SalesOption.FLAT_PRICE)
             .artist(bigNaughty)
             .build();
 
@@ -114,9 +113,8 @@ public class DataLoader implements ApplicationRunner {
             .webpageUrl("https://nextjs.org/")
             .startTime(LocalDateTime.of(2022, 6, 22, 19, 30))
             .endTime(LocalDateTime.of(2022, 6, 22, 21, 30))
-            .salesOption(SalesOption.FLAT_PRICE)
+            .eventSalesOption(EventSalesOption.FLAT_PRICE)
             .location("예술의 전당")
-            .salesOption(SalesOption.FLAT_PRICE)
             .artist(bigNaughty)
             .build();
 
