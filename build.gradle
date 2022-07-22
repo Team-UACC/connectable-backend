@@ -1,6 +1,7 @@
 buildscript {
     ext {
         queryDslVersion = "5.0.0"
+        mapStructVersion = "1.4.2.Final"
     }
 }
 
@@ -63,6 +64,15 @@ dependencies {
     // Lombok
     annotationProcessor 'org.projectlombok:lombok'
     compileOnly 'org.projectlombok:lombok'
+
+    /**
+     * MapStruct
+     *
+     * annotationProcessor 이슈로 Mapstructure는 Lombok보다 하위에 있어야함.
+     * https://mapstruct.org/faq/#Can-I-use-MapStruct-together-with-Project-Lombok
+     */
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapStructVersion}"
+    implementation "org.mapstruct:mapstruct:${mapStructVersion}"
 
     // Testing
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
