@@ -21,8 +21,9 @@ public class EventController {
     private final EventService eventService;
 
     @GetMapping
-    public List<EventResponse> getList() {
-        return eventService.getList();
+    public ResponseEntity<List<EventResponse>> getList() {
+        List<EventResponse> eventResponses = eventService.getList();
+        return ResponseEntity.ok(eventResponses);
     }
 
     @GetMapping("/{id}")
@@ -32,14 +33,14 @@ public class EventController {
     }
 
     @GetMapping("/{id}/tickets")
-    public List<TicketResponse> getTicketList(@PathVariable("id") Long eventId) {
-        List<TicketResponse> ticketResponse = eventService.getTicketList(eventId);
-        return ticketResponse;
+    public ResponseEntity<List<TicketResponse>> getTicketList(@PathVariable("id") Long eventId) {
+        List<TicketResponse> ticketResponses = eventService.getTicketList(eventId);
+        return ResponseEntity.ok(ticketResponses);
     }
 
     @GetMapping("/{event-id}/tickets/{ticket-id}")
-    public TicketResponse getTicketInfo(@PathVariable("event-id") Long eventId, @PathVariable("ticket-id") Long ticketId) {
+    public ResponseEntity<TicketResponse> getTicketInfo(@PathVariable("event-id") Long eventId, @PathVariable("ticket-id") Long ticketId) {
         TicketResponse ticketResponse = eventService.getTicketInfo(eventId, ticketId);
-        return ticketResponse;
+        return ResponseEntity.ok(ticketResponse);
     }
 }

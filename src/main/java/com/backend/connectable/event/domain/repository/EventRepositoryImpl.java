@@ -29,7 +29,7 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
 
     @Override
     public Optional<EventDetail> findEventDetailByEventId(Long eventId) {
-        return Optional.ofNullable(queryFactory.select(Projections.bean(
+        EventDetail result = queryFactory.select(Projections.bean(
             EventDetail.class,
             event.id,
             event.eventName,
@@ -58,13 +58,14 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
             .where(ticket.event.id.eq(eventId))
             .groupBy(event.id)
             .limit(1)
-            .fetchOne()
-        );
+            .fetchOne();
+
+        return Optional.ofNullable(result);
     }
 
     @Override
     public List<EventTicket> findAllTickets(Long eventId) {
-        return queryFactory.select(new QEventTicket(
+        List<EventTicket> result = queryFactory.select(new QEventTicket(
             ticket.id,
             ticket.price,
             artist.artistName,
@@ -82,11 +83,13 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
             .where(ticket.event.id.eq(eventId))
             .groupBy(ticket.id)
             .fetch();
+
+        return result;
     }
 
     @Override
     public Optional<EventTicket> findTicketByEventIdAndTicketId(Long eventId, Long ticketId) {
-        return Optional.ofNullable(queryFactory.select(new QEventTicket(
+        EventTicket result = queryFactory.select(new QEventTicket(
             ticket.id,
             ticket.price,
             artist.artistName,
@@ -103,7 +106,8 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
             .innerJoin(artist).on(event.artist.id.eq(artist.id))
             .where(ticket.event.id.eq(eventId)
                 .and(ticket.id.eq(ticketId)))
-            .fetchOne()
-        );
+            .fetchOne();
+
+        return Optional.ofNullable(result);
     }
 }

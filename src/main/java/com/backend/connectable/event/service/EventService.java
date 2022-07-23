@@ -1,8 +1,10 @@
 package com.backend.connectable.event.service;
 
+import com.backend.connectable.event.domain.Event;
 import com.backend.connectable.event.domain.dto.EventDetail;
 import com.backend.connectable.event.domain.dto.EventTicket;
 import com.backend.connectable.event.domain.repository.EventRepository;
+import com.backend.connectable.event.mapper.EventMapper;
 import com.backend.connectable.event.ui.dto.EventDetailResponse;
 import com.backend.connectable.event.ui.dto.EventResponse;
 import com.backend.connectable.event.ui.dto.TicketResponse;
@@ -25,60 +27,22 @@ public class EventService {
     private final EventRepository eventRepository;
 
     public List<EventResponse> getList() {
-        return eventRepository.findAll().stream()
-            .map(event -> EventResponse.builder()
-                .id(event.getId())
-                .name(event.getEventName())
-                .image(event.getEventImage())
-                .date(event.getStartTime())
-                .description(event.getDescription())
-                .salesFrom(event.getSalesFrom())
-                .salesTo(event.getSalesTo())
-                .build())
+        List<Event> events = eventRepository.findAll();
+        return events.stream()
+            .map(EventMapper.INSTANCE::eventToResponse)
             .collect(Collectors.toList());
     }
 
     public EventDetailResponse getEventDetail(Long eventId) {
         EventDetail eventDetail = eventRepository.findEventDetailByEventId(eventId)
             .orElseThrow(() -> new ConnectableException(HttpStatus.BAD_REQUEST, ErrorType.EVENT_NOT_EXISTS));
-        return EventDetailResponse.builder()
-            .id(eventDetail.getId())
-            .name(eventDetail.getEventName())
-            .image(eventDetail.getEventImage())
-            .artistName(eventDetail.getArtistName())
-            .artistImage(eventDetail.getArtistImage())
-            .date(eventDetail.getEndTime())
-            .description(eventDetail.getDescription())
-            .salesFrom(eventDetail.getSalesFrom())
-            .salesTo(eventDetail.getSalesTo())
-            .twitterUrl(eventDetail.getTwitterUrl())
-            .instagramUrl(eventDetail.getInstagramUrl())
-            .webpageUrl(eventDetail.getWebpageUrl())
-            .totalTicketCount(eventDetail.getTotalTicketCount())
-            .onSaleTicketCount(eventDetail.getOnSaleTicketCount())
-            .startTime(eventDetail.getStartTime())
-            .endTime(eventDetail.getEndTime())
-            .price(eventDetail.getPrice())
-            .location(eventDetail.getLocation())
-            .eventSalesOption(eventDetail.getEventSalesOption())
-            .build();
+        return EventMapper.INSTANCE.eventDetailToResponse(eventDetail);
     }
 
     public List<TicketResponse> getTicketList(Long eventId) {
         List<EventTicket> eventTickets = eventRepository.findAllTickets(eventId);
         return eventTickets.stream()
-            .map(ticket -> TicketResponse.builder()
-                .id(ticket.getId())
-                .price(ticket.getPrice())
-                .artistName(ticket.getArtistName())
-                .eventDate(ticket.getEventDate())
-                .eventName(ticket.getEventName())
-                .ticketSalesStatus(ticket.getTicketSalesStatus())
-                .tokenId(ticket.getTokenId())
-                .tokenUri(ticket.getTokenUri())
-                .metadata(ticket.getMetadata())
-                .contractAddress(ticket.getContractAddress())
-                .build())
+            .map(EventMapper.INSTANCE::ticketToResponse)
             .collect(Collectors.toList());
     }
 
