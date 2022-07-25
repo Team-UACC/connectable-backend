@@ -87,6 +87,10 @@ dependencies {
 
     // String-Utils
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
+
+    // Swagger
+    implementation "io.springfox:springfox-boot-starter:3.0.0"
+    implementation "io.springfox:springfox-swagger-ui:3.0.0"
 }
 
 tasks.named('test') {
