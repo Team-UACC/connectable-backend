@@ -5,7 +5,7 @@ import com.backend.connectable.event.domain.repository.TicketRepository;
 import com.backend.connectable.order.domain.Order;
 import com.backend.connectable.order.domain.OrderDetail;
 import com.backend.connectable.order.domain.OrderStatus;
-import com.backend.connectable.order.domain.repository.OrderDetailRepository;
+import com.backend.connectable.order.domain.repository.OrderRepository;
 import com.backend.connectable.order.ui.dto.OrderRequest;
 import com.backend.connectable.order.ui.dto.OrderResponse;
 import com.backend.connectable.security.ConnectableUserDetails;
@@ -24,31 +24,35 @@ import java.util.stream.Collectors;
 @Slf4j
 public class OrderService {
 
-    private final OrderDetailRepository orderDetailRepository;
+    private final OrderRepository orderRepository;
     private final TicketRepository ticketRepository;
 
     @Transactional
-    public OrderResponse registOrder(ConnectableUserDetails userDetails, OrderRequest request) {
+    public OrderResponse registOrder(ConnectableUserDetails userDetails, OrderRequest orderRequest) {
         User user = userDetails.getUser();
 
-        Order order = Order.builder()
-            .user(user)
-            .amount(request.getAmount())
-            .ordererName(request.getUserName())
-            .ordererPhoneNumber(request.getPhoneNumber())
-            .build();
-
-        List<Ticket> tickets = ticketRepository.findAllById(request.getTicketIds());
-        List<OrderDetail> orderDetails = request.getTicketIds().stream()
-            .map(ticketId -> OrderDetail.builder()
-                .order(order)
-                .orderStatus(OrderStatus.REQUESTED)
-                .txHash(null)
-                .ticket(tickets.remove(0))
-                .build())
-                .collect(Collectors.toList());
-
-        orderDetailRepository.saveAll(orderDetails);
+        Order order = mapOf(user, orderRequest);
+        orderRepository.save(order);
         return OrderResponse.from("true");
+    }
+
+    private Order mapOf(User user, OrderRequest orderRequest) {
+        List<Ticket> tickets = ticketRepository.findAllById(orderRequest.getTicketIds());
+        return new Order(
+            user,
+            orderRequest.getAmount(),
+            orderRequest.getUserName(),
+            orderRequest.getPhoneNumber(),
+            orderRequest.getTicketIds()
+                .stream().map(ticketId -> toOrderDetail(tickets.remove(0)))
+                .collect(Collectors.toList()));
+    }
+
+    private OrderDetail toOrderDetail(Ticket ticket) {
+        return new OrderDetail(
+            OrderStatus.REQUESTED,
+            null,
+            ticket
+        );
     }
 }

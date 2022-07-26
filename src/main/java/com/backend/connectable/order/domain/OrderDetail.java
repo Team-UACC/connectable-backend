@@ -15,10 +15,6 @@ public class OrderDetail extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(nullable = false)
-    private Order order;
-
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
@@ -29,11 +25,14 @@ public class OrderDetail extends BaseEntity {
     private Ticket ticket;
 
     @Builder
-    public OrderDetail(Long id, Order order, OrderStatus orderStatus, String txHash, Ticket ticket) {
+    public OrderDetail(Long id, OrderStatus orderStatus, String txHash, Ticket ticket) {
         this.id = id;
-        this.order = order;
         this.orderStatus = orderStatus;
         this.txHash = txHash;
         this.ticket = ticket;
+    }
+
+    public OrderDetail(OrderStatus orderStatus, String txHash, Ticket ticket) {
+        this(null, orderStatus, txHash, ticket);
     }
 }
