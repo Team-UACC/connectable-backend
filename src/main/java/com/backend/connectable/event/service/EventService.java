@@ -56,6 +56,7 @@ public class EventService {
             .artistName(eventTicket.getArtistName())
             .eventDate(eventTicket.getEventDate())
             .eventName(eventTicket.getEventName())
+            .ticketSalesStatus(eventTicket.getTicketSalesStatus())
             .tokenId(eventTicket.getTokenId())
             .tokenUri(eventTicket.getTokenUri())
             .metadata(eventTicket.getMetadata())
