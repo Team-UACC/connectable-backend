@@ -1,17 +1,15 @@
 package com.backend.connectable.order.domain;
 
 import com.backend.connectable.event.domain.Ticket;
+import com.backend.connectable.global.entity.BaseEntity;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
-
 
 @Entity
 @NoArgsConstructor
-public class OrderDetail {
+public class OrderDetail extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,20 +22,17 @@ public class OrderDetail {
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
-    @LastModifiedDate
-    private LocalDateTime modifiedDate;
-
+    @Column(nullable = true)
     private String txHash;
 
     @OneToOne
     private Ticket ticket;
 
     @Builder
-    public OrderDetail(Long id, Order order, OrderStatus orderStatus, LocalDateTime modifiedDate, String txHash, Ticket ticket) {
+    public OrderDetail(Long id, Order order, OrderStatus orderStatus, String txHash, Ticket ticket) {
         this.id = id;
         this.order = order;
         this.orderStatus = orderStatus;
-        this.modifiedDate = modifiedDate;
         this.txHash = txHash;
         this.ticket = ticket;
     }

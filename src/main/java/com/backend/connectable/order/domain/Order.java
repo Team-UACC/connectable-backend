@@ -1,17 +1,16 @@
 package com.backend.connectable.order.domain;
 
+import com.backend.connectable.global.entity.BaseEntity;
 import com.backend.connectable.user.domain.User;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor
-@Table(name = "ORDERS")
-public class Order {
+@Table(name = "orders")
+public class Order extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,9 +25,6 @@ public class Order {
     private String ordererName;
 
     private String ordererPhoneNumber;
-
-    @CreatedDate
-    private LocalDateTime createdAt;
 
     @Builder
     public Order(Long id, User user, int amount, String ordererName, String ordererPhoneNumber) {

@@ -30,4 +30,11 @@ public class OrderRequest {
     private List<Long> ticketIds;
 
     private int amount;
+
+    public OrderRequest(String userName, String phoneNumber, List<Long> ticketIds, int amount) {
+        this.userName = userName;
+        this.phoneNumber = phoneNumber;
+        this.ticketIds = ticketIds;
+        this.amount = amount;
+    }
 }
