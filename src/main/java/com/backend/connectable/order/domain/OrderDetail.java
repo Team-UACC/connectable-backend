@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @NoArgsConstructor
@@ -24,6 +25,10 @@ public class OrderDetail extends BaseEntity {
     @OneToOne
     private Ticket ticket;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
+    private Order order;
+
     @Builder
     public OrderDetail(Long id, OrderStatus orderStatus, String txHash, Ticket ticket) {
         this.id = id;
@@ -34,5 +39,13 @@ public class OrderDetail extends BaseEntity {
 
     public OrderDetail(OrderStatus orderStatus, String txHash, Ticket ticket) {
         this(null, orderStatus, txHash, ticket);
+    }
+
+    public void setOrder(Order order) {
+        if (this.order != null) {
+            this.order.getOrderDetails().remove(this);
+        }
+        this.order = order;
+        this.order.getOrderDetails().add(this);
     }
 }

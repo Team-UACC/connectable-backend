@@ -151,7 +151,7 @@ class OrderServiceTest {
         OrderRequest orderRequest = new OrderRequest("이정필", "010-3333-7777", Arrays.asList(1L, 2L), 30000);
 
         // when
-        OrderResponse orderResponse = orderService.registOrder(connectableUserDetails, orderRequest);
+        OrderResponse orderResponse = orderService.createOrder(connectableUserDetails, orderRequest);
 
         // then
         Assertions.assertThat(orderResponse.getStatus()).isEqualTo("true");

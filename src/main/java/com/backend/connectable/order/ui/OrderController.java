@@ -22,11 +22,11 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping
-    public ResponseEntity<OrderResponse> registOrder(
+    public ResponseEntity<OrderResponse> createOrder(
         @AuthenticationPrincipal ConnectableUserDetails userDetails,
         @RequestBody @Validated(ValidationSequence.class) OrderRequest request
     ) {
-        OrderResponse orderResponse = orderService.registOrder(userDetails, request);
+        OrderResponse orderResponse = orderService.createOrder(userDetails, request);
         return ResponseEntity.ok(orderResponse);
     }
 }
