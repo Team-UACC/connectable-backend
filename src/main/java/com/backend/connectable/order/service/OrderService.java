@@ -33,7 +33,7 @@ public class OrderService {
 
         Order order = mapOf(user, orderRequest);
         orderRepository.save(order);
-        return OrderResponse.from("true");
+        return OrderResponse.from("success");
     }
 
     private Order mapOf(User user, OrderRequest orderRequest) {

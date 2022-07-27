@@ -15,7 +15,7 @@ public class OrderResponse {
 
     public static OrderResponse from(String status) {
         return new OrderResponse(
-            "true"
+            status
         );
     }
 }

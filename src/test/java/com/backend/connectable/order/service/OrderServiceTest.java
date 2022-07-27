@@ -154,6 +154,6 @@ class OrderServiceTest {
         OrderResponse orderResponse = orderService.registOrder(connectableUserDetails, orderRequest);
 
         // then
-        Assertions.assertThat(orderResponse.getStatus()).isEqualTo("true");
+        Assertions.assertThat(orderResponse.getStatus()).isEqualTo("success");
     }
 }
