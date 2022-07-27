@@ -12,6 +12,7 @@ import com.backend.connectable.security.ConnectableUserDetails;
 import com.backend.connectable.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,31 +22,35 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional
-@Slf4j
 public class OrderService {
 
     private final OrderRepository orderRepository;
     private final TicketRepository ticketRepository;
 
     @Transactional
-    public OrderResponse registOrder(ConnectableUserDetails userDetails, OrderRequest orderRequest) {
+    public OrderResponse createOrder(ConnectableUserDetails userDetails, OrderRequest orderRequest) {
         User user = userDetails.getUser();
-
-        Order order = mapOf(user, orderRequest);
+        Order order = generateOrder(user, orderRequest);
         orderRepository.save(order);
         return OrderResponse.from("success");
     }
 
-    private Order mapOf(User user, OrderRequest orderRequest) {
-        List<Ticket> tickets = ticketRepository.findAllById(orderRequest.getTicketIds());
-        return new Order(
-            user,
-            orderRequest.getAmount(),
-            orderRequest.getUserName(),
-            orderRequest.getPhoneNumber(),
-            orderRequest.getTicketIds()
-                .stream().map(ticketId -> toOrderDetail(tickets.remove(0)))
-                .collect(Collectors.toList()));
+    private Order generateOrder(User user, OrderRequest orderRequest) {
+        List<OrderDetail> orderDetails = generateOrderDetails(orderRequest.getTicketIds());
+        Order order = Order.builder()
+            .user(user)
+            .ordererName(orderRequest.getUserName())
+            .ordererPhoneNumber(orderRequest.getPhoneNumber())
+            .build();
+        order.addOrderDetails(orderDetails);
+        return order;
+    }
+
+    private List<OrderDetail> generateOrderDetails(List<Long> ticketIds) {
+        List<Ticket> tickets = ticketRepository.findAllById(ticketIds);
+        return tickets.stream()
+            .map(this::toOrderDetail)
+            .collect(Collectors.toList());
     }
 
     private OrderDetail toOrderDetail(Ticket ticket) {

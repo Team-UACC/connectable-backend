@@ -5,6 +5,10 @@ import com.backend.connectable.artist.domain.repository.ArtistRepository;
 import com.backend.connectable.event.domain.*;
 import com.backend.connectable.event.domain.repository.EventRepository;
 import com.backend.connectable.event.domain.repository.TicketRepository;
+import com.backend.connectable.order.domain.Order;
+import com.backend.connectable.order.domain.OrderDetail;
+import com.backend.connectable.order.domain.OrderStatus;
+import com.backend.connectable.order.domain.repository.OrderRepository;
 import com.backend.connectable.user.domain.User;
 import com.backend.connectable.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 @Profile("dev")
 @Transactional
@@ -32,6 +37,7 @@ public class DataLoader implements ApplicationRunner {
     private final EventRepository eventRepository;
     private final TicketRepository ticketRepository;
     private final ArtistRepository artistRepository;
+    private final OrderRepository orderRepository;
 
     private static final String JOEL_EVENT_IMG_URL = "https://connectable-events.s3.ap-northeast-2.amazonaws.com/image_0xtest.jpeg";
     private static final String JOEL_EVENT_CONTRACT_ADDRESS = "0xa9dac3f1c04b55d7f8d6df115c47ecbc451c4692";
@@ -365,5 +371,31 @@ public class DataLoader implements ApplicationRunner {
             .build();
 
         ticketRepository.saveAll(Arrays.asList(ryanTicket1, ryanTicket2, ryanTicket3, ryanTicket4, ryanTicket5, ryanTicket6));
+
+        Order order1 = Order.builder()
+            .user(joel)
+            .ordererName("조영상")
+            .ordererPhoneNumber("010-1234-5678")
+            .build();
+
+        OrderDetail orderDetail1 = new OrderDetail(OrderStatus.REQUESTED, null, joelTicket4);
+        OrderDetail orderDetail2 = new OrderDetail(OrderStatus.REQUESTED, null, joelTicket5);
+        OrderDetail orderDetail3 = new OrderDetail(OrderStatus.REQUESTED, null, joelTicket6);
+        List<OrderDetail> order1Details = Arrays.asList(orderDetail1, orderDetail2, orderDetail3);
+        order1.addOrderDetails(order1Details);
+
+        Order order2 = Order.builder()
+            .user(ihh)
+            .ordererName("이호현")
+            .ordererPhoneNumber("010-9876-5432")
+            .build();
+
+        OrderDetail orderDetail4 = new OrderDetail(OrderStatus.REQUESTED, null, ryanTicket4);
+        OrderDetail orderDetail5 = new OrderDetail(OrderStatus.REQUESTED, null, ryanTicket5);
+        OrderDetail orderDetail6 = new OrderDetail(OrderStatus.REQUESTED, null, ryanTicket6);
+        List<OrderDetail> order2Details = Arrays.asList(orderDetail4, orderDetail5, orderDetail6);
+        order2.addOrderDetails(order2Details);
+
+        orderRepository.saveAll(Arrays.asList(order1, order2));
     }
 }

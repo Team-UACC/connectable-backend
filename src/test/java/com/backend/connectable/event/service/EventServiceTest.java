@@ -5,6 +5,7 @@ import com.backend.connectable.artist.domain.repository.ArtistRepository;
 import com.backend.connectable.event.domain.Event;
 import com.backend.connectable.event.domain.repository.EventRepository;
 import com.backend.connectable.event.ui.dto.EventResponse;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,12 @@ class EventServiceTest {
 
     @Autowired
     EventService eventService;
+
+    @BeforeEach
+    void setUp() {
+        eventRepository.deleteAll();
+        artistRepository.deleteAll();
+    }
 
     @DisplayName("이벤트 목록을 여러개 조회한다.")
     @Test
