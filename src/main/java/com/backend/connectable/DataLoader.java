@@ -140,7 +140,7 @@ public class DataLoader implements ApplicationRunner {
             .tokenUri("https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/1.json")
             .tokenId(1)
             .price(100000)
-            .ticketSalesStatus(TicketSalesStatus.ON_SALE)
+            .ticketSalesStatus(TicketSalesStatus.SOLD_OUT)
             .ticketMetadata(joelTicket1Metadata)
             .build();
 
@@ -161,7 +161,7 @@ public class DataLoader implements ApplicationRunner {
             .tokenUri("https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/2.json")
             .tokenId(2)
             .price(100000)
-            .ticketSalesStatus(TicketSalesStatus.ON_SALE)
+            .ticketSalesStatus(TicketSalesStatus.SOLD_OUT)
             .ticketMetadata(joelTicket2Metadata)
             .build();
 
@@ -182,7 +182,7 @@ public class DataLoader implements ApplicationRunner {
             .tokenUri("https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/3.json")
             .tokenId(3)
             .price(100000)
-            .ticketSalesStatus(TicketSalesStatus.ON_SALE)
+            .ticketSalesStatus(TicketSalesStatus.SOLD_OUT)
             .ticketMetadata(joelTicket3Metadata)
             .build();
 
@@ -203,7 +203,7 @@ public class DataLoader implements ApplicationRunner {
             .tokenUri("https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/4.json")
             .tokenId(4)
             .price(100000)
-            .ticketSalesStatus(TicketSalesStatus.SOLD_OUT)
+            .ticketSalesStatus(TicketSalesStatus.ON_SALE)
             .ticketMetadata(joelTicket4Metadata)
             .build();
 
@@ -224,7 +224,7 @@ public class DataLoader implements ApplicationRunner {
             .tokenUri("https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/5.json")
             .tokenId(5)
             .price(100000)
-            .ticketSalesStatus(TicketSalesStatus.SOLD_OUT)
+            .ticketSalesStatus(TicketSalesStatus.ON_SALE)
             .ticketMetadata(joelTicket5Metadata)
             .build();
 
@@ -245,7 +245,7 @@ public class DataLoader implements ApplicationRunner {
             .tokenUri("https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/6.json")
             .tokenId(6)
             .price(100000)
-            .ticketSalesStatus(TicketSalesStatus.SOLD_OUT)
+            .ticketSalesStatus(TicketSalesStatus.ON_SALE)
             .ticketMetadata(joelTicket6Metadata)
             .build();
         ticketRepository.saveAll(Arrays.asList(joelTicket1, joelTicket2, joelTicket3, joelTicket4, joelTicket5, joelTicket6));
@@ -266,7 +266,7 @@ public class DataLoader implements ApplicationRunner {
             .tokenUri("https://connectable-events.s3.ap-northeast-2.amazonaws.com/ryan-event/json/1.json")
             .tokenId(1)
             .price(100000)
-            .ticketSalesStatus(TicketSalesStatus.ON_SALE)
+            .ticketSalesStatus(TicketSalesStatus.SOLD_OUT)
             .ticketMetadata(ryanTicket1Metadata)
             .build();
 
@@ -286,7 +286,7 @@ public class DataLoader implements ApplicationRunner {
             .tokenUri("https://connectable-events.s3.ap-northeast-2.amazonaws.com/ryan-event/json/2.json")
             .tokenId(2)
             .price(100000)
-            .ticketSalesStatus(TicketSalesStatus.SOLD_OUT)
+            .ticketSalesStatus(TicketSalesStatus.ON_SALE)
             .ticketMetadata(ryanTicket2Metadata)
             .build();
 
@@ -306,7 +306,7 @@ public class DataLoader implements ApplicationRunner {
             .tokenUri("https://connectable-events.s3.ap-northeast-2.amazonaws.com/ryan-event/json/3.json")
             .tokenId(3)
             .price(100000)
-            .ticketSalesStatus(TicketSalesStatus.SOLD_OUT)
+            .ticketSalesStatus(TicketSalesStatus.ON_SALE)
             .ticketMetadata(ryanTicket3Metadata)
             .build();
 
@@ -326,7 +326,7 @@ public class DataLoader implements ApplicationRunner {
             .tokenUri("https://connectable-events.s3.ap-northeast-2.amazonaws.com/ryan-event/json/4.json")
             .tokenId(4)
             .price(100000)
-            .ticketSalesStatus(TicketSalesStatus.SOLD_OUT)
+            .ticketSalesStatus(TicketSalesStatus.ON_SALE)
             .ticketMetadata(ryanTicket4Metadata)
             .build();
 
@@ -346,7 +346,7 @@ public class DataLoader implements ApplicationRunner {
             .tokenUri("https://connectable-events.s3.ap-northeast-2.amazonaws.com/ryan-event/json/5.json")
             .tokenId(5)
             .price(100000)
-            .ticketSalesStatus(TicketSalesStatus.SOLD_OUT)
+            .ticketSalesStatus(TicketSalesStatus.ON_SALE)
             .ticketMetadata(ryanTicket5Metadata)
             .build();
 
@@ -366,7 +366,7 @@ public class DataLoader implements ApplicationRunner {
             .tokenUri("https://connectable-events.s3.ap-northeast-2.amazonaws.com/ryan-event/json/6.json")
             .tokenId(6)
             .price(100000)
-            .ticketSalesStatus(TicketSalesStatus.SOLD_OUT)
+            .ticketSalesStatus(TicketSalesStatus.ON_SALE)
             .ticketMetadata(ryanTicket6Metadata)
             .build();
 
