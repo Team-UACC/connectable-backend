@@ -3,12 +3,13 @@ package com.backend.connectable.order.domain;
 import com.backend.connectable.event.domain.Ticket;
 import com.backend.connectable.global.entity.BaseEntity;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Objects;
 
 @Entity
+@Getter
 @NoArgsConstructor
 public class OrderDetail extends BaseEntity {
 
@@ -22,7 +23,7 @@ public class OrderDetail extends BaseEntity {
     @Column(nullable = true)
     private String txHash;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     private Ticket ticket;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -47,5 +48,37 @@ public class OrderDetail extends BaseEntity {
         }
         this.order = order;
         this.order.getOrderDetails().add(this);
+    }
+
+    public void paid() {
+        this.orderStatus = orderStatus.toPaid();
+    }
+
+    public void unpaid() {
+        this.orderStatus = orderStatus.toUnpaid();
+    }
+
+    public void refund() {
+        this.orderStatus = orderStatus.toRefund();
+    }
+
+    public void transferSuccess() {
+        this.orderStatus = orderStatus.toTransferSuccess();
+    }
+
+    public void transferFail() {
+        this.orderStatus = orderStatus.toTransferFail();
+    }
+
+    public String getKlaytnAddress() {
+        return order.getUser().getKlaytnAddress();
+    }
+
+    public int getTokenId() {
+        return ticket.getTokenId();
+    }
+
+    public String getContractAddress() {
+        return ticket.getContractAddress();
     }
 }

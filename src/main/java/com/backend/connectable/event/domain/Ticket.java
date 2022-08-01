@@ -49,4 +49,8 @@ public class Ticket {
         this.ticketSalesStatus = ticketSalesStatus;
         this.ticketMetadata = ticketMetadata;
     }
+
+    public String getContractAddress() {
+        return event.getContractAddress();
+    }
 }
