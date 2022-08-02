@@ -39,6 +39,7 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
             event.startTime,
             event.endTime,
             event.description,
+            event.contractAddress,
             event.salesFrom,
             event.salesTo,
             event.twitterUrl,
