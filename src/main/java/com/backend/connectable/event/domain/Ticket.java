@@ -53,4 +53,8 @@ public class Ticket {
     public String getContractAddress() {
         return event.getContractAddress();
     }
+
+    public void transferredTo(User user) {
+        this.user = user;
+    }
 }

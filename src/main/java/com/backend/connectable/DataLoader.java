@@ -198,7 +198,7 @@ public class DataLoader implements ApplicationRunner {
             .build();
 
         Ticket joelTicket4 = Ticket.builder()
-            .user(admin)
+            .user(joel)
             .event(joelEvent)
             .tokenUri("https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/4.json")
             .tokenId(4)
@@ -378,7 +378,7 @@ public class DataLoader implements ApplicationRunner {
             .ordererPhoneNumber("010-1234-5678")
             .build();
 
-        OrderDetail orderDetail1 = new OrderDetail(OrderStatus.REQUESTED, null, joelTicket4);
+        OrderDetail orderDetail1 = new OrderDetail(OrderStatus.TRANSFER_SUCCESS, "0x5a79e442c91f49bad73ed753625a72e2043d3806682f69f1fcdbdead98a50a2f", joelTicket4);
         OrderDetail orderDetail2 = new OrderDetail(OrderStatus.REQUESTED, null, joelTicket5);
         OrderDetail orderDetail3 = new OrderDetail(OrderStatus.REQUESTED, null, joelTicket6);
         List<OrderDetail> order1Details = Arrays.asList(orderDetail1, orderDetail2, orderDetail3);
