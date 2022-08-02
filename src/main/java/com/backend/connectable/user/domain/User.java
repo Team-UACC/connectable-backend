@@ -32,7 +32,7 @@ public class User {
     @Builder
     public User(Long id, String klaytnAddress, String nickname, String phoneNumber, boolean privacyAgreement, boolean isActive) {
         this.id = id;
-        this.klaytnAddress = klaytnAddress;
+        this.klaytnAddress = klaytnAddress.toLowerCase();
         this.nickname = nickname;
         this.phoneNumber = phoneNumber;
         this.privacyAgreement = privacyAgreement;
