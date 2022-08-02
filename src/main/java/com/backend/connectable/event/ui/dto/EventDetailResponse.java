@@ -20,6 +20,7 @@ public class EventDetailResponse {
     private String artistName;
     private String artistImage;
     private String description;
+    private String contractAddress;
     private Long salesFrom;
     private Long salesTo;
     private String twitterUrl;
@@ -34,13 +35,17 @@ public class EventDetailResponse {
     private EventSalesOption eventSalesOption;
 
     @Builder
-    public EventDetailResponse(Long id, String name, String image, String artistName, String artistImage, String description, LocalDateTime salesFrom, LocalDateTime salesTo, String twitterUrl, String instagramUrl, String webpageUrl, int totalTicketCount, int onSaleTicketCount, LocalDateTime startTime, LocalDateTime endTime, int price, String location, EventSalesOption eventSalesOption) {
+    public EventDetailResponse(Long id, String name, String image, String artistName, String artistImage, String description,
+                               String contractAddress, LocalDateTime salesFrom, LocalDateTime salesTo, String twitterUrl,
+                               String instagramUrl, String webpageUrl, int totalTicketCount, int onSaleTicketCount,
+                               LocalDateTime startTime, LocalDateTime endTime, int price, String location, EventSalesOption eventSalesOption) {
         this.id = id;
         this.name = name;
         this.image = image;
         this.artistName = artistName;
         this.artistImage = artistImage;
         this.description = description;
+        this.contractAddress = contractAddress;
         this.salesFrom = DateTimeUtil.toEpochMilliSeconds(salesFrom);
         this.salesTo = DateTimeUtil.toEpochMilliSeconds(salesTo);
         this.twitterUrl = twitterUrl;

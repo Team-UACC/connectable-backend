@@ -73,6 +73,7 @@ class EventControllerTest {
         "빅나티",
         "https://user-images.githubusercontent.com/54073761/179218800-dda72067-3b25-4ca3-b53b-4895c5e49213.jpeg",
         "이씨 콘서트 at Connectable",
+        "0x1234abcd",
         LocalDateTime.of(2022, 7, 12, 0, 0),
         LocalDateTime.of(2022, 7, 30, 0, 0),
         "https://twitter.com/iamprogrammerio/status/666930927675797504",
@@ -167,6 +168,7 @@ class EventControllerTest {
                 .contentType(APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.artistName").value("빅나티"))
+            .andExpect(jsonPath("$.contractAddress").value("0x1234abcd"))
             .andDo(print());
     }
 

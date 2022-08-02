@@ -20,6 +20,7 @@ public class EventDetail {
     private String artistName;
     private String artistImage;
     private String description;
+    private String contractAddress;
     private LocalDateTime salesFrom;
     private LocalDateTime salesTo;
     private String twitterUrl;
