@@ -25,6 +25,9 @@ public class JwtProvider {
     @Value("${jwt.expire-time}")
     private Long duration;
 
+    @Value("${jwt.admin-payload}")
+    private String adminPayload;
+
     private Algorithm algorithm;
 
     private final UserDetailsService userDetailsService;
@@ -63,5 +66,12 @@ public class JwtProvider {
     public Authentication getAuthentication(String token) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(exportClaim(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+    }
+
+    public void verifyAdmin(String token) {
+        String adminPayload = exportClaim(token);
+        if (!this.adminPayload.equals(adminPayload)) {
+            throw new IllegalArgumentException("어드민 토큰이 아닙니다.");
+        }
     }
 }
