@@ -11,6 +11,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 
 @RequiredArgsConstructor
@@ -22,11 +23,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = AuthorizationExtractor.extract(request);
+        String path = request.getRequestURI();
         if (!Objects.isNull(token)) {
-            jwtProvider.verify(token);
-            Authentication authentication = jwtProvider.getAuthentication(token);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            verifyTokenAccordingToPath(token, path);
         }
         filterChain.doFilter(request, response);
+    }
+
+    private void verifyTokenAccordingToPath(String token, String path) {
+        if (path.startsWith("/admin")) {
+            jwtProvider.verifyAdmin(token);
+            return;
+        }
+        jwtProvider.verify(token);
+        Authentication authentication = jwtProvider.getAuthentication(token);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 }

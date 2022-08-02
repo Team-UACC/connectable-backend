@@ -22,6 +22,7 @@ spring:
 jwt:
    secret: uacc-to-the-moon
    expire-time: 14400000
+   admin-payload: admin-payload
 logging:
   level:
     org:
@@ -68,6 +69,7 @@ aws:
 jwt:
   secret: uacc-to-the-moon
   expire-time: 14400000
+  admin-payload: ${jwt.admin_payload}
 logging:
   level:
     org:
