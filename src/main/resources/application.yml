@@ -49,7 +49,7 @@ spring:
     import: 'aws-parameterstore:'
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: ${jpa.ddl_auto}
     properties:
       hibernate:
         format_sql: true
