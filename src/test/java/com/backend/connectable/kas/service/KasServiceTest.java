@@ -4,9 +4,12 @@ import com.backend.connectable.kas.service.dto.*;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -21,6 +24,32 @@ class KasServiceTest {
 
     private static String NEW_CONTRACT_ADDRESS = "0xd933e90917791e8441f42478ea1e882f599b1941";
     private static String NEW_CONTRACT_NAME = "";
+
+    @Value("${kas.settings.account-pool-address}")
+    public String poolAddress;
+
+    @Test
+    void findAllTokensOfContractAddressesOwnedByUser() throws InterruptedException {
+        ContractItemsResponse myContracts = kasService.getMyContracts();
+        List<String> myContractAddresses  = myContracts.getItems().stream()
+            .map(ContractItemResponse::getAddress)
+            .filter(address -> !address.equalsIgnoreCase("updateme"))
+            .collect(Collectors.toList());
+        System.out.println("MyContract: " + myContractAddresses);
+
+        for (String myContractAddress : myContractAddresses) {
+            int randomId = (int) Math.floor(Math.random() * (1000-100+1) + 100);
+            kasService.mintMyToken(myContractAddress, randomId, "https://" + myContractAddress + "/" + randomId + ".json");
+        }
+
+        Thread.sleep(5000);
+
+        Map<String, TokensResponse> allTokensOfContractAddressesOwnedByUser =
+            kasService.findAllTokensOfContractAddressesOwnedByUser(myContractAddresses, poolAddress);
+        for (TokensResponse value : allTokensOfContractAddressesOwnedByUser.values()) {
+            System.out.println(value.getTokenUris());
+        }
+    }
 
     @Test
     @Order(1)

@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -56,5 +58,43 @@ public class Ticket {
 
     public void transferredTo(User user) {
         this.user = user;
+        this.soldOut();
+    }
+
+    public void toPending() {
+        this.ticketSalesStatus = this.ticketSalesStatus.toPending();
+    }
+
+    public void soldOut() {
+        this.ticketSalesStatus = this.ticketSalesStatus.soldOut();
+    }
+
+    public void onSale() {
+        this.ticketSalesStatus = this.ticketSalesStatus.onSale();
+    }
+
+    public LocalDateTime getStartTime() {
+        return this.event.getStartTime();
+    }
+
+    public Long getEventId() {
+        return this.event.getId();
+    }
+
+    public String getArtistName() {
+        return this.event.getArtistName();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Ticket ticket = (Ticket) o;
+        return Objects.equals(id, ticket.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

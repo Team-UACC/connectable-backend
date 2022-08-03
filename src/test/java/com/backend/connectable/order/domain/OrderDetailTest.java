@@ -1,5 +1,7 @@
 package com.backend.connectable.order.domain;
 
+import com.backend.connectable.event.domain.Ticket;
+import com.backend.connectable.event.domain.TicketSalesStatus;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -8,12 +10,17 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 class OrderDetailTest {
 
+    Ticket pendingTicket = Ticket.builder()
+        .ticketSalesStatus(TicketSalesStatus.PENDING)
+        .build();
+
     @DisplayName("OrderDetail의 orderStatus가 Request인 경우 Paid로 변경이 가능하다.")
     @Test
     void toPaid() {
         // given
         OrderDetail orderDetail = OrderDetail.builder()
             .orderStatus(OrderStatus.REQUESTED)
+            .ticket(pendingTicket)
             .build();
 
         // when
@@ -27,6 +34,7 @@ class OrderDetailTest {
         // given
         OrderDetail orderDetail = OrderDetail.builder()
             .orderStatus(OrderStatus.TRANSFER_FAIL)
+            .ticket(pendingTicket)
             .build();
 
         // when & then
@@ -40,6 +48,7 @@ class OrderDetailTest {
         // given
         OrderDetail orderDetail = OrderDetail.builder()
             .orderStatus(OrderStatus.REQUESTED)
+            .ticket(pendingTicket)
             .build();
 
         // when
@@ -53,6 +62,7 @@ class OrderDetailTest {
         // given
         OrderDetail orderDetail = OrderDetail.builder()
             .orderStatus(OrderStatus.TRANSFER_FAIL)
+            .ticket(pendingTicket)
             .build();
 
         // when & then
@@ -66,6 +76,7 @@ class OrderDetailTest {
         // given
         OrderDetail orderDetail = OrderDetail.builder()
             .orderStatus(OrderStatus.REQUESTED)
+            .ticket(pendingTicket)
             .build();
 
         // when
@@ -79,6 +90,7 @@ class OrderDetailTest {
         // given
         OrderDetail orderDetail = OrderDetail.builder()
             .orderStatus(OrderStatus.TRANSFER_FAIL)
+            .ticket(pendingTicket)
             .build();
 
         // when & then
@@ -92,6 +104,7 @@ class OrderDetailTest {
         // given
         OrderDetail orderDetail = OrderDetail.builder()
             .orderStatus(OrderStatus.REQUESTED)
+            .ticket(pendingTicket)
             .build();
 
         // when & then
@@ -105,6 +118,7 @@ class OrderDetailTest {
         // given
         OrderDetail orderDetail = OrderDetail.builder()
             .orderStatus(OrderStatus.PAID)
+            .ticket(pendingTicket)
             .build();
 
         // when
@@ -118,6 +132,7 @@ class OrderDetailTest {
         // given
         OrderDetail orderDetail = OrderDetail.builder()
             .orderStatus(OrderStatus.REQUESTED)
+            .ticket(pendingTicket)
             .build();
 
         // when & then

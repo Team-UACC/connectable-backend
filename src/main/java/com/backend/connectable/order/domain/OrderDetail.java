@@ -56,10 +56,12 @@ public class OrderDetail extends BaseEntity {
 
     public void unpaid() {
         this.orderStatus = orderStatus.toUnpaid();
+        this.ticket.onSale();
     }
 
     public void refund() {
         this.orderStatus = orderStatus.toRefund();
+        this.ticket.onSale();
     }
 
     public void transferSuccess(String txHash) {

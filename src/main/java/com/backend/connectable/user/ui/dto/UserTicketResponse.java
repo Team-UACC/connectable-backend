@@ -1,11 +1,14 @@
 package com.backend.connectable.user.ui.dto;
 
+import com.backend.connectable.event.domain.Ticket;
 import com.backend.connectable.event.domain.TicketMetadata;
 import com.backend.connectable.event.domain.TicketSalesStatus;
 import com.backend.connectable.global.common.util.DateTimeUtil;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -38,5 +41,26 @@ public class UserTicketResponse {
         this.contractAddress = contractAddress;
         this.eventId = eventId;
         this.artistName = artistName;
+    }
+
+    public static List<UserTicketResponse> toList(List<Ticket> tickets) {
+        return tickets.stream()
+            .map(UserTicketResponse::of)
+            .collect(Collectors.toList());
+    }
+
+    public static UserTicketResponse of(Ticket ticket) {
+        return UserTicketResponse.builder()
+            .id(ticket.getId())
+            .price(ticket.getPrice())
+            .eventDate(ticket.getStartTime())
+            .ticketSalesStatus(ticket.getTicketSalesStatus())
+            .tokenId(ticket.getTokenId())
+            .tokenUri(ticket.getTokenUri())
+            .metadata(ticket.getTicketMetadata())
+            .contractAddress(ticket.getContractAddress())
+            .eventId(ticket.getEventId())
+            .artistName(ticket.getArtistName())
+            .build();
     }
 }

@@ -118,7 +118,7 @@ class AdminServiceTest {
         .tokenUri("https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/4.json")
         .tokenId(4)
         .price(100000)
-        .ticketSalesStatus(TicketSalesStatus.ON_SALE)
+        .ticketSalesStatus(TicketSalesStatus.PENDING)
         .ticketMetadata(joelTicket4Metadata)
         .build();
 
@@ -139,7 +139,7 @@ class AdminServiceTest {
         .tokenUri("https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/5.json")
         .tokenId(5)
         .price(100000)
-        .ticketSalesStatus(TicketSalesStatus.ON_SALE)
+        .ticketSalesStatus(TicketSalesStatus.PENDING)
         .ticketMetadata(joelTicket5Metadata)
         .build();
 
@@ -184,6 +184,7 @@ class AdminServiceTest {
         assertThat(resultOrderDetail.getOrderStatus()).isEqualTo(OrderStatus.TRANSFER_SUCCESS);
         assertThat(resultOrderDetail.getTxHash()).isEqualTo("0x1234abcd");
         assertThat(resultOrderDetail.getTicket().getUser().getId()).isEqualTo(joel.getId());
+        assertThat(resultOrderDetail.getTicket().getTicketSalesStatus()).isEqualTo(TicketSalesStatus.SOLD_OUT);
     }
 
     @DisplayName("OrderDetail의 ID에 대해 Unpaid로 상태를 변경할 수 있다.")
@@ -198,6 +199,7 @@ class AdminServiceTest {
         // then
         OrderDetail resultOrderDetail = orderDetailRepository.findById(orderDetailId).get();
         assertThat(resultOrderDetail.getOrderStatus()).isEqualTo(OrderStatus.UNPAID);
+        assertThat(resultOrderDetail.getTicket().getTicketSalesStatus()).isEqualTo(TicketSalesStatus.ON_SALE);
     }
 
     @DisplayName("OrderDetail의 ID에 대해 Refund로 상태를 변경할 수 있다.")
@@ -212,6 +214,7 @@ class AdminServiceTest {
         // then
         OrderDetail resultOrderDetail = orderDetailRepository.findById(orderDetailId).get();
         assertThat(resultOrderDetail.getOrderStatus()).isEqualTo(OrderStatus.REFUND);
+        assertThat(resultOrderDetail.getTicket().getTicketSalesStatus()).isEqualTo(TicketSalesStatus.ON_SALE);
     }
 
     @AfterEach
