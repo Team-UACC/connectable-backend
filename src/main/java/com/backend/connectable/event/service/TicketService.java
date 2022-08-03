@@ -1,6 +1,5 @@
 package com.backend.connectable.event.service;
 
-import com.backend.connectable.event.domain.TicketSalesStatus;
 import com.backend.connectable.event.domain.repository.TicketRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

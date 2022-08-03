@@ -11,8 +11,6 @@ import com.backend.connectable.order.ui.dto.OrderResponse;
 import com.backend.connectable.security.ConnectableUserDetails;
 import com.backend.connectable.user.domain.User;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
