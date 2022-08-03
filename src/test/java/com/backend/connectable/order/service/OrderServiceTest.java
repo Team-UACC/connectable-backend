@@ -10,7 +10,6 @@ import com.backend.connectable.order.ui.dto.OrderResponse;
 import com.backend.connectable.security.ConnectableUserDetails;
 import com.backend.connectable.user.domain.User;
 import com.backend.connectable.user.domain.repository.UserRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,6 +21,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -133,7 +135,7 @@ class OrderServiceTest {
             .event(event)
             .tokenUri("https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/2.json")
             .price(100000)
-            .ticketSalesStatus(TicketSalesStatus.SOLD_OUT)
+            .ticketSalesStatus(TicketSalesStatus.ON_SALE)
             .ticketMetadata(ticket2Metadata)
             .build();
 
@@ -145,15 +147,20 @@ class OrderServiceTest {
 
     @DisplayName("티켓을 구매하였을때, 주문정보 및 주문상세정보가 등록된다.")
     @Test
-    void registOrder() {
+    void createOrder() {
         // given
         ConnectableUserDetails connectableUserDetails = new ConnectableUserDetails(user);
-        OrderRequest orderRequest = new OrderRequest("이정필", "010-3333-7777", Arrays.asList(1L, 2L), 30000);
+        OrderRequest orderRequest = new OrderRequest("이정필", "010-3333-7777",
+            Arrays.asList(ticket1.getId(), ticket2.getId()), 30000);
 
         // when
         OrderResponse orderResponse = orderService.createOrder(connectableUserDetails, orderRequest);
 
         // then
-        Assertions.assertThat(orderResponse.getStatus()).isEqualTo("success");
+        assertThat(orderResponse.getStatus()).isEqualTo("success");
+        Ticket updatedTicket1 = ticketRepository.findById(ticket1.getId()).get();
+        Ticket updatedTicket2 = ticketRepository.findById(ticket2.getId()).get();
+        assertThat(updatedTicket1.getTicketSalesStatus()).isEqualTo(TicketSalesStatus.PENDING);
+        assertThat(updatedTicket2.getTicketSalesStatus()).isEqualTo(TicketSalesStatus.PENDING);
     }
 }

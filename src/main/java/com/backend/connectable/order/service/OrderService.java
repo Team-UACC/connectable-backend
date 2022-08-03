@@ -48,6 +48,7 @@ public class OrderService {
 
     private List<OrderDetail> generateOrderDetails(List<Long> ticketIds) {
         List<Ticket> tickets = ticketRepository.findAllById(ticketIds);
+        tickets.forEach(Ticket::toPending);
         return tickets.stream()
             .map(this::toOrderDetail)
             .collect(Collectors.toList());
