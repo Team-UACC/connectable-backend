@@ -1,5 +1,7 @@
 package com.backend.connectable.user.service;
 
+import com.backend.connectable.event.domain.Ticket;
+import com.backend.connectable.event.service.EventService;
 import com.backend.connectable.klip.service.KlipService;
 import com.backend.connectable.klip.service.dto.KlipAuthLoginResponse;
 import com.backend.connectable.security.ConnectableUserDetails;
@@ -25,6 +27,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final KlipService klipService;
     private final JwtProvider jwtProvider;
+    private final EventService eventService;
 
     public UserLoginResponse login(UserLoginRequest userLoginRequest) {
         String requestKey = userLoginRequest.getRequestKey();
@@ -83,23 +86,10 @@ public class UserService {
     }
 
     public UserTicketListResponse getUserTicketsByUserDetails(ConnectableUserDetails userDetails) {
-        User user = userDetails.getUser();
-        List<UserTicketResponse> userTickets = userRepository.getOwnTicketsByUser(user.getId()).stream()
-            .map(ticket -> UserTicketResponse.builder()
-                .id(ticket.getId())
-                .price(ticket.getPrice())
-                .eventDate(ticket.getEventDate())
-                .eventName(ticket.getEventName())
-                .tokenId(ticket.getTokenId())
-                .tokenUri(ticket.getTokenUri())
-                .metadata(ticket.getMetadata())
-                .contractAddress(ticket.getContractAddress())
-                .eventId(ticket.getEventId())
-                .artistName(ticket.getArtistName())
-                .build()
-            )
-            .collect(Collectors.toList());
-        return UserTicketListResponse.of(userTickets);
+        String userKlaytnAddress = userDetails.getUser().getKlaytnAddress();
+        List<Ticket> tickets = eventService.findTicketByUserAddress(userKlaytnAddress);
+        List<UserTicketResponse> userTicketResponses = UserTicketResponse.toList(tickets);
+        return UserTicketListResponse.of(userTicketResponses);
     }
 
     public UserValidationResponse validateNickname(String nickname) {

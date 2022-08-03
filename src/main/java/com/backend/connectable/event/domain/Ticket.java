@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -69,5 +70,17 @@ public class Ticket {
 
     public void onSale() {
         this.ticketSalesStatus = this.ticketSalesStatus.onSale();
+    }
+
+    public LocalDateTime getStartTime() {
+        return this.event.getStartTime();
+    }
+
+    public Long getEventId() {
+        return this.event.getId();
+    }
+
+    public String getArtistName() {
+        return this.event.getArtistName();
     }
 }

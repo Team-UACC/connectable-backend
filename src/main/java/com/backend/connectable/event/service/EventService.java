@@ -1,9 +1,11 @@
 package com.backend.connectable.event.service;
 
 import com.backend.connectable.event.domain.Event;
+import com.backend.connectable.event.domain.Ticket;
 import com.backend.connectable.event.domain.dto.EventDetail;
 import com.backend.connectable.event.domain.dto.EventTicket;
 import com.backend.connectable.event.domain.repository.EventRepository;
+import com.backend.connectable.event.domain.repository.TicketRepository;
 import com.backend.connectable.event.mapper.EventMapper;
 import com.backend.connectable.event.ui.dto.EventDetailResponse;
 import com.backend.connectable.event.ui.dto.EventResponse;
@@ -12,11 +14,12 @@ import com.backend.connectable.exception.ConnectableException;
 import com.backend.connectable.exception.ErrorType;
 import com.backend.connectable.kas.service.KasService;
 import com.backend.connectable.kas.service.dto.TokenResponse;
+import com.backend.connectable.kas.service.dto.TokensResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,6 +28,7 @@ public class EventService {
 
     private final KasService kasService;
     private final EventRepository eventRepository;
+    private final TicketRepository ticketRepository;
 
     public List<EventResponse> getList() {
         List<Event> events = eventRepository.findAll();
@@ -63,5 +67,17 @@ public class EventService {
             .contractAddress(eventTicket.getContractAddress())
             .ownedBy(tokenResponse.getOwner())
             .build();
+    }
+
+    public List<Ticket> findTicketByUserAddress(String userKlaytnAddress) {
+        List<String> contractAddresses = eventRepository.findAllContractAddresses();
+        Map<String, TokensResponse> userTokens = kasService.findAllTokensOfContractAddressesOwnedByUser(contractAddresses, userKlaytnAddress);
+
+        List<String> userTokenUris = userTokens.values().stream()
+            .map(TokensResponse::getTokenUris)
+            .flatMap(Collection::stream)
+            .collect(Collectors.toList());
+
+        return ticketRepository.findAllByTokenUri(userTokenUris);
     }
 }

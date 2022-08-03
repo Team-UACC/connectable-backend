@@ -70,4 +70,8 @@ public class Event {
         this.endTime = endTime;
         this.eventSalesOption = eventSalesOption;
     }
+
+    public String getArtistName() {
+        return this.artist.getArtistName();
+    }
 }

@@ -10,8 +10,13 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import javax.annotation.PostConstruct;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 
 @Service
 @Slf4j
@@ -265,5 +270,32 @@ public class KasService {
             log.error("KAS Message: " + kasExceptionResponse.getMessage());
             throw new KasException(kasExceptionResponse);
         }
+    }
+
+    public Map<String, TokensResponse> findAllTokensOfContractAddressesOwnedByUser(List<String> contractAddresses, String userKlaytnAddress) {
+        Map<String, TokensResponse> tokensResponses = new HashMap<>();
+        CountDownLatch countDownLatch = new CountDownLatch(contractAddresses.size());
+
+        for (String contractAddress : contractAddresses) {
+            Mono<TokensResponse> tokensResponseMono = findAllTokensOfContractAddressOwnedByUser(contractAddress, userKlaytnAddress);
+            tokensResponseMono.subscribe(tokensResponse -> {
+                tokensResponses.put(contractAddress, tokensResponse);
+                countDownLatch.countDown();
+            });
+        }
+
+        try {
+            countDownLatch.await();
+            return tokensResponses;
+        } catch (InterruptedException e) {
+            throw new IllegalArgumentException("비동기 처리에서 문제가 발생했습니다.");
+        }
+    }
+
+    private Mono<TokensResponse> findAllTokensOfContractAddressOwnedByUser(String contractAddress, String userKlaytnAddress) {
+        return webClient.get()
+            .uri(CONTRACT_API_URL + "/" + contractAddress + "/owner/" + userKlaytnAddress)
+            .retrieve()
+            .bodyToMono(TokensResponse.class);
     }
 }
