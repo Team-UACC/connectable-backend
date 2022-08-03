@@ -203,7 +203,7 @@ public class DataLoader implements ApplicationRunner {
             .tokenUri("https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/4.json")
             .tokenId(4)
             .price(100000)
-            .ticketSalesStatus(TicketSalesStatus.ON_SALE)
+            .ticketSalesStatus(TicketSalesStatus.SOLD_OUT)
             .ticketMetadata(joelTicket4Metadata)
             .build();
 
@@ -219,12 +219,12 @@ public class DataLoader implements ApplicationRunner {
             .build();
 
         Ticket joelTicket5 = Ticket.builder()
-            .user(admin)
+            .user(joel)
             .event(joelEvent)
             .tokenUri("https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/5.json")
             .tokenId(5)
             .price(100000)
-            .ticketSalesStatus(TicketSalesStatus.ON_SALE)
+            .ticketSalesStatus(TicketSalesStatus.SOLD_OUT)
             .ticketMetadata(joelTicket5Metadata)
             .build();
 
@@ -240,12 +240,12 @@ public class DataLoader implements ApplicationRunner {
             .build();
 
         Ticket joelTicket6 = Ticket.builder()
-            .user(admin)
+            .user(ihh)
             .event(joelEvent)
             .tokenUri("https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/6.json")
             .tokenId(6)
             .price(100000)
-            .ticketSalesStatus(TicketSalesStatus.ON_SALE)
+            .ticketSalesStatus(TicketSalesStatus.SOLD_OUT)
             .ticketMetadata(joelTicket6Metadata)
             .build();
         ticketRepository.saveAll(Arrays.asList(joelTicket1, joelTicket2, joelTicket3, joelTicket4, joelTicket5, joelTicket6));
@@ -321,12 +321,12 @@ public class DataLoader implements ApplicationRunner {
             .build();
 
         Ticket ryanTicket4 = Ticket.builder()
-            .user(admin)
+            .user(ihh)
             .event(ryanEvent)
             .tokenUri("https://connectable-events.s3.ap-northeast-2.amazonaws.com/ryan-event/json/4.json")
             .tokenId(4)
             .price(100000)
-            .ticketSalesStatus(TicketSalesStatus.ON_SALE)
+            .ticketSalesStatus(TicketSalesStatus.SOLD_OUT)
             .ticketMetadata(ryanTicket4Metadata)
             .build();
 
@@ -341,12 +341,12 @@ public class DataLoader implements ApplicationRunner {
             .build();
 
         Ticket ryanTicket5 = Ticket.builder()
-            .user(admin)
+            .user(ihh)
             .event(ryanEvent)
             .tokenUri("https://connectable-events.s3.ap-northeast-2.amazonaws.com/ryan-event/json/5.json")
             .tokenId(5)
             .price(100000)
-            .ticketSalesStatus(TicketSalesStatus.ON_SALE)
+            .ticketSalesStatus(TicketSalesStatus.SOLD_OUT)
             .ticketMetadata(ryanTicket5Metadata)
             .build();
 
@@ -378,10 +378,13 @@ public class DataLoader implements ApplicationRunner {
             .ordererPhoneNumber("010-1234-5678")
             .build();
 
-        OrderDetail orderDetail1 = new OrderDetail(OrderStatus.TRANSFER_SUCCESS, "0x5a79e442c91f49bad73ed753625a72e2043d3806682f69f1fcdbdead98a50a2f", joelTicket4);
-        OrderDetail orderDetail2 = new OrderDetail(OrderStatus.REQUESTED, null, joelTicket5);
-        OrderDetail orderDetail3 = new OrderDetail(OrderStatus.REQUESTED, null, joelTicket6);
-        List<OrderDetail> order1Details = Arrays.asList(orderDetail1, orderDetail2, orderDetail3);
+        OrderDetail orderDetail1 = new OrderDetail(OrderStatus.TRANSFER_SUCCESS, "0x89cfee0a93fb59208da7f290507160720e4a9e71549d98b3d1064c6c2a671278", joelTicket1);
+        OrderDetail orderDetail2 = new OrderDetail(OrderStatus.TRANSFER_SUCCESS, "0x4ca1775975b1e2ef06bff05e4a8d74b66b9397c05b1f3cfd105f4ba159c92371", joelTicket2);
+        OrderDetail orderDetail3 = new OrderDetail(OrderStatus.TRANSFER_SUCCESS, "0x06abac950af4e26085c457119871fc318c852160c551010d9601cc44ea5dd41f", joelTicket3);
+        OrderDetail orderDetail4 = new OrderDetail(OrderStatus.TRANSFER_SUCCESS, "0x5a79e442c91f49bad73ed753625a72e2043d3806682f69f1fcdbdead98a50a2f", joelTicket4);
+        OrderDetail orderDetail5 = new OrderDetail(OrderStatus.TRANSFER_SUCCESS, "0x4a021da20180a607bc40c5e1065f96f61532b464e6e97266201e629dbc591321", joelTicket5);
+        OrderDetail orderDetail6 = new OrderDetail(OrderStatus.TRANSFER_SUCCESS, "0xd7b71e7d259a2b46d2f147b9763a534f51a0472c5cc726f68bc626eedd025e73", joelTicket6);
+        List<OrderDetail> order1Details = Arrays.asList(orderDetail1, orderDetail2, orderDetail3, orderDetail4, orderDetail5, orderDetail6);
         order1.addOrderDetails(order1Details);
 
         Order order2 = Order.builder()
@@ -390,10 +393,10 @@ public class DataLoader implements ApplicationRunner {
             .ordererPhoneNumber("010-9876-5432")
             .build();
 
-        OrderDetail orderDetail4 = new OrderDetail(OrderStatus.REQUESTED, null, ryanTicket4);
-        OrderDetail orderDetail5 = new OrderDetail(OrderStatus.REQUESTED, null, ryanTicket5);
-        OrderDetail orderDetail6 = new OrderDetail(OrderStatus.REQUESTED, null, ryanTicket6);
-        List<OrderDetail> order2Details = Arrays.asList(orderDetail4, orderDetail5, orderDetail6);
+        OrderDetail orderDetail7 = new OrderDetail(OrderStatus.TRANSFER_SUCCESS, "0x81ccf823b62c3b0edcd7bb6d47dcc951f87154fe832d7529029245070c844222", ryanTicket1);
+        OrderDetail orderDetail8 = new OrderDetail(OrderStatus.TRANSFER_SUCCESS, "0x7ff47b4ca774124c603a9a826551f8a6e9a3e012cec1cd8ab9dffc2b1f45d142", ryanTicket4);
+        OrderDetail orderDetail9 = new OrderDetail(OrderStatus.TRANSFER_SUCCESS, "0x8aa08ec38c12ba9525e0dfb59e34e825e6d30c41c2e2fb51eb3e841e11d16a65", ryanTicket5);
+        List<OrderDetail> order2Details = Arrays.asList(orderDetail7, orderDetail8, orderDetail9);
         order2.addOrderDetails(order2Details);
 
         orderRepository.saveAll(Arrays.asList(order1, order2));
