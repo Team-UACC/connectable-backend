@@ -150,7 +150,8 @@ class OrderServiceTest {
     void createOrder() {
         // given
         ConnectableUserDetails connectableUserDetails = new ConnectableUserDetails(user);
-        OrderRequest orderRequest = new OrderRequest("이정필", "010-3333-7777", Arrays.asList(1L, 2L), 30000);
+        OrderRequest orderRequest = new OrderRequest("이정필", "010-3333-7777",
+            Arrays.asList(ticket1.getId(), ticket2.getId()), 30000);
 
         // when
         OrderResponse orderResponse = orderService.createOrder(connectableUserDetails, orderRequest);

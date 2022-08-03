@@ -56,9 +56,18 @@ public class Ticket {
 
     public void transferredTo(User user) {
         this.user = user;
+        this.soldOut();
     }
 
     public void toPending() {
         this.ticketSalesStatus = this.ticketSalesStatus.toPending();
+    }
+
+    public void soldOut() {
+        this.ticketSalesStatus = this.ticketSalesStatus.soldOut();
+    }
+
+    public void onSale() {
+        this.ticketSalesStatus = this.ticketSalesStatus.onSale();
     }
 }
