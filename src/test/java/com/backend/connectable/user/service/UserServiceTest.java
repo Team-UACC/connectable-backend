@@ -5,6 +5,7 @@ import com.backend.connectable.artist.domain.repository.ArtistRepository;
 import com.backend.connectable.event.domain.*;
 import com.backend.connectable.event.domain.repository.EventRepository;
 import com.backend.connectable.event.domain.repository.TicketRepository;
+import com.backend.connectable.event.service.EventService;
 import com.backend.connectable.klip.service.KlipService;
 import com.backend.connectable.klip.service.dto.KlipAuthLoginResponse;
 import com.backend.connectable.security.ConnectableUserDetails;
@@ -50,6 +51,9 @@ class UserServiceTest {
 
     @MockBean
     KlipService klipService;
+
+    @MockBean
+    EventService eventService;
 
     private User user1;
     private Artist artist1;
@@ -285,6 +289,7 @@ class UserServiceTest {
     @Test
     void getUserTicketsByUserDetails() {
         // given
+        given(eventService.findTicketByUserAddress(user1KlaytnAddress)).willReturn(Arrays.asList(ticket1, ticket2));
         ConnectableUserDetails connectableUserDetails = new ConnectableUserDetails(user1);
 
         // when

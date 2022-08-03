@@ -13,7 +13,9 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -80,14 +82,25 @@ class TicketRepositoryTest {
             }})
             .build();
 
+    String tokenUri1 = "https://token.uri.1";
     Ticket joelTicket1 = Ticket.builder()
             .user(joel)
             .event(joelEvent)
-            .tokenUri("https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/1.json")
+            .tokenUri(tokenUri1)
             .price(100000)
             .ticketSalesStatus(TicketSalesStatus.ON_SALE)
             .ticketMetadata(joelTicket1Metadata)
             .build();
+
+    String tokenUri2 = "https://token.uri.2";
+    Ticket joelTicket2 = Ticket.builder()
+        .user(joel)
+        .event(joelEvent)
+        .tokenUri(tokenUri2)
+        .price(100000)
+        .ticketSalesStatus(TicketSalesStatus.ON_SALE)
+        .ticketMetadata(joelTicket1Metadata)
+        .build();
 
     @BeforeEach
     void setUp() {
@@ -109,5 +122,18 @@ class TicketRepositoryTest {
         assertThat(savedTicket.getTicketSalesStatus()).isEqualTo(TicketSalesStatus.ON_SALE);
         assertThat(savedTicket.getTicketMetadata().getName()).isEqualTo("조엘 콘서트 #1");
         assertThat(savedTicket.getTicketMetadata().getAttributes()).hasSize(3);
+    }
+
+    @DisplayName("Ticket을 tokenUri로 조회할 수 있다.")
+    @Test
+    void findTicketsByTokenUri() {
+        // given
+        ticketRepository.saveAll(Arrays.asList(joelTicket1, joelTicket2));
+
+        // when
+        List<Ticket> foundTickets = ticketRepository.findAllByTokenUri(Arrays.asList(tokenUri1, tokenUri2));
+
+        // then
+        assertThat(foundTickets).contains(joelTicket1, joelTicket2);
     }
 }

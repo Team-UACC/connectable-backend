@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -14,4 +15,10 @@ import java.util.List;
 public class TokensResponse {
     private String cursor;
     private List<TokenResponse> items;
+
+    public List<String> getTokenUris() {
+        return items.stream()
+            .map(TokenResponse::getTokenUri)
+            .collect(Collectors.toList());
+    }
 }
