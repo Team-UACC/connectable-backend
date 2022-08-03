@@ -166,7 +166,8 @@ class AdminServiceTest {
 
         orderRepository.save(order);
 
-        given(kasService.sendMyToken(any(), any(), any())).willReturn(new TransactionResponse());
+        given(kasService.sendMyToken(any(String.class), any(Integer.class), any(String.class)))
+            .willReturn(new TransactionResponse("Submitted", "0x1234abcd"));
     }
 
     @DisplayName("OrderDetail의 ID에 대해 Paid로 상태를 변경, 티켓을 전송할 수 있으며 Transfer Success로 변환이 가능하다.")
@@ -181,6 +182,8 @@ class AdminServiceTest {
         // then
         OrderDetail resultOrderDetail = orderDetailRepository.findById(orderDetailId).get();
         assertThat(resultOrderDetail.getOrderStatus()).isEqualTo(OrderStatus.TRANSFER_SUCCESS);
+        assertThat(resultOrderDetail.getTxHash()).isEqualTo("0x1234abcd");
+        assertThat(resultOrderDetail.getTicket().getUser().getId()).isEqualTo(joel.getId());
     }
 
     @DisplayName("OrderDetail의 ID에 대해 Unpaid로 상태를 변경할 수 있다.")

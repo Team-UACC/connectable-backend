@@ -2,6 +2,7 @@ package com.backend.connectable.admin.service;
 
 import com.backend.connectable.exception.KasException;
 import com.backend.connectable.kas.service.KasService;
+import com.backend.connectable.kas.service.dto.TransactionResponse;
 import com.backend.connectable.order.domain.OrderDetail;
 import com.backend.connectable.order.domain.repository.OrderDetailRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,8 +33,8 @@ public class AdminService {
         int tokenId = orderDetail.getTokenId();
         String receiverAddress = orderDetail.getKlaytnAddress();
         try {
-            kasService.sendMyToken(contractAddress, tokenId, receiverAddress);
-            orderDetail.transferSuccess();
+            TransactionResponse transactionResponse = kasService.sendMyToken(contractAddress, tokenId, receiverAddress);
+            orderDetail.transferSuccess(transactionResponse.getTransactionHash());
         } catch (KasException kasException) {
             orderDetail.transferFail();
         }

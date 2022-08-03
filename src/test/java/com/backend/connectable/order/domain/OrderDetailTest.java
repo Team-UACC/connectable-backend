@@ -85,19 +85,6 @@ class OrderDetailTest {
             .isInstanceOf(IllegalArgumentException.class);
     }
 
-    @DisplayName("OrderDetail의 orderStatus가 paid 경우 transferSuccess로 변경이 가능하다.")
-    @Test
-    void toTransferSuccess() {
-        // given
-        OrderDetail orderDetail = OrderDetail.builder()
-            .orderStatus(OrderStatus.PAID)
-            .build();
-
-        // when
-        assertThatCode(() -> orderDetail.transferSuccess())
-            .doesNotThrowAnyException();
-    }
-
     @DisplayName("OrderDetail의 orderStatus가 paid 아닌 경우 transferSuccess로 변경이 불가능하다.")
     @Test
     void toTransferSuccessFail() {
@@ -107,7 +94,7 @@ class OrderDetailTest {
             .build();
 
         // when & then
-        assertThatThrownBy(() -> orderDetail.transferSuccess())
+        assertThatThrownBy(() -> orderDetail.transferSuccess("0x1234"))
             .isInstanceOf(IllegalArgumentException.class);
     }
 
