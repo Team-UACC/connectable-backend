@@ -1,17 +1,13 @@
-package com.backend.connectable.event.service;
+package com.backend.connectable.schedule;
 
 import com.backend.connectable.event.domain.repository.TicketRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-@Service
 @RequiredArgsConstructor
-@Transactional
 @Slf4j
-public class TicketService {
+public class ScheduledTasks {
 
     private final TicketRepository ticketRepository;
 
