@@ -57,4 +57,8 @@ public class Ticket {
     public void transferredTo(User user) {
         this.user = user;
     }
+
+    public void toPending() {
+        this.ticketSalesStatus = this.ticketSalesStatus.toPending();
+    }
 }
