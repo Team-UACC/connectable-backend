@@ -16,6 +16,7 @@ import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 
 @Service
@@ -287,7 +288,7 @@ public class KasService {
         try {
             countDownLatch.await();
             return tokensResponses;
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | KasException e) {
             throw new IllegalArgumentException("비동기 처리에서 문제가 발생했습니다.");
         }
     }
@@ -296,6 +297,9 @@ public class KasService {
         return webClient.get()
             .uri(CONTRACT_API_URL + "/" + contractAddress + "/owner/" + userKlaytnAddress)
             .retrieve()
+            .onStatus(HttpStatus::is4xxClientError, response -> {
+                throw Objects.requireNonNull(response.bodyToMono(KasException.class).block());
+            })
             .bodyToMono(TokensResponse.class);
     }
 }
