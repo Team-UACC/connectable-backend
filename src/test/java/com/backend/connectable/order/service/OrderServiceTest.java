@@ -224,6 +224,6 @@ class OrderServiceTest {
         assertThat(orderDetailResponses.get(1).getTicketSalesStatus()).isEqualTo(TicketSalesStatus.PENDING);
         assertThat(orderDetailResponses.get(1).getOrderStatus()).isEqualTo(OrderStatus.REQUESTED);
         assertThat(orderDetailResponses.get(1).getModifiedDate()).isNotNull();
-        assertThat(orderDetailResponses.get(0).getModifiedDate()).isAfter(orderDetailResponses.get(1).getModifiedDate());
+        assertThat(orderDetailResponses.get(0).getModifiedDate()).isGreaterThanOrEqualTo(orderDetailResponses.get(1).getModifiedDate());
     }
 }
