@@ -2,6 +2,7 @@ package com.backend.connectable.order.ui.dto;
 
 import com.backend.connectable.event.domain.TicketMetadata;
 import com.backend.connectable.event.domain.TicketSalesStatus;
+import com.backend.connectable.global.common.util.DateTimeUtil;
 import com.backend.connectable.order.domain.OrderStatus;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,7 +22,7 @@ public class OrderDetailResponse {
     private Long orderId;
     private Long orderDetailId;
     private OrderStatus orderStatus;
-    private LocalDateTime modifiedDate;
+    private Long modifiedDate;
     private String txHash;
 
     @Builder
@@ -32,7 +33,7 @@ public class OrderDetailResponse {
         this.orderId = orderId;
         this.orderDetailId = orderDetailId;
         this.orderStatus = orderStatus;
-        this.modifiedDate = modifiedDate;
+        this.modifiedDate = DateTimeUtil.toEpochMilliSeconds(modifiedDate);
         this.txHash = txHash;
     }
 }
