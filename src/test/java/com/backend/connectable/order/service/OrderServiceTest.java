@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 @ExtendWith(SpringExtension.class)
@@ -212,13 +213,17 @@ class OrderServiceTest {
         // when
         orderService.createOrder(connectableUserDetails, orderRequest1);
         orderService.createOrder(connectableUserDetails, orderRequest2);
-        List<OrderDetailResponse> orderDetailResponse = orderService.getOrderDetailList(connectableUserDetails);
+        List<OrderDetailResponse> orderDetailResponses = orderService.getOrderDetailList(connectableUserDetails);
 
-        assertThat(orderDetailResponse.get(0).getTicketSalesStatus()).isEqualTo(TicketSalesStatus.PENDING);
-        assertThat(orderDetailResponse.get(0).getOrderStatus()).isEqualTo(OrderStatus.REQUESTED);
-        assertThat(orderDetailResponse.get(0).getModifiedDate()).isNotNull();
-        assertThat(orderDetailResponse.get(1).getTicketSalesStatus()).isEqualTo(TicketSalesStatus.PENDING);
-        assertThat(orderDetailResponse.get(1).getOrderStatus()).isEqualTo(OrderStatus.REQUESTED);
-        assertThat(orderDetailResponse.get(1).getModifiedDate()).isNotNull();
+        // then
+        assertEquals(3L, orderDetailResponses.size());
+        assertThat(orderDetailResponses.get(0).getTicketSalesStatus()).isEqualTo(TicketSalesStatus.PENDING);
+        assertThat(orderDetailResponses.get(0).getOrderStatus()).isEqualTo(OrderStatus.REQUESTED);
+        assertThat(orderDetailResponses.get(0).getModifiedDate()).isNotNull();
+        assertThat(orderDetailResponses.get(0).getTicketMetadata().getName()).contains("조엘");
+        assertThat(orderDetailResponses.get(1).getTicketSalesStatus()).isEqualTo(TicketSalesStatus.PENDING);
+        assertThat(orderDetailResponses.get(1).getOrderStatus()).isEqualTo(OrderStatus.REQUESTED);
+        assertThat(orderDetailResponses.get(1).getModifiedDate()).isNotNull();
+        assertThat(orderDetailResponses.get(0).getModifiedDate()).isAfter(orderDetailResponses.get(1).getModifiedDate());
     }
 }

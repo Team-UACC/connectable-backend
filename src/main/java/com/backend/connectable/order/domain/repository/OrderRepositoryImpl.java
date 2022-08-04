@@ -24,20 +24,22 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 
     @Override
     public List<TicketOrderDetail> getOrderDetailList(String klaytnAddress) {
-        List<TicketOrderDetail> orderDetailResponses = queryFactory.select(new QTicketOrderDetail(
+        List<TicketOrderDetail> orderDetailResponses = queryFactory.selectDistinct(new QTicketOrderDetail(
             ticket.id,
             ticket.ticketSalesStatus,
+            ticket.ticketMetadata,
             order.id,
             orderDetail.id,
             orderDetail.orderStatus,
             orderDetail.modifiedDate,
             orderDetail.txHash
             ))
-            .from(order)
-            .innerJoin(user).on(order.user.id.eq(user.id))
-            .innerJoin(ticket).on(ticket.user.id.eq(user.id))
-            .innerJoin(orderDetail).on(orderDetail.order.id.eq(order.id))
+            .from(orderDetail)
+            .innerJoin(order).on(order.id.eq(orderDetail.order.id))
+            .innerJoin(user).on(user.id.eq(order.user.id))
+            .innerJoin(ticket).on(ticket.id.eq(orderDetail.ticket.id))
             .where(user.klaytnAddress.eq(klaytnAddress))
+            .groupBy(orderDetail.id, ticket.id)
             .orderBy(orderDetail.modifiedDate.desc())
             .fetch();
         
