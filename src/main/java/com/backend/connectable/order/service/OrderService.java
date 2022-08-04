@@ -6,6 +6,9 @@ import com.backend.connectable.order.domain.Order;
 import com.backend.connectable.order.domain.OrderDetail;
 import com.backend.connectable.order.domain.OrderStatus;
 import com.backend.connectable.order.domain.repository.OrderRepository;
+import com.backend.connectable.order.domain.repository.dto.TicketOrderDetail;
+import com.backend.connectable.order.mapper.OrderMapper;
+import com.backend.connectable.order.ui.dto.OrderDetailResponse;
 import com.backend.connectable.order.ui.dto.OrderRequest;
 import com.backend.connectable.order.ui.dto.OrderResponse;
 import com.backend.connectable.security.ConnectableUserDetails;
@@ -31,6 +34,15 @@ public class OrderService {
         Order order = generateOrder(user, orderRequest);
         orderRepository.save(order);
         return OrderResponse.from("success");
+    }
+
+    public List<OrderDetailResponse> getOrderDetailList(ConnectableUserDetails userDetails) {
+        String klaytnAddress = userDetails.getUser().getKlaytnAddress();
+        List<TicketOrderDetail> orderDetailResponses = orderRepository.getOrderDetailList(klaytnAddress);
+
+        return orderDetailResponses.stream()
+            .map(OrderMapper.INSTANCE::ticketOrderDetailToResponse)
+            .collect(Collectors.toList());
     }
 
     private Order generateOrder(User user, OrderRequest orderRequest) {
