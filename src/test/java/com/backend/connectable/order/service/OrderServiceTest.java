@@ -5,6 +5,10 @@ import com.backend.connectable.artist.domain.repository.ArtistRepository;
 import com.backend.connectable.event.domain.*;
 import com.backend.connectable.event.domain.repository.EventRepository;
 import com.backend.connectable.event.domain.repository.TicketRepository;
+import com.backend.connectable.order.domain.OrderStatus;
+import com.backend.connectable.order.domain.repository.OrderDetailRepository;
+import com.backend.connectable.order.domain.repository.OrderRepository;
+import com.backend.connectable.order.ui.dto.OrderDetailResponse;
 import com.backend.connectable.order.ui.dto.OrderRequest;
 import com.backend.connectable.order.ui.dto.OrderResponse;
 import com.backend.connectable.security.ConnectableUserDetails;
@@ -21,6 +25,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -42,6 +47,12 @@ class OrderServiceTest {
     TicketRepository ticketRepository;
 
     @Autowired
+    OrderDetailRepository orderDetailRepository;
+
+    @Autowired
+    OrderRepository orderRepository;
+
+    @Autowired
     OrderService orderService;
 
     private User user;
@@ -51,6 +62,8 @@ class OrderServiceTest {
     private Ticket ticket1;
     private TicketMetadata ticket2Metadata;
     private Ticket ticket2;
+    private TicketMetadata ticket3Metadata;
+    private Ticket ticket3;
 
     private final String userKlaytnAddress = "0x12345678";
     private final String userNickname = "leejp";
@@ -60,6 +73,8 @@ class OrderServiceTest {
 
     @BeforeEach
     void setUp() {
+        orderDetailRepository.deleteAll();
+        orderRepository.deleteAll();
         ticketRepository.deleteAll();
         eventRepository.deleteAll();
         artistRepository.deleteAll();
@@ -139,10 +154,30 @@ class OrderServiceTest {
             .ticketMetadata(ticket2Metadata)
             .build();
 
+        ticket3Metadata = TicketMetadata.builder()
+            .name("조엘 콘서트 #3")
+            .description("조엘의 콘서트 at Connectable")
+            .image("https://connectable-events.s3.ap-northeast-2.amazonaws.com/ticket_test3.png")
+            .attributes(new HashMap<>(){{
+                put("Background", "Yellow");
+                put("Artist", "Joel");
+                put("Seat", "A5");
+            }})
+            .build();
+
+        ticket3 = Ticket.builder()
+            .user(user)
+            .event(event)
+            .tokenUri("https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/3.json")
+            .price(100000)
+            .ticketSalesStatus(TicketSalesStatus.ON_SALE)
+            .ticketMetadata(ticket3Metadata)
+            .build();
+
         userRepository.save(user);
         artistRepository.save(artist);
         eventRepository.save(event);
-        ticketRepository.saveAll(Arrays.asList(ticket1, ticket2));
+        ticketRepository.saveAll(Arrays.asList(ticket1, ticket2, ticket3));
     }
 
     @DisplayName("티켓을 구매하였을때, 주문정보 및 주문상세정보가 등록된다.")
@@ -162,5 +197,28 @@ class OrderServiceTest {
         Ticket updatedTicket2 = ticketRepository.findById(ticket2.getId()).get();
         assertThat(updatedTicket1.getTicketSalesStatus()).isEqualTo(TicketSalesStatus.PENDING);
         assertThat(updatedTicket2.getTicketSalesStatus()).isEqualTo(TicketSalesStatus.PENDING);
+    }
+
+    @DisplayName("유저 정보를 이용하여 구매내역을 확인할 수 있다.")
+    @Test
+    void getOrderDetailList() {
+        // given
+        ConnectableUserDetails connectableUserDetails = new ConnectableUserDetails(user);
+        OrderRequest orderRequest1 = new OrderRequest("이정필", "010-3333-7777",
+            Arrays.asList(ticket1.getId(), ticket2.getId()), 200000);
+        OrderRequest orderRequest2 = new OrderRequest("이정필", "010-3333-7777",
+            Arrays.asList(ticket3.getId()), 100000);
+
+        // when
+        orderService.createOrder(connectableUserDetails, orderRequest1);
+        orderService.createOrder(connectableUserDetails, orderRequest2);
+        List<OrderDetailResponse> orderDetailResponse = orderService.getOrderDetailList(connectableUserDetails);
+
+        assertThat(orderDetailResponse.get(0).getTicketSalesStatus()).isEqualTo(TicketSalesStatus.PENDING);
+        assertThat(orderDetailResponse.get(0).getOrderStatus()).isEqualTo(OrderStatus.REQUESTED);
+        assertThat(orderDetailResponse.get(0).getModifiedDate()).isNotNull();
+        assertThat(orderDetailResponse.get(1).getTicketSalesStatus()).isEqualTo(TicketSalesStatus.PENDING);
+        assertThat(orderDetailResponse.get(1).getOrderStatus()).isEqualTo(OrderStatus.REQUESTED);
+        assertThat(orderDetailResponse.get(1).getModifiedDate()).isNotNull();
     }
 }
