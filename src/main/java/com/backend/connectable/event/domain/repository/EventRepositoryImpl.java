@@ -47,7 +47,7 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
             event.webpageUrl,
             ticket.count().intValue().as("totalTicketCount"),
             ExpressionUtils.as(
-                JPAExpressions.select(ticket.count().intValue()).from(ticket).where(ticket.ticketSalesStatus.eq(TicketSalesStatus.ON_SALE))
+                JPAExpressions.select(ticket.count().intValue()).from(ticket).where(ticket.ticketSalesStatus.eq(TicketSalesStatus.ON_SALE).and(ticket.event.id.eq(eventId)))
             , "onSaleTicketCount"),
             ticket.price,
             event.location,
