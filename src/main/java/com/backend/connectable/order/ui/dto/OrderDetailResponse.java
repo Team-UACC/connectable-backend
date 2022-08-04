@@ -23,7 +23,6 @@ public class OrderDetailResponse {
     private String txHash;
 
     @Builder
-
     public OrderDetailResponse(Long ticketId, TicketSalesStatus ticketSalesStatus, Long orderId, Long orderDetailId, OrderStatus orderStatus, LocalDateTime modifiedDate, String txHash) {
         this.ticketId = ticketId;
         this.ticketSalesStatus = ticketSalesStatus;

@@ -23,7 +23,6 @@ public class TicketOrderDetail {
     private String txHash;
 
     @QueryProjection
-
     public TicketOrderDetail(Long ticketId, TicketSalesStatus ticketSalesStatus, Long orderId, Long orderDetailId, OrderStatus orderStatus, LocalDateTime modifiedDate, String txHash) {
         this.ticketId = ticketId;
         this.ticketSalesStatus = ticketSalesStatus;
