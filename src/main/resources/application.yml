@@ -41,6 +41,8 @@ kas:
     access-key-id: KASKOOU7SCEQTOSZ2FV0E9UQ
     secret-access-key: t-gAxJ_10sf7iqvo7qKxRIY6qUsyXMksMS6y0iY7
     chain-id: 1001
+dataloader:
+  enable: true
 ---
 spring:
   config:
@@ -88,3 +90,5 @@ kas:
     user-fee-payer-address: ${kas.user_fee_payer_address}
     access-key-id: ${kas.access_key_id}
     secret-access-key: ${kas.secret_access_key}
+dataloader:
+  enable: ${dataloader.enable}

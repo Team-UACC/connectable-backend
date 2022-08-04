@@ -130,6 +130,21 @@ public class KasService {
         return (ContractItemResponse) responseObject;
     }
 
+    public ContractItemResponse getMyContractMyAlias(String alias) {
+        Object responseObject = webClient.get()
+            .uri(CONTRACT_API_URL + "/" + alias)
+            .exchangeToMono(response -> {
+                if (response.statusCode().equals(HttpStatus.OK)) {
+                    return response.bodyToMono(ContractItemResponse.class);
+                }
+                return response.bodyToMono(KasExceptionResponse.class);
+            })
+            .block();
+
+        handleKasException(responseObject);
+        return (ContractItemResponse) responseObject;
+    }
+
     public TransactionResponse mintToken(String contractAddress, String tokenId, String tokenUri, String tokenOwner) {
         TokenRequest tokenRequest = TokenRequest.builder()
             .id(tokenId)
@@ -157,7 +172,7 @@ public class KasService {
     }
 
     public TransactionResponse mintMyToken(String contractAddress, int tokenId, String tokenUri) {
-        return mintToken(contractAddress, TOKEN_ID_PREFIX + tokenId, tokenUri, accountPoolAddress);
+        return mintToken(contractAddress, TOKEN_ID_PREFIX + Integer.toHexString(tokenId), tokenUri, accountPoolAddress);
     }
 
     public TokensResponse getTokens(String contractAddress) {
@@ -191,7 +206,7 @@ public class KasService {
     }
 
     public TokenResponse getToken(String contractAddress, int tokenId) {
-        return getToken(contractAddress, TOKEN_ID_PREFIX + tokenId);
+        return getToken(contractAddress, TOKEN_ID_PREFIX + Integer.toHexString(tokenId));
     }
 
     public TransactionResponse sendMyToken(String contractAddress, String tokenId, String receiver) {
@@ -217,7 +232,7 @@ public class KasService {
     }
 
     public TransactionResponse sendMyToken(String contractAddress, int tokenId, String receiver) {
-        return sendMyToken(contractAddress, TOKEN_ID_PREFIX + tokenId, receiver);
+        return sendMyToken(contractAddress, TOKEN_ID_PREFIX + Integer.toHexString(tokenId), receiver);
     }
 
     public TransactionResponse burnMyToken(String contractAddress, String tokenId) {
@@ -241,7 +256,7 @@ public class KasService {
     }
 
     public TransactionResponse burnMyToken(String contractAddress, int tokenId) {
-        return burnMyToken(contractAddress, TOKEN_ID_PREFIX + tokenId);
+        return burnMyToken(contractAddress, TOKEN_ID_PREFIX + Integer.toHexString(tokenId));
     }
 
     public TokenHistoriesResponse getTokenHistory(String contractAddress, String tokenId) {
@@ -260,7 +275,7 @@ public class KasService {
     }
 
     public TokenHistoriesResponse getTokenHistory(String contractAddress, int tokenId) {
-        return getTokenHistory(contractAddress, TOKEN_ID_PREFIX + tokenId);
+        return getTokenHistory(contractAddress, TOKEN_ID_PREFIX + Integer.toHexString(tokenId));
     }
 
     private void handleKasException(Object responseObject) {
