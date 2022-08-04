@@ -21,7 +21,7 @@ class S3ServiceTest {
     void getMetadata() {
         // given
         String brownNft1TokenUri = "https://connectable-events.s3.ap-northeast-2.amazonaws.com/brown-event/json/1.json";
-        String brownNft1Image = "https://connectable-events.s3.ap-northeast-2.amazonaws.com/ryan-event/images/1.png";
+        String brownNft1Image = "https://connectable-events.s3.ap-northeast-2.amazonaws.com/brown-event/images/1.png";
 
         // when
         TicketMetadataResponse ticketMetadataResponse = s3Service.fetchMetadata(brownNft1TokenUri);
