@@ -1,6 +1,7 @@
 package com.backend.connectable.security;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,7 @@ import java.util.Objects;
 
 @RequiredArgsConstructor
 @Component
+@Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtProvider jwtProvider;
@@ -23,6 +25,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = AuthorizationExtractor.extract(request);
         String path = request.getRequestURI();
+        log.info("[[Token]] : " + token);
+        log.info("[[Path]] : " + path);
         if (!Objects.isNull(token)) {
             verifyTokenAccordingToPath(token, path);
         }
