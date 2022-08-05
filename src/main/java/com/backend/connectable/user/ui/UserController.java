@@ -30,7 +30,10 @@ public class UserController {
     @GetMapping
     public ResponseEntity<UserResponse> getUser(@AuthenticationPrincipal ConnectableUserDetails userDetails) {
         UserResponse userResponse = userService.getUserByUserDetails(userDetails);
-        return ResponseEntity.ok(userResponse);
+        if (userResponse.isSuccess()) {
+            return ResponseEntity.ok(userResponse);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(userResponse);
     }
 
     @DeleteMapping

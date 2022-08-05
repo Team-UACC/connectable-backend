@@ -68,7 +68,10 @@ public class UserService {
 
     public UserResponse getUserByUserDetails(ConnectableUserDetails userDetails) {
         User user = userDetails.getUser();
-        return UserResponse.of(user);
+        if (user.hasNickname() && user.hasPhoneNumber()) {
+            return UserResponse.ofSuccess(user);
+        }
+        return UserResponse.ofFailure(user);
     }
 
     public UserModifyResponse deleteUserByUserDetails(ConnectableUserDetails userDetails) {
