@@ -1,6 +1,8 @@
 spring:
   profiles:
     active: local
+    group:
+      dev: slack-paid-logging, console-logging
 ---
 spring:
   config:
@@ -80,6 +82,9 @@ logging:
           descriptor:
             sql:
               BasicBinder: TRACE
+  slack:
+    webhook-uri: ${slack.paid_channel_uri}
+  config: classpath:logback-spring.xml
 kas:
   settings:
     enable-global-fee-payer: false

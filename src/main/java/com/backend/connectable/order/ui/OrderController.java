@@ -7,6 +7,9 @@ import com.backend.connectable.order.ui.dto.OrderRequest;
 import com.backend.connectable.order.ui.dto.OrderResponse;
 import com.backend.connectable.security.ConnectableUserDetails;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -20,6 +23,7 @@ import java.util.List;
 public class OrderController {
 
     private final OrderService orderService;
+    private Logger log = LoggerFactory.getLogger(this.getClass());
 
     @PostMapping
     public ResponseEntity<OrderResponse> createOrder(
@@ -27,6 +31,7 @@ public class OrderController {
         @RequestBody @Validated(ValidationSequence.class) OrderRequest request
     ) {
         OrderResponse orderResponse = orderService.createOrder(userDetails, request);
+        log.info("##USER::{}@@PHONE::{}@@TICKETS::{}", request.getUserName(), request.getPhoneNumber(), StringUtils.join(request.getTicketIds(), ','));
         return ResponseEntity.ok(orderResponse);
     }
 

@@ -91,6 +91,9 @@ dependencies {
     // Swagger
     implementation "io.springfox:springfox-boot-starter:3.0.0"
     implementation "io.springfox:springfox-swagger-ui:3.0.0"
+
+    // Slack
+    implementation 'com.github.maricn:logback-slack-appender:1.6.1'
 }
 
 tasks.named('test') {
