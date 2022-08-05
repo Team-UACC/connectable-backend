@@ -87,7 +87,7 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
             .innerJoin(artist).on(event.artist.id.eq(artist.id))
             .where(ticket.event.id.eq(eventId))
             .groupBy(ticket.id)
-            .orderBy(ticketSortSpecifier())
+            .orderBy(ticketSortSpecifier(), ticket.id.asc())
             .fetch();
 
         return result;
