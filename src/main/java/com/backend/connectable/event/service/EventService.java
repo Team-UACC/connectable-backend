@@ -16,6 +16,7 @@ import com.backend.connectable.kas.service.KasService;
 import com.backend.connectable.kas.service.dto.TokenResponse;
 import com.backend.connectable.kas.service.dto.TokensResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +34,7 @@ public class EventService {
     private final TicketRepository ticketRepository;
 
     public List<EventResponse> getList() {
-        List<Event> events = eventRepository.findAll();
+        List<Event> events = eventRepository.findAll(Sort.by(Sort.Direction.DESC, "salesTo"));
         return events.stream()
             .map(EventMapper.INSTANCE::eventToResponse)
             .collect(Collectors.toList());
