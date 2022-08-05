@@ -4,6 +4,11 @@ import com.backend.connectable.artist.domain.Artist;
 import com.backend.connectable.artist.domain.repository.ArtistRepository;
 import com.backend.connectable.event.domain.Event;
 import com.backend.connectable.event.domain.EventSalesOption;
+import com.backend.connectable.event.domain.Ticket;
+import com.backend.connectable.event.domain.TicketSalesStatus;
+import com.backend.connectable.event.domain.dto.EventTicket;
+import com.backend.connectable.user.domain.User;
+import com.backend.connectable.user.domain.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,6 +29,12 @@ class EventRepositoryTest {
     EventRepository eventRepository;
 
     @Autowired
+    TicketRepository ticketRepository;
+
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
     ArtistRepository artistRepository;
 
     Artist bigNaughty = Artist.builder()
@@ -34,6 +45,14 @@ class EventRepositoryTest {
         .password("temptemp1234")
         .phoneNumber("01012345678")
         .artistImage("ARTIST_IMAGE")
+        .build();
+
+    User user = User.builder()
+        .phoneNumber("010-0000-0000")
+        .klaytnAddress("0x1234")
+        .nickname("user")
+        .privacyAgreement(true)
+        .isActive(true)
         .build();
 
     String joelEventContractAddress = "0x1234";
@@ -79,6 +98,7 @@ class EventRepositoryTest {
 
         artistRepository.save(bigNaughty);
         eventRepository.saveAll(Arrays.asList(joelEvent, ryanEvent));
+        userRepository.save(user);
     }
 
 
@@ -87,5 +107,80 @@ class EventRepositoryTest {
     void findAllContractAddresses() {
         List<String> allContractAddresses = eventRepository.findAllContractAddresses();
         assertThat(allContractAddresses).contains(joelEventContractAddress, ryanEventContractAddress);
+    }
+
+    @DisplayName("이벤트의 티켓들을 ON_SALE, PENDING, SOLD_OUT, EXPIRED로 가져오며, 이를 id 순으로 정렬하여 가져올 수 있다.")
+    @Test
+    void findAllTickets() {
+        // given
+        Ticket ticket1SoldOut = Ticket.builder()
+            .user(user)
+            .event(joelEvent)
+            .tokenId(1)
+            .tokenUri("https://token1.uri")
+            .price(100000)
+            .ticketSalesStatus(TicketSalesStatus.SOLD_OUT)
+            .build();
+
+        Ticket ticket2SoldOut = Ticket.builder()
+            .user(user)
+            .event(joelEvent)
+            .tokenId(2)
+            .tokenUri("https://token1.uri")
+            .price(100000)
+            .ticketSalesStatus(TicketSalesStatus.SOLD_OUT)
+            .build();
+
+        Ticket ticket3Pending = Ticket.builder()
+            .user(user)
+            .event(joelEvent)
+            .tokenId(3)
+            .tokenUri("https://token1.uri")
+            .price(100000)
+            .ticketSalesStatus(TicketSalesStatus.PENDING)
+            .build();
+
+        Ticket ticket4Pending = Ticket.builder()
+            .user(user)
+            .event(joelEvent)
+            .tokenId(4)
+            .tokenUri("https://token1.uri")
+            .price(100000)
+            .ticketSalesStatus(TicketSalesStatus.PENDING)
+            .build();
+
+        Ticket ticket5OnSale = Ticket.builder()
+            .user(user)
+            .event(joelEvent)
+            .tokenId(5)
+            .tokenUri("https://token1.uri")
+            .price(100000)
+            .ticketSalesStatus(TicketSalesStatus.ON_SALE)
+            .build();
+
+
+        Ticket ticket6OnSale = Ticket.builder()
+            .user(user)
+            .event(joelEvent)
+            .tokenId(6)
+            .tokenUri("https://token1.uri")
+            .price(100000)
+            .ticketSalesStatus(TicketSalesStatus.ON_SALE)
+            .build();
+
+        ticketRepository.saveAll(Arrays.asList(ticket1SoldOut, ticket2SoldOut, ticket3Pending, ticket4Pending,
+            ticket5OnSale, ticket6OnSale));
+
+        // when
+        Long eventId = joelEvent.getId();
+        List<EventTicket> allTickets = eventRepository.findAllTickets(eventId);
+
+        // then
+        assertThat(allTickets.get(0).getTokenId()).isEqualTo(ticket5OnSale.getTokenId());
+        assertThat(allTickets.get(1).getTokenId()).isEqualTo(ticket6OnSale.getTokenId());
+        assertThat(allTickets.get(2).getTokenId()).isEqualTo(ticket3Pending.getTokenId());
+        assertThat(allTickets.get(3).getTokenId()).isEqualTo(ticket4Pending.getTokenId());
+        assertThat(allTickets.get(4).getTokenId()).isEqualTo(ticket1SoldOut.getTokenId());
+        assertThat(allTickets.get(5).getTokenId()).isEqualTo(ticket2SoldOut.getTokenId());
     }
 }
