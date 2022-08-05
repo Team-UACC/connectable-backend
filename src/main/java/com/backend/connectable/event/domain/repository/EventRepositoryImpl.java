@@ -5,7 +5,11 @@ import com.backend.connectable.event.domain.dto.EventDetail;
 import com.backend.connectable.event.domain.dto.EventTicket;
 import com.backend.connectable.event.domain.dto.QEventTicket;
 import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
@@ -83,6 +87,7 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
             .innerJoin(artist).on(event.artist.id.eq(artist.id))
             .where(ticket.event.id.eq(eventId))
             .groupBy(ticket.id)
+            .orderBy(ticketSortSpecifier())
             .fetch();
 
         return result;
@@ -110,5 +115,20 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
             .fetchOne();
 
         return Optional.ofNullable(result);
+    }
+
+    private OrderSpecifier<Integer> ticketSortSpecifier() {
+        NumberExpression<Integer> cases = new CaseBuilder()
+            .when(ticket.ticketSalesStatus.eq(TicketSalesStatus.ON_SALE))
+            .then(1)
+            .when(ticket.ticketSalesStatus.eq(TicketSalesStatus.PENDING))
+            .then(2)
+            .when(ticket.ticketSalesStatus.eq(TicketSalesStatus.SOLD_OUT))
+            .then(3)
+            .when(ticket.ticketSalesStatus.eq(TicketSalesStatus.EXPIRED))
+            .then(4)
+            .otherwise(5);
+
+        return new OrderSpecifier<>(Order.ASC, cases);
     }
 }
