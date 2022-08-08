@@ -1,5 +1,6 @@
 package com.backend.connectable.security;
 
+import com.backend.connectable.exception.ConnectableException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +52,7 @@ class JwtProviderTest {
 
         // when & then
         assertThatThrownBy(() -> jwtProvider.verify(token))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(ConnectableException.class);
     }
 
     @Test
@@ -76,7 +77,7 @@ class JwtProviderTest {
 
         // when & then
         assertThatThrownBy(() -> jwtProvider.exportClaim(invalidToken))
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(ConnectableException.class);
     }
 
     @DisplayName("어드민 JWT 토큰에 대해 verify 할 수 있다.")
@@ -98,6 +99,6 @@ class JwtProviderTest {
 
         // when & then
         assertThatThrownBy(() -> jwtProvider.verifyAdmin(adminToken))
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(ConnectableException.class);
     }
 }

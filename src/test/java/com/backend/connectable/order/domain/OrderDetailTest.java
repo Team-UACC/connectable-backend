@@ -2,6 +2,7 @@ package com.backend.connectable.order.domain;
 
 import com.backend.connectable.event.domain.Ticket;
 import com.backend.connectable.event.domain.TicketSalesStatus;
+import com.backend.connectable.exception.ConnectableException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -39,7 +40,7 @@ class OrderDetailTest {
 
         // when & then
         assertThatThrownBy(() -> orderDetail.paid())
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(ConnectableException.class);
     }
 
     @DisplayName("OrderDetail의 orderStatus가 Request인 경우 unpaid로 변경이 가능하다.")
@@ -67,7 +68,7 @@ class OrderDetailTest {
 
         // when & then
         assertThatThrownBy(() -> orderDetail.unpaid())
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(ConnectableException.class);
     }
 
     @DisplayName("OrderDetail의 orderStatus가 Request인 경우 refund로 변경이 가능하다.")
@@ -95,7 +96,7 @@ class OrderDetailTest {
 
         // when & then
         assertThatThrownBy(() -> orderDetail.refund())
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(ConnectableException.class);
     }
 
     @DisplayName("OrderDetail의 orderStatus가 paid 아닌 경우 transferSuccess로 변경이 불가능하다.")
@@ -109,7 +110,7 @@ class OrderDetailTest {
 
         // when & then
         assertThatThrownBy(() -> orderDetail.transferSuccess("0x1234"))
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(ConnectableException.class);
     }
 
     @DisplayName("OrderDetail의 orderStatus가 paid 경우 transferFail로 변경이 가능하다.")
@@ -137,6 +138,6 @@ class OrderDetailTest {
 
         // when & then
         assertThatThrownBy(() -> orderDetail.transferFail())
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(ConnectableException.class);
     }
 }
