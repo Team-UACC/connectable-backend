@@ -1,5 +1,7 @@
 package com.backend.connectable.kas.service;
 
+import com.backend.connectable.exception.ConnectableException;
+import com.backend.connectable.exception.ErrorType;
 import com.backend.connectable.exception.KasException;
 import com.backend.connectable.exception.KasExceptionResponse;
 import com.backend.connectable.kas.service.dto.*;
@@ -281,9 +283,6 @@ public class KasService {
     private void handleKasException(Object responseObject) {
         if (responseObject instanceof KasExceptionResponse) {
             KasExceptionResponse kasExceptionResponse = (KasExceptionResponse) responseObject;
-            log.error("KAS Request ID: " + kasExceptionResponse.getRequestId());
-            log.error("KAS Code: " + kasExceptionResponse.getCode());
-            log.error("KAS Message: " + kasExceptionResponse.getMessage());
             throw new KasException(kasExceptionResponse);
         }
     }
@@ -303,8 +302,8 @@ public class KasService {
         try {
             countDownLatch.await();
             return tokensResponses;
-        } catch (InterruptedException | KasException e) {
-            throw new IllegalArgumentException("비동기 처리에서 문제가 발생했습니다.");
+        } catch (InterruptedException e) {
+            throw new ConnectableException(HttpStatus.INTERNAL_SERVER_ERROR, ErrorType.ASYNC_HANDLING_ERROR);
         }
     }
 

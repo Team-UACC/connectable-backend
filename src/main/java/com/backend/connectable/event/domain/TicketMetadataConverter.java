@@ -1,8 +1,11 @@
 package com.backend.connectable.event.domain;
 
+import com.backend.connectable.exception.ConnectableException;
+import com.backend.connectable.exception.ErrorType;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.HttpStatus;
 
 import javax.persistence.AttributeConverter;
 import java.io.IOException;
@@ -17,7 +20,7 @@ public class TicketMetadataConverter implements AttributeConverter<TicketMetadat
         try {
             return objectMapper.writeValueAsString(attribute);
         } catch (JsonProcessingException e) {
-            throw new IllegalArgumentException("티켓 메타데이터 -> JSON 실패");
+            throw new ConnectableException(HttpStatus.INTERNAL_SERVER_ERROR, ErrorType.TICKET_METADATA_TO_JSON_FAILURE);
         }
     }
 
@@ -26,7 +29,7 @@ public class TicketMetadataConverter implements AttributeConverter<TicketMetadat
         try {
             return objectMapper.readValue(dbData, TicketMetadata.class);
         } catch (IOException e) {
-            throw new IllegalArgumentException("JSON -> 티켓 메타데이터 실패");
+            throw new ConnectableException(HttpStatus.INTERNAL_SERVER_ERROR, ErrorType.TICKET_JSON_TO_METADATA_FAILURE);
         }
     }
 }

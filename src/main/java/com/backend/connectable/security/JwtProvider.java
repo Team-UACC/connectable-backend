@@ -4,8 +4,11 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.backend.connectable.exception.ConnectableException;
+import com.backend.connectable.exception.ErrorType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -50,7 +53,7 @@ public class JwtProvider {
                 .build()
                 .verify(token);
         } catch (JWTVerificationException e) {
-            throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
+            throw new ConnectableException(HttpStatus.BAD_REQUEST, ErrorType.INVALID_TOKEN);
         }
     }
 
@@ -59,7 +62,7 @@ public class JwtProvider {
              return JWT.decode(token)
                 .getSubject();
         } catch (JWTDecodeException e) {
-            throw new IllegalArgumentException("토큰 디코딩에 실패하였습니다.");
+            throw new ConnectableException(HttpStatus.BAD_REQUEST, ErrorType.TOKEN_PAYLOAD_EXTRACTION_FAILURE);
         }
     }
 
@@ -71,7 +74,7 @@ public class JwtProvider {
     public void verifyAdmin(String token) {
         String adminPayload = exportClaim(token);
         if (!this.adminPayload.equals(adminPayload)) {
-            throw new IllegalArgumentException("어드민 토큰이 아닙니다.");
+            throw new ConnectableException(HttpStatus.BAD_REQUEST, ErrorType.ADMIN_TOKEN_VERIFY_FAILURE);
         }
     }
 }

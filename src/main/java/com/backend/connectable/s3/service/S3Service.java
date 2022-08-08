@@ -10,7 +10,6 @@ public class S3Service {
     private final RestTemplate restTemplate = new RestTemplate();
 
     public TicketMetadataResponse fetchMetadata(String tokenUri) {
-        return restTemplate.getForEntity(tokenUri, TicketMetadataResponse.class)
-            .getBody();
+        return restTemplate.getForEntity(tokenUri, TicketMetadataResponse.class).getBody();
     }
 }
