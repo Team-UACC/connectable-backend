@@ -1,5 +1,9 @@
 package com.backend.connectable.order.domain;
 
+import com.backend.connectable.exception.ConnectableException;
+import com.backend.connectable.exception.ErrorType;
+import org.springframework.http.HttpStatus;
+
 public enum OrderStatus {
 
     REQUESTED, PAID, UNPAID, REFUND, TRANSFER_SUCCESS, TRANSFER_FAIL;
@@ -16,34 +20,34 @@ public enum OrderStatus {
         if (this.isRequested()) {
             return PAID;
         }
-        throw new IllegalArgumentException("PAID 상태로 변경이 불가합니다.");
+        throw new ConnectableException(HttpStatus.BAD_REQUEST, ErrorType.ORDER_TO_PAID_UNAVAILABLE);
     }
 
     public OrderStatus toUnpaid() {
         if (this.isRequested()) {
             return UNPAID;
         }
-        throw new IllegalArgumentException("UNPAID 상태로 변경이 불가합니다.");
+        throw new ConnectableException(HttpStatus.BAD_REQUEST, ErrorType.ORDER_TO_UNPAID_UNAVAILABLE);
     }
 
     public OrderStatus toRefund() {
         if (this.isRequested()) {
             return REFUND;
         }
-        throw new IllegalArgumentException("REFUND 상태로 변경이 불가합니다.");
+        throw new ConnectableException(HttpStatus.BAD_REQUEST, ErrorType.ORDER_TO_REFUND_UNAVAILABLE);
     }
 
     public OrderStatus toTransferSuccess() {
         if (this.isPaid()) {
             return TRANSFER_SUCCESS;
         }
-        throw new IllegalArgumentException("TRANSFER SUCCESS 상태로 변경이 불가합니다.");
+        throw new ConnectableException(HttpStatus.BAD_REQUEST, ErrorType.ORDER_TO_TRANSFER_SUCCESS_UNAVAILABLE);
     }
 
     public OrderStatus toTransferFail() {
         if (this.isPaid()) {
             return TRANSFER_FAIL;
         }
-        throw new IllegalArgumentException("TRANSFER FAIL 상태로 변경이 불가합니다.");
+        throw new ConnectableException(HttpStatus.BAD_REQUEST, ErrorType.ORDER_TO_TRANSFER_FAIL_UNAVAILABLE);
     }
 }

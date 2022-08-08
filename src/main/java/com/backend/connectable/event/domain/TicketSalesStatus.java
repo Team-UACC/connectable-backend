@@ -1,5 +1,9 @@
 package com.backend.connectable.event.domain;
 
+import com.backend.connectable.exception.ConnectableException;
+import com.backend.connectable.exception.ErrorType;
+import org.springframework.http.HttpStatus;
+
 public enum TicketSalesStatus {
     ON_SALE, PENDING, SOLD_OUT, EXPIRED;
 
@@ -7,20 +11,20 @@ public enum TicketSalesStatus {
         if (this.equals(ON_SALE)) {
             return PENDING;
         }
-        throw new IllegalArgumentException("ON SALE 상태만 PENDING으로 변할 수 있습니다.");
+        throw new ConnectableException(HttpStatus.BAD_REQUEST, ErrorType.TICKET_TO_PENDING_UNAVAILABLE);
     }
 
     public TicketSalesStatus soldOut() {
         if (this.equals(PENDING)) {
             return SOLD_OUT;
         }
-        throw new IllegalArgumentException("PENDING 상태만 SOLD_OUT으로 변할 수 있습니다.");
+        throw new ConnectableException(HttpStatus.BAD_REQUEST, ErrorType.TICKET_TO_SOLD_OUT_UNAVAILABLE);
     }
 
     public TicketSalesStatus onSale() {
         if (this.equals(PENDING)) {
             return ON_SALE;
         }
-        throw new IllegalArgumentException("PENDING 상태만 ON_SALE로 변할 수 있습니다.");
+        throw new ConnectableException(HttpStatus.BAD_REQUEST, ErrorType.TICKET_TO_ON_SALE_UNAVAILABLE);
     }
 }

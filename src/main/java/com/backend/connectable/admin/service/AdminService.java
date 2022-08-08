@@ -1,11 +1,14 @@
 package com.backend.connectable.admin.service;
 
+import com.backend.connectable.exception.ConnectableException;
+import com.backend.connectable.exception.ErrorType;
 import com.backend.connectable.exception.KasException;
 import com.backend.connectable.kas.service.KasService;
 import com.backend.connectable.kas.service.dto.TransactionResponse;
 import com.backend.connectable.order.domain.OrderDetail;
 import com.backend.connectable.order.domain.repository.OrderDetailRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +28,7 @@ public class AdminService {
 
     private OrderDetail findOrderDetail(Long orderDetailId) {
         return orderDetailRepository.findById(orderDetailId)
-            .orElseThrow(() -> new IllegalArgumentException("ID에 대응되는 주문 상세가 없습니다."));
+            .orElseThrow(() -> new ConnectableException(HttpStatus.BAD_REQUEST, ErrorType.ORDER_DETAIL_NOT_EXISTS));
     }
 
     private void sendTicket(OrderDetail orderDetail) {
