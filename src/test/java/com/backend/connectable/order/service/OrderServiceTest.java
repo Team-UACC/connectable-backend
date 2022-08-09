@@ -221,9 +221,13 @@ class OrderServiceTest {
         assertThat(orderDetailResponses.get(0).getOrderStatus()).isEqualTo(OrderStatus.REQUESTED);
         assertThat(orderDetailResponses.get(0).getModifiedDate()).isNotNull();
         assertThat(orderDetailResponses.get(0).getTicketMetadata().getName()).contains("조엘");
+        assertThat(orderDetailResponses.get(0).getEventId()).isNotNull();
+        assertThat(orderDetailResponses.get(0).getPrice()).isEqualTo(100000);
         assertThat(orderDetailResponses.get(1).getTicketSalesStatus()).isEqualTo(TicketSalesStatus.PENDING);
         assertThat(orderDetailResponses.get(1).getOrderStatus()).isEqualTo(OrderStatus.REQUESTED);
         assertThat(orderDetailResponses.get(1).getModifiedDate()).isNotNull();
+        assertThat(orderDetailResponses.get(1).getEventId()).isNotNull();
+        assertThat(orderDetailResponses.get(1).getPrice()).isEqualTo(100000);
         assertThat(orderDetailResponses.get(0).getModifiedDate()).isGreaterThanOrEqualTo(orderDetailResponses.get(1).getModifiedDate());
     }
 }
