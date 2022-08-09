@@ -29,6 +29,13 @@ class KasServiceTest {
     public String poolAddress;
 
     @Test
+    void getContractInfo() {
+        ContractItemResponse myContract = kasService.getMyContract(NEW_CONTRACT_ADDRESS);
+        System.out.println("myContract.getAlias() = " + myContract.getAlias());
+        System.out.println("myContract.getName() = " + myContract.getName());
+    }
+
+    @Test
     void findAllTokensOfContractAddressesOwnedByUser() throws InterruptedException {
         ContractItemsResponse myContracts = kasService.getMyContracts();
         List<String> myContractAddresses  = myContracts.getItems().stream()
