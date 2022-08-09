@@ -4,7 +4,6 @@ import com.backend.connectable.event.domain.TicketSalesStatus;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
@@ -21,7 +20,6 @@ public class TicketRepositoryImpl implements TicketRepositoryCustom {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
-    @Transactional
     public long modifyTicketSalesStatusExpire() {
         long fetchedRowCount = queryFactory
             .update(ticket)

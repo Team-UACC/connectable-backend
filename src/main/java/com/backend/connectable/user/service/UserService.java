@@ -19,7 +19,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 @Slf4j
 public class UserService {
 
@@ -74,16 +74,20 @@ public class UserService {
         return UserResponse.ofFailure(user);
     }
 
+    @Transactional
     public UserModifyResponse deleteUserByUserDetails(ConnectableUserDetails userDetails) {
         User user = userDetails.getUser();
         userRepository.deleteUser(user.getKlaytnAddress());
         return UserModifyResponse.ofSuccess();
     }
 
+    @Transactional
     public UserModifyResponse modifyUserByUserDetails(ConnectableUserDetails userDetails, UserModifyRequest userModifyRequest) {
         User user = userDetails.getUser();
         log.info("@@USER_DETAILS_USER_OBJECT::{}", user);
-        userRepository.modifyUser(user.getKlaytnAddress(), userModifyRequest.getNickname(), userModifyRequest.getPhoneNumber());
+        user.modifyNickname(userModifyRequest.getNickname());
+        user.modifyPhoneNumber(userModifyRequest.getPhoneNumber());
+//        userRepository.modifyUser(user.getKlaytnAddress(), userModifyRequest.getNickname(), userModifyRequest.getPhoneNumber());
         return UserModifyResponse.ofSuccess();
     }
 
