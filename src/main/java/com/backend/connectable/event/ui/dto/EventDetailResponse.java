@@ -33,6 +33,7 @@ public class EventDetailResponse {
     private int price;
     private String location;
     private EventSalesOption eventSalesOption;
+    private String openseaUrl;
 
     @Builder
     public EventDetailResponse(Long id, String name, String image, String artistName, String artistImage, String description,
@@ -58,5 +59,9 @@ public class EventDetailResponse {
         this.price = price;
         this.location = location;
         this.eventSalesOption = eventSalesOption;
+    }
+
+    public void setOpenseaUrl(String openseaUrl) {
+        this.openseaUrl = openseaUrl;
     }
 }

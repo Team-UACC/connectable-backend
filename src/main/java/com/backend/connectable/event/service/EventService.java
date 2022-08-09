@@ -12,7 +12,9 @@ import com.backend.connectable.event.ui.dto.EventResponse;
 import com.backend.connectable.event.ui.dto.TicketResponse;
 import com.backend.connectable.exception.ConnectableException;
 import com.backend.connectable.exception.ErrorType;
+import com.backend.connectable.global.common.util.OpenseaCollectionNamingUtil;
 import com.backend.connectable.kas.service.KasService;
+import com.backend.connectable.kas.service.dto.ContractItemResponse;
 import com.backend.connectable.kas.service.dto.TokenResponse;
 import com.backend.connectable.kas.service.dto.TokensResponse;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +45,14 @@ public class EventService {
     public EventDetailResponse getEventDetail(Long eventId) {
         EventDetail eventDetail = eventRepository.findEventDetailByEventId(eventId)
             .orElseThrow(() -> new ConnectableException(HttpStatus.BAD_REQUEST, ErrorType.EVENT_NOT_EXISTS));
-        return EventMapper.INSTANCE.eventDetailToResponse(eventDetail);
+        EventDetailResponse eventDetailResponse = EventMapper.INSTANCE.eventDetailToResponse(eventDetail);
+
+        // Todo : Contract Name을 DB에 저장할 것
+        ContractItemResponse eventContractInformation = kasService.getMyContract(eventDetail.getContractAddress());
+        String contractName = eventContractInformation.getName();
+        String openseaUrl = OpenseaCollectionNamingUtil.toOpenseaCollectionUrl(contractName);
+        eventDetailResponse.setOpenseaUrl(openseaUrl);
+        return eventDetailResponse;
     }
 
     public List<TicketResponse> getTicketList(Long eventId) {
