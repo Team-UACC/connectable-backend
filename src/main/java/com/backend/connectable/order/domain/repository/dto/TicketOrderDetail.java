@@ -20,6 +20,8 @@ public class TicketOrderDetail {
     private TicketSalesStatus ticketSalesStatus;
     @Convert(converter = TicketMetadata.class)
     private TicketMetadata ticketMetadata;
+    private int price;
+    private Long eventId;
     private Long orderId;
     private Long orderDetailId;
     private OrderStatus orderStatus;
@@ -27,10 +29,12 @@ public class TicketOrderDetail {
     private String txHash;
 
     @QueryProjection
-    public TicketOrderDetail(Long ticketId, TicketSalesStatus ticketSalesStatus, TicketMetadata ticketMetadata, Long orderId, Long orderDetailId, OrderStatus orderStatus, LocalDateTime modifiedDate, String txHash) {
+    public TicketOrderDetail(Long ticketId, TicketSalesStatus ticketSalesStatus, TicketMetadata ticketMetadata, int price, Long eventId, Long orderId, Long orderDetailId, OrderStatus orderStatus, LocalDateTime modifiedDate, String txHash) {
         this.ticketId = ticketId;
         this.ticketSalesStatus = ticketSalesStatus;
         this.ticketMetadata = ticketMetadata;
+        this.price = price;
+        this.eventId = eventId;
         this.orderId = orderId;
         this.orderDetailId = orderDetailId;
         this.orderStatus = orderStatus;

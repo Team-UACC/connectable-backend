@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+import static com.backend.connectable.event.domain.QEvent.event;
 import static com.backend.connectable.event.domain.QTicket.ticket;
 import static com.backend.connectable.order.domain.QOrder.order;
 import static com.backend.connectable.order.domain.QOrderDetail.orderDetail;
@@ -28,6 +29,8 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
             ticket.id,
             ticket.ticketSalesStatus,
             ticket.ticketMetadata,
+            ticket.price,
+            event.id,
             order.id,
             orderDetail.id,
             orderDetail.orderStatus,
@@ -38,6 +41,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
             .innerJoin(order).on(order.id.eq(orderDetail.order.id))
             .innerJoin(user).on(user.id.eq(order.user.id))
             .innerJoin(ticket).on(ticket.id.eq(orderDetail.ticket.id))
+            .innerJoin(event).on(event.id.eq(ticket.event.id))
             .where(user.klaytnAddress.eq(klaytnAddress))
             .groupBy(orderDetail.id, ticket.id)
             .orderBy(orderDetail.modifiedDate.desc())
