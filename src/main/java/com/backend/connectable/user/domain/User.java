@@ -39,14 +39,6 @@ public class User {
         this.isActive = isActive;
     }
 
-    public void modifyNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public void modifyPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
     public boolean hasNickname() {
         return !Objects.isNull(nickname);
     }
