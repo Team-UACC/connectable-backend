@@ -86,9 +86,7 @@ public class UserService {
     public UserModifyResponse modifyUserByUserDetails(ConnectableUserDetails userDetails, UserModifyRequest userModifyRequest) {
         User user = userDetails.getUser();
         log.info("@@USER_DETAILS_USER_OBJECT::{}", user);
-        user.modifyNickname(userModifyRequest.getNickname());
-        user.modifyPhoneNumber(userModifyRequest.getPhoneNumber());
-//        userRepository.modifyUser(user.getKlaytnAddress(), userModifyRequest.getNickname(), userModifyRequest.getPhoneNumber());
+        userRepository.modifyUser(user.getKlaytnAddress(), userModifyRequest.getNickname(), userModifyRequest.getPhoneNumber());
         return UserModifyResponse.ofSuccess();
     }
 
