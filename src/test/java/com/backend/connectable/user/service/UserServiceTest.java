@@ -198,6 +198,7 @@ class UserServiceTest {
         UserModifyResponse userModifyResponse = userService.modifyUserByUserDetails(connectableUserDetails, userModifyRequest);
 
         // then
+        assertThat(connectableUserDetails.getUser().getNickname()).isEqualTo("mrlee7");
         assertThat(userModifyResponse.getStatus()).isEqualTo("success");
     }
 
