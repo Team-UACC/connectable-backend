@@ -12,6 +12,7 @@ import com.backend.connectable.user.ui.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -81,7 +82,7 @@ public class UserService {
         return UserModifyResponse.ofSuccess();
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public UserModifyResponse modifyUserByUserDetails(ConnectableUserDetails userDetails, UserModifyRequest userModifyRequest) {
         User user = userDetails.getUser();
         log.info("@@USER_DETAILS_USER_OBJECT::{}", user);
