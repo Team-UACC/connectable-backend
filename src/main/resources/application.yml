@@ -2,7 +2,7 @@ spring:
   profiles:
     active: local
     group:
-      dev: slack-paid-logging, console-logging
+      dev: console-logging,file-sql-logging,file-info-logging,file-error-logging,slack-dev-error-logging,slack-paid-logging
 ---
 spring:
   config:
@@ -82,8 +82,15 @@ logging:
           descriptor:
             sql:
               BasicBinder: TRACE
+    org.springframework.orm: TRACE
+    org.springframework.transaction: TRACE
+    com.zaxxer.hikari: TRACE
+    com.mysql.cj.jdbc: TRACE
   slack:
-    webhook-uri: ${slack.paid_channel_uri}
+    webhook-uri-dev-paid: ${slack.paid_channel_uri}
+    webhook-uri-dev-error: ${slack.error_channel_uri}
+  file:
+    path: /home/ubuntu
   config: classpath:logback-spring.xml
 kas:
   settings:
