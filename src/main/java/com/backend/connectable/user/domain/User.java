@@ -47,6 +47,11 @@ public class User {
         return !Objects.isNull(phoneNumber);
     }
 
+    public void modifyInformation(String nickname, String phoneNumber) {
+        this.nickname = nickname;
+        this.phoneNumber = phoneNumber;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
