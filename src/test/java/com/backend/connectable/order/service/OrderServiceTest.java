@@ -185,7 +185,7 @@ class OrderServiceTest {
     @Test
     void createOrder() {
         // given
-        ConnectableUserDetails connectableUserDetails = new ConnectableUserDetails(user);
+        ConnectableUserDetails connectableUserDetails = new ConnectableUserDetails(user.getKlaytnAddress());
         OrderRequest orderRequest = new OrderRequest("이정필", "010-3333-7777",
             Arrays.asList(ticket1.getId(), ticket2.getId()), 30000);
 
@@ -204,7 +204,7 @@ class OrderServiceTest {
     @Test
     void getOrderDetailList() {
         // given
-        ConnectableUserDetails connectableUserDetails = new ConnectableUserDetails(user);
+        ConnectableUserDetails connectableUserDetails = new ConnectableUserDetails(user.getKlaytnAddress());
         OrderRequest orderRequest1 = new OrderRequest("이정필", "010-3333-7777",
             Arrays.asList(ticket1.getId(), ticket2.getId()), 200000);
         OrderRequest orderRequest2 = new OrderRequest("이정필", "010-3333-7777",
