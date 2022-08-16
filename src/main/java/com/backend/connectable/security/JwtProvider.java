@@ -4,11 +4,10 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.backend.connectable.exception.ConnectableException;
 import com.backend.connectable.exception.ErrorType;
+import com.backend.connectable.security.exception.ConnectableSecurityException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -47,35 +46,35 @@ public class JwtProvider {
             .sign(algorithm);
     }
 
-    public void verify(String token) {
+    public void verify(String token) throws ConnectableSecurityException {
         try {
             JWT.require(algorithm)
                 .build()
                 .verify(token);
         } catch (JWTVerificationException e) {
-            throw new ConnectableException(HttpStatus.BAD_REQUEST, ErrorType.INVALID_TOKEN);
+            throw new ConnectableSecurityException(ErrorType.INVALID_TOKEN);
         }
     }
 
-    public String exportClaim(String token) {
+    public String exportClaim(String token) throws ConnectableSecurityException {
         try {
-             return JWT.decode(token)
+            return JWT.decode(token)
                 .getSubject();
         } catch (JWTDecodeException e) {
-            throw new ConnectableException(HttpStatus.BAD_REQUEST, ErrorType.TOKEN_PAYLOAD_EXTRACTION_FAILURE);
+            throw new ConnectableSecurityException(ErrorType.TOKEN_PAYLOAD_EXTRACTION_FAILURE);
         }
     }
 
-    public Authentication getAuthentication(String token) {
+    public Authentication getAuthentication(String token) throws ConnectableSecurityException {
         String klaytnAddress = exportClaim(token);
         UserDetails userDetails = userDetailsService.loadUserByUsername(klaytnAddress);
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
-    public void verifyAdmin(String token) {
+    public void verifyAdmin(String token) throws ConnectableSecurityException {
         String adminPayload = exportClaim(token);
         if (!this.adminPayload.equals(adminPayload)) {
-            throw new ConnectableException(HttpStatus.BAD_REQUEST, ErrorType.ADMIN_TOKEN_VERIFY_FAILURE);
+            throw new ConnectableSecurityException(ErrorType.ADMIN_TOKEN_VERIFY_FAILURE);
         }
     }
 }
