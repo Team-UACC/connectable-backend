@@ -67,7 +67,8 @@ public class JwtProvider {
     }
 
     public Authentication getAuthentication(String token) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(exportClaim(token));
+        String klaytnAddress = exportClaim(token);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(klaytnAddress);
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
