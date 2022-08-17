@@ -11,7 +11,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserResponse {
 
     private final static String STATUS_SUCCESS = "success";
@@ -21,15 +20,6 @@ public class UserResponse {
     private String nickname;
     private String phoneNumber;
     private String klaytnAddress;
-
-    public static UserResponse of(User user) {
-        return new UserResponse(
-                "success",
-                user.getNickname(),
-                user.getPhoneNumber(),
-                user.getKlaytnAddress()
-        );
-    }
 
     public static UserResponse ofSuccess(User user) {
         return new UserResponse(
@@ -49,7 +39,7 @@ public class UserResponse {
         );
     }
 
-    public boolean isSuccess() {
+    public boolean checkSuccess() {
         return this.status.equals(STATUS_SUCCESS);
     }
 }
