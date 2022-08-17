@@ -2,6 +2,8 @@ package com.backend.connectable.user.service;
 
 import com.backend.connectable.event.domain.Ticket;
 import com.backend.connectable.event.service.EventService;
+import com.backend.connectable.exception.ConnectableException;
+import com.backend.connectable.exception.ErrorType;
 import com.backend.connectable.klip.service.KlipService;
 import com.backend.connectable.klip.service.dto.KlipAuthLoginResponse;
 import com.backend.connectable.security.ConnectableUserDetails;
@@ -11,8 +13,8 @@ import com.backend.connectable.user.domain.repository.UserRepository;
 import com.backend.connectable.user.ui.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -29,6 +31,7 @@ public class UserService {
     private final JwtProvider jwtProvider;
     private final EventService eventService;
 
+    @Transactional
     public UserLoginResponse login(UserLoginRequest userLoginRequest) {
         String requestKey = userLoginRequest.getRequestKey();
         KlipAuthLoginResponse klipAuthLoginResponse = klipService.authLogin(requestKey);
@@ -68,30 +71,34 @@ public class UserService {
     }
 
     public UserResponse getUserByUserDetails(ConnectableUserDetails userDetails) {
-        User user = userDetails.getUser();
+        User user = findUser(userDetails.getKlaytnAddress());
         if (user.hasNickname() && user.hasPhoneNumber()) {
             return UserResponse.ofSuccess(user);
         }
         return UserResponse.ofFailure(user);
     }
 
+    private User findUser(String klaytnAddress) {
+        return userRepository.findByKlaytnAddress(klaytnAddress)
+            .orElseThrow(() -> new ConnectableException(HttpStatus.BAD_REQUEST, ErrorType.USER_NOT_FOUND));
+    }
+
     @Transactional
     public UserModifyResponse deleteUserByUserDetails(ConnectableUserDetails userDetails) {
-        User user = userDetails.getUser();
+        User user = findUser(userDetails.getKlaytnAddress());
         userRepository.deleteUser(user.getKlaytnAddress());
         return UserModifyResponse.ofSuccess();
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional
     public UserModifyResponse modifyUserByUserDetails(ConnectableUserDetails userDetails, UserModifyRequest userModifyRequest) {
-        User user = userDetails.getUser();
-        log.info("@@USER_DETAILS_USER_OBJECT::{}", user);
-        userRepository.modifyUser(user.getKlaytnAddress(), userModifyRequest.getNickname(), userModifyRequest.getPhoneNumber());
+        User user = findUser(userDetails.getKlaytnAddress());
+        user.modifyInformation(userModifyRequest.getNickname(), userModifyRequest.getPhoneNumber());
         return UserModifyResponse.ofSuccess();
     }
 
     public UserTicketListResponse getUserTicketsByUserDetails(ConnectableUserDetails userDetails) {
-        String userKlaytnAddress = userDetails.getUser().getKlaytnAddress();
+        String userKlaytnAddress = userDetails.getKlaytnAddress();
         List<Ticket> tickets = eventService.findTicketByUserAddress(userKlaytnAddress);
         List<UserTicketResponse> userTicketResponses = UserTicketResponse.toList(tickets);
         return UserTicketListResponse.of(userTicketResponses);

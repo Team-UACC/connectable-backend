@@ -1,6 +1,5 @@
 package com.backend.connectable.security;
 
-import com.backend.connectable.user.domain.User;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -12,7 +11,7 @@ import java.util.Collection;
 @Getter
 public class ConnectableUserDetails implements UserDetails {
 
-    private final User user;
+    private final String klaytnAddress;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -21,17 +20,17 @@ public class ConnectableUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null;
+        return "";
     }
 
     @Override
     public String getUsername() {
-        return user.getNickname();
+        return "";
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return user.isActive();
+        return true;
     }
 
     @Override

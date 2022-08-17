@@ -2,6 +2,7 @@ spring:
   profiles:
     active: local
     group:
+      local: console-logging
       dev: console-logging,file-sql-logging,file-info-logging,file-error-logging,slack-dev-error-logging,slack-paid-logging
 ---
 spring:

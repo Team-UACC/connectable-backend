@@ -162,7 +162,7 @@ class UserServiceTest {
     @Test
     void getUserByUserDetails() {
         // given
-        ConnectableUserDetails connectableUserDetails = new ConnectableUserDetails(user1);
+        ConnectableUserDetails connectableUserDetails = new ConnectableUserDetails(user1.getKlaytnAddress());
 
         // when
         UserResponse userResponse = userService.getUserByUserDetails(connectableUserDetails);
@@ -178,7 +178,7 @@ class UserServiceTest {
     @Test
     void deleteUser() {
         // given
-        ConnectableUserDetails connectableUserDetails = new ConnectableUserDetails(user1);
+        ConnectableUserDetails connectableUserDetails = new ConnectableUserDetails(user1.getKlaytnAddress());
 
         // when
         UserModifyResponse userModifyResponse = userService.deleteUserByUserDetails(connectableUserDetails);
@@ -191,7 +191,7 @@ class UserServiceTest {
     @Test
     void modifyUser() {
         // given
-        ConnectableUserDetails connectableUserDetails = new ConnectableUserDetails(user1);
+        ConnectableUserDetails connectableUserDetails = new ConnectableUserDetails(user1.getKlaytnAddress());
         UserModifyRequest userModifyRequest = new UserModifyRequest("mrlee7", "01085161399");
 
         // when
@@ -290,7 +290,7 @@ class UserServiceTest {
     void getUserTicketsByUserDetails() {
         // given
         given(eventService.findTicketByUserAddress(user1KlaytnAddress)).willReturn(Arrays.asList(ticket1, ticket2));
-        ConnectableUserDetails connectableUserDetails = new ConnectableUserDetails(user1);
+        ConnectableUserDetails connectableUserDetails = new ConnectableUserDetails(user1.getKlaytnAddress());
 
         // when
         UserTicketListResponse userTicketListResponse = userService.getUserTicketsByUserDetails(connectableUserDetails);
