@@ -1,6 +1,7 @@
 package com.backend.connectable.user.ui.dto;
 
 import com.backend.connectable.user.domain.User;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserResponse {
 
     private final static String STATUS_SUCCESS = "success";
