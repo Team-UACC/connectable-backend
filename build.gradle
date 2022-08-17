@@ -38,6 +38,10 @@ allprojects {
     }
 }
 
+test {
+    useJUnitPlatform()
+}
+
 dependencies {
     // Spring
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -77,6 +81,7 @@ dependencies {
     // Testing
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'io.rest-assured:rest-assured:4.4.0'
 
     // Caver-Java & KAS
     implementation 'com.klaytn.caver:core:1.6.2'

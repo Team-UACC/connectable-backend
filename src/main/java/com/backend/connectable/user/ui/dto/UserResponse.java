@@ -1,6 +1,7 @@
 package com.backend.connectable.user.ui.dto;
 
 import com.backend.connectable.user.domain.User;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,15 +21,6 @@ public class UserResponse {
     private String phoneNumber;
     private String klaytnAddress;
 
-    public static UserResponse of(User user) {
-        return new UserResponse(
-                "success",
-                user.getNickname(),
-                user.getPhoneNumber(),
-                user.getKlaytnAddress()
-        );
-    }
-
     public static UserResponse ofSuccess(User user) {
         return new UserResponse(
             STATUS_SUCCESS,
@@ -47,7 +39,7 @@ public class UserResponse {
         );
     }
 
-    public boolean isSuccess() {
+    public boolean checkSuccess() {
         return this.status.equals(STATUS_SUCCESS);
     }
 }
