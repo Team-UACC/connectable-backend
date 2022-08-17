@@ -23,7 +23,7 @@ public class OrderDetail extends BaseEntity {
     @Column(nullable = true)
     private String txHash;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne
     private Ticket ticket;
 
     @ManyToOne(fetch = FetchType.LAZY)
