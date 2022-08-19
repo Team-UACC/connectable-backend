@@ -46,6 +46,8 @@ kas:
     chain-id: 1001
 dataloader:
   enable: true
+swagger:
+  url: http://localhost:8080
 ---
 spring:
   config:
@@ -105,3 +107,5 @@ kas:
     secret-access-key: ${kas.secret_access_key}
 dataloader:
   enable: ${dataloader.enable}
+swagger:
+  url: https://connectable.kro.kr
