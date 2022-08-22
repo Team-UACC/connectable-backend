@@ -4,6 +4,7 @@ spring:
     group:
       local: console-logging
       dev: console-logging,file-sql-logging,file-info-logging,file-error-logging,slack-dev-error-logging,slack-paid-logging
+      prod: console-logging,file-sql-logging,file-info-logging,file-error-logging,slack-dev-error-logging,slack-paid-logging
 ---
 spring:
   config:
@@ -109,3 +110,64 @@ dataloader:
   enable: ${dataloader.enable}
 swagger:
   url: https://connectable.kro.kr
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+    import: 'aws-parameterstore:'
+  jpa:
+    hibernate:
+      ddl-auto: ${jpa.ddl_auto}
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+    show-sql: true
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${jdbc.url}
+    username: ${jdbc.username}
+    password: ${jdbc.password}
+aws:
+  paramstore:
+    enabled: true
+    prefix: /config
+    profile-separator: _
+    name: connectable
+jwt:
+  secret: ${jwt.secret}
+  expire-time: 14400000
+  admin-payload: ${jwt.admin_payload}
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
+    org.springframework.orm: TRACE
+    org.springframework.transaction: TRACE
+    com.zaxxer.hikari: TRACE
+    com.mysql.cj.jdbc: TRACE
+  slack:
+    webhook-uri-dev-paid: ${slack.paid_channel_uri}
+    webhook-uri-dev-error: ${slack.error_channel_uri}
+  file:
+    path: /
+  config: classpath:logback-spring.xml
+kas:
+  settings:
+    enable-global-fee-payer: false
+    chain-id: 8217
+    account-pool-krn: ${kas.account_pool_krn}
+    account-pool-address: ${kas.account_pool_address}
+    user-fee-payer-krn: ${kas.user_fee_payer_krn}
+    user-fee-payer-address: ${kas.user_fee_payer_address}
+    access-key-id: ${kas.access_key_id}
+    secret-access-key: ${kas.secret_access_key}
+dataloader:
+  enable: ${dataloader.enable}
+swagger:
+  url: https://api.connectable.fans
