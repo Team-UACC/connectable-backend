@@ -3,7 +3,7 @@ pipeline {
      stages {
          stage('Prepare') {
              steps {
-                 sh '$(aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/y3o5z1g2)'
+                 sh 'aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/y3o5z1g2'
              }
          }
          stage('Gradle Build') {
