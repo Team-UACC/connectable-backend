@@ -38,7 +38,7 @@ pipeline {
                          sh "docker tag connectable:latest ${env.PROD_ECR}:latest"
                          sh "docker push ${env.PROD_ECR}:latest"
                      } else {
-                         sh "docker tag connectable:latest ${env.DEV_ECR}:latest"
+                         sh "docker tag dev-connectable:latest ${env.DEV_ECR}:latest"
                          sh "docker push ${env.DEV_ECR}:latest"
                      }
                  }
