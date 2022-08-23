@@ -24,10 +24,7 @@ pipeline {
          }
          stage('Aws ECS Deploy') {
             steps {
-                script {
-                            def ecs_update_url = "aws ecs update-service --region ap-northeast-2 --cluster connectable-prod-cluster --service prod-service-1 --task-definition prod-task:2"
-                            sh ecs_update_url
-                        }
+                sh 'aws ecs update-service --region ap-northeast-2 --cluster connectable-prod-cluster --service prod-service-1 --force-new-deployment'
             }
          }
      }
