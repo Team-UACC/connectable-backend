@@ -21,7 +21,13 @@ pipeline {
 
          stage('Docker Build') {
              steps {
-                 sh "docker build -t connectable ."
+                 script {
+                    if (env.BRANCH_NAME == 'master') {
+                        sh "docker build -t connectable ."
+                    } else {
+                        sh "docker build -t dev-connectable ."
+                    }
+                 }
              }
          }
 
@@ -29,11 +35,11 @@ pipeline {
              steps {
                  script {
                      if (env.BRANCH_NAME == 'master') {
-                         sh "docker tag connectable:latest ${env.PROD_ECR}/connectable:latest"
-                         sh "docker push ${env.PROD_ECR}/connectable:latest"
+                         sh "docker tag connectable:latest ${env.PROD_ECR}:latest"
+                         sh "docker push ${env.PROD_ECR}:latest"
                      } else {
-                         sh "docker tag connectable:latest ${env.DEV_ECR}/connectable:latest"
-                         sh "docker push ${env.DEV_ECR}/connectable:latest"
+                         sh "docker tag connectable:latest ${env.DEV_ECR}:latest"
+                         sh "docker push ${env.DEV_ECR}:latest"
                      }
                  }
              }
