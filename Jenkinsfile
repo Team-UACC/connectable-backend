@@ -23,9 +23,9 @@ pipeline {
              steps {
                  script {
                     if (env.BRANCH_NAME == 'master') {
-                        sh "docker build -t connectable ."
+                        sh "docker build --build-arg 'PROFILE=prod' -t connectable ."
                     } else {
-                        sh "docker build -t dev-connectable ."
+                        sh "docker build --build-arg 'PROFILE=dev' -t dev-connectable ."
                     }
                  }
              }
