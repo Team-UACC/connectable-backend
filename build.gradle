@@ -1,6 +1,14 @@
+buildscript {
+    ext {
+        queryDslVersion = "5.0.0"
+        mapStructVersion = "1.4.2.Final"
+    }
+}
+
 plugins {
     id 'org.springframework.boot' version '2.7.1'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
     id 'java'
 }
 
@@ -18,21 +26,107 @@ repositories {
     mavenCentral()
 }
 
+dependencyManagement {
+    imports {
+        mavenBom "io.awspring.cloud:spring-cloud-aws-dependencies:2.3.3"
+    }
+}
+
+allprojects {
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
+
+tasks.jar {
+    enabled = false
+}
+
 dependencies {
+    // Spring
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.flywaydb:flyway-core'
-    compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    runtimeOnly 'com.h2database:h2'
+
+    // DB
     runtimeOnly 'mysql:mysql-connector-java'
+    runtimeOnly 'com.h2database:h2:1.4.199'
+
+    // Cloud
+    implementation group: 'io.awspring.cloud', name: 'spring-cloud-starter-aws-parameter-store-config'
+
+    // QueryDsl
+    implementation 'com.querydsl:querydsl-jpa'
+    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+    implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
+
+    // Security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'com.auth0:java-jwt:3.19.2'
+
+    // Lombok
     annotationProcessor 'org.projectlombok:lombok'
+    compileOnly 'org.projectlombok:lombok'
+
+    /**
+     * MapStruct
+     *
+     * annotationProcessor 이슈로 Mapstructure는 Lombok보다 하위에 있어야함.
+     * https://mapstruct.org/faq/#Can-I-use-MapStruct-together-with-Project-Lombok
+     */
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapStructVersion}"
+    implementation "org.mapstruct:mapstruct:${mapStructVersion}"
+
+    // Testing
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'io.rest-assured:rest-assured:4.4.0'
+
+    // Caver-Java & KAS
+    implementation 'com.klaytn.caver:core:1.6.2'
+    implementation 'xyz.groundx.caver:caver-java-ext-kas:1.1.1'
+
+    // Webflux
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-webflux', version: '2.7.0'
+
+    // String-Utils
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
+
+    // Swagger
+    implementation "io.springfox:springfox-boot-starter:3.0.0"
+    implementation "io.springfox:springfox-swagger-ui:3.0.0"
+
+    // Slack
+    implementation 'com.github.maricn:logback-slack-appender:1.6.1'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+def querydslDir = "$buildDir/generated/querydsl"
+
+querydsl {
+    jpa = true
+    querydslSourcesDir = querydslDir
+}
+
+sourceSets {
+    main.java.srcDir querydslDir
+}
+
+compileQuerydsl {
+    options.annotationProcessorPath = configurations.querydsl
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    querydsl.extendsFrom compileClasspath
 }
