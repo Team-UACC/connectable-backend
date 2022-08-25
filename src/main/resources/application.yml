@@ -155,7 +155,7 @@ logging:
     webhook-uri-dev-paid: ${slack.paid_channel_uri}
     webhook-uri-dev-error: ${slack.error_channel_uri}
   file:
-    path: /
+    path: /home/ubuntu
   config: classpath:logback-spring.xml
 kas:
   settings:
