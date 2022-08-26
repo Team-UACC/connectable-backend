@@ -1,9 +1,11 @@
 package com.backend.connectable.event.domain;
 
-import com.backend.connectable.user.domain.User;
+import com.backend.connectable.exception.ConnectableException;
+import com.backend.connectable.exception.ErrorType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.http.HttpStatus;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -20,10 +22,6 @@ public class Ticket {
 
     @ManyToOne
     @JoinColumn(nullable = false)
-    private User user;
-
-    @ManyToOne
-    @JoinColumn(nullable = false)
     private Event event;
 
     private int tokenId;
@@ -31,6 +29,8 @@ public class Ticket {
     private String tokenUri;
 
     private int price;
+
+    private boolean isUsed;
 
     @Enumerated(EnumType.STRING)
     private TicketSalesStatus ticketSalesStatus;
@@ -40,25 +40,20 @@ public class Ticket {
     private TicketMetadata ticketMetadata;
 
     @Builder
-    public Ticket(Long id, User user, Event event, int tokenId, String tokenUri, int price,
+    public Ticket(Long id, Event event, int tokenId, String tokenUri, int price,
                   TicketSalesStatus ticketSalesStatus, TicketMetadata ticketMetadata) {
         this.id = id;
-        this.user = user;
         this.event = event;
         this.tokenId = tokenId;
         this.tokenUri = tokenUri;
         this.price = price;
         this.ticketSalesStatus = ticketSalesStatus;
         this.ticketMetadata = ticketMetadata;
+        this.isUsed = false;
     }
 
     public String getContractAddress() {
         return event.getContractAddress();
-    }
-
-    public void transferredTo(User user) {
-        this.user = user;
-        this.soldOut();
     }
 
     public void toPending() {
@@ -71,6 +66,13 @@ public class Ticket {
 
     public void onSale() {
         this.ticketSalesStatus = this.ticketSalesStatus.onSale();
+    }
+
+    public void useToEnterEvent() {
+        if (this.isUsed) {
+            throw new ConnectableException(HttpStatus.BAD_REQUEST, ErrorType.TICKET_ALREADY_USED);
+        }
+        this.isUsed = true;
     }
 
     public LocalDateTime getStartTime() {
