@@ -84,7 +84,6 @@ public class DataLoader implements ApplicationRunner {
             TicketMetadata ticketMetadata = s3Service.fetchMetadata(tokenUri)
                 .toTicketMetadata();
             Ticket brownTicket = Ticket.builder()
-                .user(admin)
                 .event(brownEvent)
                 .tokenUri(tokenUri)
                 .tokenId(i)

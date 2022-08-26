@@ -127,7 +127,6 @@ class OrderServiceTest {
             .build();
 
         ticket1 = Ticket.builder()
-            .user(user)
             .event(event)
             .tokenUri("https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/1.json")
             .price(100000)
@@ -147,7 +146,6 @@ class OrderServiceTest {
             .build();
 
         ticket2 = Ticket.builder()
-            .user(user)
             .event(event)
             .tokenUri("https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/2.json")
             .price(100000)
@@ -167,7 +165,6 @@ class OrderServiceTest {
             .build();
 
         ticket3 = Ticket.builder()
-            .user(user)
             .event(event)
             .tokenUri("https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/3.json")
             .price(100000)

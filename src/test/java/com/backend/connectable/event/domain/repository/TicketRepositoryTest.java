@@ -84,7 +84,6 @@ class TicketRepositoryTest {
 
     String tokenUri1 = "https://token.uri.1";
     Ticket joelTicket1 = Ticket.builder()
-            .user(joel)
             .event(joelEvent)
             .tokenUri(tokenUri1)
             .price(100000)
@@ -94,7 +93,6 @@ class TicketRepositoryTest {
 
     String tokenUri2 = "https://token.uri.2";
     Ticket joelTicket2 = Ticket.builder()
-        .user(joel)
         .event(joelEvent)
         .tokenUri(tokenUri2)
         .price(100000)
@@ -116,7 +114,6 @@ class TicketRepositoryTest {
         Ticket savedTicket = ticketRepository.save(joelTicket1);
 
         // then
-        assertThat(savedTicket.getUser()).isEqualTo(joel);
         assertThat(savedTicket.getEvent()).isEqualTo(joelEvent);
         assertThat(savedTicket.getPrice()).isEqualTo(100000);
         assertThat(savedTicket.getTicketSalesStatus()).isEqualTo(TicketSalesStatus.ON_SALE);
