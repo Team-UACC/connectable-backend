@@ -27,9 +27,7 @@ CREATE TABLE `orders` (
                           `orderer_name` varchar(255) DEFAULT NULL,
                           `orderer_phone_number` varchar(255) DEFAULT NULL,
                           `user_id` bigint NOT NULL,
-                          PRIMARY KEY (`id`),
-                          KEY `FKel9kyl84ego2otj2accfd8mr7` (`user_id`),
-                          CONSTRAINT `FKel9kyl84ego2otj2accfd8mr7` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+                          PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `event` (
@@ -48,9 +46,7 @@ CREATE TABLE `event` (
                          `twitter_url` varchar(255) DEFAULT NULL,
                          `webpage_url` varchar(255) DEFAULT NULL,
                          `artist_id` bigint NOT NULL,
-                         PRIMARY KEY (`id`),
-                         KEY `FKdvvkbxm5gn0f66no9ja48hks2` (`artist_id`),
-                         CONSTRAINT `FKdvvkbxm5gn0f66no9ja48hks2` FOREIGN KEY (`artist_id`) REFERENCES `artist` (`id`)
+                         PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `ticket` (
@@ -62,11 +58,7 @@ CREATE TABLE `ticket` (
                           `token_uri` varchar(255) DEFAULT NULL,
                           `event_id` bigint NOT NULL,
                           `user_id` bigint NOT NULL,
-                          PRIMARY KEY (`id`),
-                          KEY `FKfytuhjopeamxbt1cpudy92x5n` (`event_id`),
-                          KEY `FKdvt57mcco3ogsosi97odw563o` (`user_id`),
-                          CONSTRAINT `FKdvt57mcco3ogsosi97odw563o` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
-                          CONSTRAINT `FKfytuhjopeamxbt1cpudy92x5n` FOREIGN KEY (`event_id`) REFERENCES `event` (`id`)
+                          PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `order_detail` (
@@ -77,9 +69,5 @@ CREATE TABLE `order_detail` (
                                 `tx_hash` varchar(255) DEFAULT NULL,
                                 `order_id` bigint NOT NULL,
                                 `ticket_id` bigint DEFAULT NULL,
-                                PRIMARY KEY (`id`),
-                                KEY `FKrws2q0si6oyd6il8gqe2aennc` (`order_id`),
-                                KEY `FKrre8eo0thwbk3a83648x1o0ep` (`ticket_id`),
-                                CONSTRAINT `FKrre8eo0thwbk3a83648x1o0ep` FOREIGN KEY (`ticket_id`) REFERENCES `ticket` (`id`),
-                                CONSTRAINT `FKrws2q0si6oyd6il8gqe2aennc` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`)
+                                PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
