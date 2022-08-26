@@ -103,6 +103,9 @@ dependencies {
 
     // Slack
     implementation 'com.github.maricn:logback-slack-appender:1.6.1'
+
+    // flyway
+    implementation('org.flywaydb:flyway-core:6.4.2')
 }
 
 tasks.named('test') {
