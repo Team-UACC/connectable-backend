@@ -114,7 +114,6 @@ class EventRepositoryTest {
     void findAllTickets() {
         // given
         Ticket ticket1SoldOut = Ticket.builder()
-            .user(user)
             .event(joelEvent)
             .tokenId(1)
             .tokenUri("https://token1.uri")
@@ -123,7 +122,6 @@ class EventRepositoryTest {
             .build();
 
         Ticket ticket2SoldOut = Ticket.builder()
-            .user(user)
             .event(joelEvent)
             .tokenId(2)
             .tokenUri("https://token1.uri")
@@ -132,7 +130,6 @@ class EventRepositoryTest {
             .build();
 
         Ticket ticket3Pending = Ticket.builder()
-            .user(user)
             .event(joelEvent)
             .tokenId(3)
             .tokenUri("https://token1.uri")
@@ -141,7 +138,6 @@ class EventRepositoryTest {
             .build();
 
         Ticket ticket4Pending = Ticket.builder()
-            .user(user)
             .event(joelEvent)
             .tokenId(4)
             .tokenUri("https://token1.uri")
@@ -150,7 +146,6 @@ class EventRepositoryTest {
             .build();
 
         Ticket ticket5OnSale = Ticket.builder()
-            .user(user)
             .event(joelEvent)
             .tokenId(5)
             .tokenUri("https://token1.uri")
@@ -160,7 +155,6 @@ class EventRepositoryTest {
 
 
         Ticket ticket6OnSale = Ticket.builder()
-            .user(user)
             .event(joelEvent)
             .tokenId(6)
             .tokenUri("https://token1.uri")

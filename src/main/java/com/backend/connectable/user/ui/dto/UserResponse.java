@@ -1,7 +1,6 @@
 package com.backend.connectable.user.ui.dto;
 
 import com.backend.connectable.user.domain.User;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
