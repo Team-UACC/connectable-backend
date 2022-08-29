@@ -21,6 +21,7 @@ public class EventDetail {
     private String artistImage;
     private String description;
     private String contractAddress;
+    private String contractName;
     private LocalDateTime salesFrom;
     private LocalDateTime salesTo;
     private String twitterUrl;
