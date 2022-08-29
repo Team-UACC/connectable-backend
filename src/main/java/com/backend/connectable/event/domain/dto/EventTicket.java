@@ -44,4 +44,12 @@ public class EventTicket {
         this.metadata = metadata;
         this.contractAddress = contractAddress;
     }
+
+    public boolean getIsUsed() {
+        return isUsed;
+    }
+
+    public boolean isUsed() {
+        return isUsed;
+    }
 }

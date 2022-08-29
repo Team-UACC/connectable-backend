@@ -24,7 +24,6 @@ public class TicketResponse {
     private boolean isUsed;
     private TicketMetadataResponse metadata;
     private String contractAddress;
-
     private String ownedBy;
 
     @Builder
