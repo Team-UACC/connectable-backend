@@ -77,6 +77,7 @@ public class EventService {
             .ticketSalesStatus(eventTicket.getTicketSalesStatus())
             .tokenId(eventTicket.getTokenId())
             .tokenUri(eventTicket.getTokenUri())
+            .isUsed(eventTicket.isUsed())
             .metadata(eventTicket.getMetadata())
             .contractAddress(eventTicket.getContractAddress())
             .ownedBy(tokenResponse.getOwner())

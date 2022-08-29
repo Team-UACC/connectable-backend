@@ -21,14 +21,14 @@ public class TicketResponse {
     private TicketSalesStatus ticketSalesStatus;
     private int tokenId;
     private String tokenUri;
+    private boolean isUsed;
     private TicketMetadataResponse metadata;
     private String contractAddress;
-
     private String ownedBy;
 
     @Builder
     public TicketResponse(Long id, int price, String artistName, LocalDateTime eventDate, String eventName, TicketSalesStatus ticketSalesStatus,
-                          int tokenId, String tokenUri, TicketMetadata metadata, String contractAddress, String ownedBy) {
+                          int tokenId, String tokenUri, boolean isUsed, TicketMetadata metadata, String contractAddress, String ownedBy) {
         this.id = id;
         this.price = price;
         this.artistName = artistName;
@@ -37,6 +37,7 @@ public class TicketResponse {
         this.ticketSalesStatus = ticketSalesStatus;
         this.tokenId = tokenId;
         this.tokenUri = tokenUri;
+        this.isUsed = isUsed;
         this.metadata = TicketMetadataResponse.of(metadata);
         this.contractAddress = contractAddress;
         this.ownedBy = ownedBy;

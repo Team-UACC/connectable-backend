@@ -109,6 +109,7 @@ class EventControllerTest {
         TicketSalesStatus.ON_SALE,
         0,
         "https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/1.json",
+        false,
         SAMPLE_TICKET_METADATA,
         "0x123456",
         "0xabcd"
@@ -123,6 +124,7 @@ class EventControllerTest {
         TicketSalesStatus.ON_SALE,
         1,
         "https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/2.json",
+        false,
         SAMPLE_TICKET_METADATA,
         "0x123456",
         "0xabcd"
