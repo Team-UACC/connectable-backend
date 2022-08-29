@@ -7,7 +7,7 @@ import org.springframework.data.redis.core.RedisHash;
 
 
 @Getter
-@RedisHash
+@RedisHash(value = "UserTicketEntrance")
 public class UserTicketEntrance {
 
     @Id
