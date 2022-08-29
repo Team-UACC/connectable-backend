@@ -4,12 +4,15 @@ import com.backend.connectable.event.domain.Ticket;
 import com.backend.connectable.event.service.EventService;
 import com.backend.connectable.exception.ConnectableException;
 import com.backend.connectable.exception.ErrorType;
+import com.backend.connectable.global.common.util.RandomStringUtil;
 import com.backend.connectable.klip.service.KlipService;
 import com.backend.connectable.klip.service.dto.KlipAuthLoginResponse;
 import com.backend.connectable.security.ConnectableUserDetails;
 import com.backend.connectable.security.JwtProvider;
 import com.backend.connectable.user.domain.User;
 import com.backend.connectable.user.domain.repository.UserRepository;
+import com.backend.connectable.user.redis.UserTicketEntrance;
+import com.backend.connectable.user.redis.UserTicketEntranceRedisRepository;
 import com.backend.connectable.user.ui.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +33,7 @@ public class UserService {
     private final KlipService klipService;
     private final JwtProvider jwtProvider;
     private final EventService eventService;
+    private final UserTicketEntranceRedisRepository userTicketEntranceRedisRepository;
 
     @Transactional
     public UserLoginResponse login(UserLoginRequest userLoginRequest) {
@@ -110,5 +114,27 @@ public class UserService {
             return UserValidationResponse.ofUnavailable();
         }
         return UserValidationResponse.ofAvailable();
+    }
+
+    public UserTicketVerificationResponse getUserTicketEntranceVerification(ConnectableUserDetails userDetails, Long ticketId) {
+        User user = findUser(userDetails.getKlaytnAddress());
+        Ticket ticket = eventService.findTicketById(ticketId);
+        if (ticket.isUsed()) {
+            throw new ConnectableException(HttpStatus.BAD_REQUEST, ErrorType.ENTRANCE_ALREADY_DONE);
+        }
+
+        String klaytnAddress = user.getKlaytnAddress();
+        String verification = RandomStringUtil.generate();
+        saveUserTicketEntrance(klaytnAddress, ticketId, verification);
+        return UserTicketVerificationResponse.of(klaytnAddress, ticketId, verification);
+    }
+
+    private void saveUserTicketEntrance(String klaytnAddress, Long ticketId, String verification) {
+        UserTicketEntrance userTicketEntrance = UserTicketEntrance.builder()
+            .klaytnAddress(klaytnAddress)
+            .ticketId(ticketId)
+            .verification(verification)
+            .build();
+        userTicketEntranceRedisRepository.save(userTicketEntrance);
     }
 }
