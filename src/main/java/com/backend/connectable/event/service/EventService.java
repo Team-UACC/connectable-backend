@@ -88,4 +88,9 @@ public class EventService {
 
         return ticketRepository.findAllByTokenUri(userTokenUris);
     }
+
+    public Ticket findTicketById(Long ticketId) {
+        return ticketRepository.findById(ticketId)
+            .orElseThrow(() -> new ConnectableException(HttpStatus.BAD_REQUEST, ErrorType.TICKET_NOT_EXISTS));
+    }
 }

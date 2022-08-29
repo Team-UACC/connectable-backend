@@ -25,6 +25,9 @@ spring:
     password:
   flyway:
     enabled: false
+  redis:
+    host: 127.0.0.1
+    port: 6379
 jwt:
   secret: uacc-to-the-moon
   expire-time: 14400000
@@ -73,6 +76,9 @@ spring:
   flyway:
     enabled: true
     baseline-on-migrate: true
+  redis:
+    host: 127.0.0.1
+    port: 6379
 aws:
   paramstore:
     enabled: true
@@ -137,6 +143,9 @@ spring:
   flyway:
     enabled: true
     baseline-on-migrate: true
+  redis:
+    host: 127.0.0.1
+    port: 6379
 aws:
   paramstore:
     enabled: true
