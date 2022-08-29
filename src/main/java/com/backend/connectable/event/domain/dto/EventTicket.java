@@ -23,12 +23,15 @@ public class EventTicket {
     private TicketSalesStatus ticketSalesStatus;
     private int tokenId;
     private String tokenUri;
+    private boolean isUsed;
     @Convert(converter = TicketMetadata.class)
     private TicketMetadata metadata;
     private String contractAddress;
 
     @QueryProjection
-    public EventTicket(Long id, int price, String artistName, LocalDateTime eventDate, String eventName, TicketSalesStatus ticketSalesStatus, int tokenId, String tokenUri, TicketMetadata metadata, String contractAddress) {
+    public EventTicket(Long id, int price, String artistName, LocalDateTime eventDate, String eventName,
+                       TicketSalesStatus ticketSalesStatus, int tokenId, String tokenUri, boolean isUsed,
+                       TicketMetadata metadata, String contractAddress) {
         this.id = id;
         this.price = price;
         this.artistName = artistName;
@@ -37,6 +40,7 @@ public class EventTicket {
         this.ticketSalesStatus = ticketSalesStatus;
         this.tokenId = tokenId;
         this.tokenUri = tokenUri;
+        this.isUsed = isUsed;
         this.metadata = metadata;
         this.contractAddress = contractAddress;
     }
