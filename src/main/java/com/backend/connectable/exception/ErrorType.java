@@ -9,6 +9,7 @@ public enum ErrorType {
     USER_NOT_FOUND("AUTH-001", "해당 유저를 찾을 수 없습니다."),
     INVALID_TOKEN("AUTH-002", "유효하지 않은 토큰입니다."),
     TOKEN_PAYLOAD_EXTRACTION_FAILURE("AUTH-003", "토큰 페이로드 추출에 실패했습니다"),
+    INVALID_AUTH_KEY("AUTH-004", "올바르지 않은 인증키입니다."),
 
     MISSING_REQUIRED_VALUE_ERROR("COMMON-001", "필수 요청값이 누락되었습니다."),
     NOT_ALLOWED_PERMISSION_ERROR("COMMON-002", "허용되지 않은 권한입니다."),

@@ -25,6 +25,9 @@ spring:
     password:
   flyway:
     enabled: false
+  redis:
+    host: 127.0.0.1
+    port: 6379
 jwt:
   secret: uacc-to-the-moon
   expire-time: 14400000
@@ -51,6 +54,10 @@ dataloader:
   enable: true
 swagger:
   url: http://localhost:8080
+sms:
+  api-key: NCSDOXRJCN3PNEUL
+  api-secret: 6AY7BFTPYTHTYN8QN4E98YSDNPINO9XN
+  source-phone-number: 01085161399
 ---
 spring:
   config:
@@ -73,6 +80,9 @@ spring:
   flyway:
     enabled: true
     baseline-on-migrate: true
+  redis:
+    host: ${redis.host}
+    port: ${redis.port}
 aws:
   paramstore:
     enabled: true
@@ -115,6 +125,10 @@ dataloader:
   enable: ${dataloader.enable}
 swagger:
   url: https://connectable.kro.kr
+sms:
+  api-key: ${sms.api-key}
+  api-secret: ${sms.api-secret}
+  source-phone-number: ${sms.source-phone-number}
 ---
 spring:
   config:
@@ -137,6 +151,9 @@ spring:
   flyway:
     enabled: true
     baseline-on-migrate: true
+  redis:
+    host: ${redis.host}
+    port: ${redis.port}
 aws:
   paramstore:
     enabled: true
@@ -179,3 +196,7 @@ dataloader:
   enable: ${dataloader.enable}
 swagger:
   url: https://api.connectable.fans
+sms:
+  api-key: ${sms.api-key}
+  api-secret: ${sms.api-secret}
+  source-phone-number: ${sms.source-phone-number}

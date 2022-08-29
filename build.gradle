@@ -106,6 +106,12 @@ dependencies {
 
     // flyway
     implementation('org.flywaydb:flyway-core:6.4.2')
+
+    // Redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis:2.7.3'
+
+    // Sms
+    implementation 'net.nurigo:sdk:4.2.3'
 }
 
 tasks.named('test') {
