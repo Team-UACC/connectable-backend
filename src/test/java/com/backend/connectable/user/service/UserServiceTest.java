@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
@@ -349,6 +350,7 @@ class UserServiceTest {
 
     @DisplayName("사전에 생성된 QR 정보를 매칭하여 입장에 사용할 수 있다.")
     @Test
+    @Transactional
     void useTicketToEnter() {
         // given
         given(eventService.findTicketById(ticket1.getId())).willReturn(ticket1);
@@ -364,10 +366,13 @@ class UserServiceTest {
 
         // when
         UserTicketEntranceResponse userTicketEntranceResponse = userService.useTicketToEnter(ticket1.getId(), userTicketEntranceRequest);
+        em.flush();
+        em.clear();
 
         // then
         assertThat(userTicketEntranceResponse.getStatus()).isEqualTo("success");
-        assertThat(ticket1.isUsed()).isTrue();
+        Ticket usedTicket = ticketRepository.findById(ticket1.getId()).get();
+        assertThat(usedTicket.isUsed()).isTrue();
     }
 
     @DisplayName("사전에 생성된 QR 정보에서 device-secret이 다르면 예외가 발생한다.")
