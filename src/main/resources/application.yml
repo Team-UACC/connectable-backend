@@ -58,6 +58,8 @@ sms:
   api-key: NCSDOXRJCN3PNEUL
   api-secret: 6AY7BFTPYTHTYN8QN4E98YSDNPINO9XN
   source-phone-number: 01085161399
+entrance:
+  device-secret: device-secret
 ---
 spring:
   config:
@@ -129,6 +131,8 @@ sms:
   api-key: ${sms.api-key}
   api-secret: ${sms.api-secret}
   source-phone-number: ${sms.source-phone-number}
+entrance:
+  device-secret: ${entrance.device-secret}
 ---
 spring:
   config:
@@ -200,3 +204,5 @@ sms:
   api-key: ${sms.api-key}
   api-secret: ${sms.api-secret}
   source-phone-number: ${sms.source-phone-number}
+entrance:
+  device-secret: ${entrance.device-secret}
