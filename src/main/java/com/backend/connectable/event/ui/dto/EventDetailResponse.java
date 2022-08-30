@@ -2,6 +2,7 @@ package com.backend.connectable.event.ui.dto;
 
 import com.backend.connectable.event.domain.EventSalesOption;
 import com.backend.connectable.global.common.util.DateTimeUtil;
+import com.backend.connectable.global.common.util.OpenseaCollectionNamingUtil;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,7 @@ public class EventDetailResponse {
     private String artistImage;
     private String description;
     private String contractAddress;
+    private String openseaUrl;
     private Long salesFrom;
     private Long salesTo;
     private String twitterUrl;
@@ -33,11 +35,10 @@ public class EventDetailResponse {
     private int price;
     private String location;
     private EventSalesOption eventSalesOption;
-    private String openseaUrl;
 
     @Builder
     public EventDetailResponse(Long id, String name, String image, String artistName, String artistImage, String description,
-                               String contractAddress, LocalDateTime salesFrom, LocalDateTime salesTo, String twitterUrl,
+                               String contractAddress, String contractName, LocalDateTime salesFrom, LocalDateTime salesTo, String twitterUrl,
                                String instagramUrl, String webpageUrl, int totalTicketCount, int onSaleTicketCount,
                                LocalDateTime startTime, LocalDateTime endTime, int price, String location, EventSalesOption eventSalesOption) {
         this.id = id;
@@ -47,6 +48,7 @@ public class EventDetailResponse {
         this.artistImage = artistImage;
         this.description = description;
         this.contractAddress = contractAddress;
+        this.openseaUrl = OpenseaCollectionNamingUtil.toOpenseaCollectionUrl(contractName);
         this.salesFrom = DateTimeUtil.toEpochMilliSeconds(salesFrom);
         this.salesTo = DateTimeUtil.toEpochMilliSeconds(salesTo);
         this.twitterUrl = twitterUrl;
@@ -59,9 +61,5 @@ public class EventDetailResponse {
         this.price = price;
         this.location = location;
         this.eventSalesOption = eventSalesOption;
-    }
-
-    public void setOpenseaUrl(String openseaUrl) {
-        this.openseaUrl = openseaUrl;
     }
 }

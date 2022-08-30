@@ -40,6 +40,10 @@ public enum ErrorType {
     ORDER_TO_TRANSFER_SUCCESS_UNAVAILABLE("ORDER-004", "TRANSFER SUCCESS 상태로 변경이 불가합니다."),
     ORDER_TO_TRANSFER_FAIL_UNAVAILABLE("ORDER-005", "TRANSFER FAIL 상태로 변경이 불가합니다."),
 
+    ENTRANCE_ALREADY_DONE("ENTRANCE-001", "입장 처리가 완료된 티켓입니다."),
+    ENTRANCE_AUTHORIZATION_NEEDED("ENTRANCE-002", "입장 처리에 대한 권한이 없습니다"),
+    ENTRANCE_QR_EXPIRED("ENTRANCE-003", "만료된 입장 QR 입니다."),
+
     ORDER_DETAIL_NOT_EXISTS("ADMIN-001", "존재하지 않는 주문 상세입니다."),
     ADMIN_TOKEN_VERIFY_FAILURE("ADMIN-002", "어드민 토큰이 아닙니다.");
 

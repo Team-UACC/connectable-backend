@@ -74,6 +74,7 @@ class EventControllerTest {
         "https://user-images.githubusercontent.com/54073761/179218800-dda72067-3b25-4ca3-b53b-4895c5e49213.jpeg",
         "이씨 콘서트 at Connectable",
         "0x1234abcd",
+        "CONTRACT NAME",
         LocalDateTime.of(2022, 7, 12, 0, 0),
         LocalDateTime.of(2022, 7, 30, 0, 0),
         "https://twitter.com/iamprogrammerio/status/666930927675797504",
@@ -109,6 +110,7 @@ class EventControllerTest {
         TicketSalesStatus.ON_SALE,
         0,
         "https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/1.json",
+        false,
         SAMPLE_TICKET_METADATA,
         "0x123456",
         "0xabcd"
@@ -123,6 +125,7 @@ class EventControllerTest {
         TicketSalesStatus.ON_SALE,
         1,
         "https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/2.json",
+        false,
         SAMPLE_TICKET_METADATA,
         "0x123456",
         "0xabcd"
