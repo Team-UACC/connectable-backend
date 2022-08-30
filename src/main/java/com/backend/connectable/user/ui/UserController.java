@@ -55,6 +55,13 @@ public class UserController {
         return ResponseEntity.ok(userTicketListResponse);
     }
 
+    @GetMapping("/tickets/{ticket-id}/entrance-verification")
+    public ResponseEntity<UserTicketVerificationResponse> getUserTicketEntranceVerification(@AuthenticationPrincipal ConnectableUserDetails userDetails,
+                                                                                            @PathVariable("ticket-id") Long ticketId) {
+        UserTicketVerificationResponse userTicketVerificationResponse = userService.getUserTicketEntranceVerification(userDetails, ticketId);
+        return ResponseEntity.ok(userTicketVerificationResponse);
+    }
+
     @GetMapping("/validation")
     public ResponseEntity<UserValidationResponse> validateNickname(@RequestParam String nickname) {
         UserValidationResponse userValidationResponse = userService.validateNickname(nickname);

@@ -11,6 +11,8 @@ import com.backend.connectable.klip.service.dto.KlipAuthLoginResponse;
 import com.backend.connectable.security.ConnectableUserDetails;
 import com.backend.connectable.user.domain.User;
 import com.backend.connectable.user.domain.repository.UserRepository;
+import com.backend.connectable.user.redis.UserTicketEntrance;
+import com.backend.connectable.user.redis.UserTicketEntranceRedisRepository;
 import com.backend.connectable.user.ui.dto.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -45,6 +47,9 @@ class UserServiceTest {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    UserTicketEntranceRedisRepository userTicketEntranceRedisRepository;
 
     @Autowired
     EntityManager em;
@@ -313,5 +318,26 @@ class UserServiceTest {
         // then
         assertThat(unavailable.getAvailable()).isFalse();
         assertThat(available.getAvailable()).isTrue();
+    }
+
+    @DisplayName("User가 입장을 위해 Ticket Verification을 받을 수 있다.")
+    @Test
+    void getUserTicketEntranceVerification() {
+        // given
+        ConnectableUserDetails connectableUserDetails = new ConnectableUserDetails(user1KlaytnAddress);
+        Long ticketId = ticket1.getId();
+        given(eventService.findTicketById(ticketId)).willReturn(ticket1);
+
+        // when
+        UserTicketVerificationResponse userTicketEntranceVerification = userService.getUserTicketEntranceVerification(connectableUserDetails, ticketId);
+
+        // then
+        assertThat(userTicketEntranceVerification.getKlaytnAddress()).isEqualTo(user1KlaytnAddress);
+        assertThat(userTicketEntranceVerification.getTicketId()).isEqualTo(ticketId);
+
+        UserTicketEntrance userTicketEntrance = userTicketEntranceRedisRepository.findById(user1KlaytnAddress).get();
+        assertThat(userTicketEntranceVerification.getKlaytnAddress()).isEqualTo(userTicketEntrance.getKlaytnAddress());
+        assertThat(userTicketEntranceVerification.getTicketId()).isEqualTo(userTicketEntrance.getTicketId());
+        assertThat(userTicketEntranceVerification.getVerification()).isEqualTo(userTicketEntrance.getVerification());
     }
 }
