@@ -68,7 +68,7 @@ public class Ticket {
         this.ticketSalesStatus = this.ticketSalesStatus.onSale();
     }
 
-    public void useToEnterEvent() {
+    public void useToEnter() {
         if (this.isUsed) {
             throw new ConnectableException(HttpStatus.BAD_REQUEST, ErrorType.TICKET_ALREADY_USED);
         }

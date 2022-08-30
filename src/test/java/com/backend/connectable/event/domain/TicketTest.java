@@ -34,7 +34,7 @@ class TicketTest {
             .build();
 
         // when & then
-        assertThatCode(ticket::useToEnterEvent).doesNotThrowAnyException();
+        assertThatCode(ticket::useToEnter).doesNotThrowAnyException();
     }
 
     @DisplayName("티켓의 isUsed가 true라면 재입장에 사용할 수 있다.")
@@ -46,10 +46,10 @@ class TicketTest {
             .tokenUri("tokenUri")
             .price(10000)
             .build();
-        ticket.useToEnterEvent();
+        ticket.useToEnter();
 
         // when & then
-        assertThatCode(ticket::useToEnterEvent)
+        assertThatCode(ticket::useToEnter)
             .isInstanceOf(ConnectableException.class);
     }
 }
