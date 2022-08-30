@@ -31,6 +31,8 @@ public class AuthService {
     @Value("${sms.api-secret}")
     private String smsApiSecret;
 
+    private static final String smsApiDomain = "https://api.coolsms.co.kr";
+
     public String getAuthKey(String phoneNumber, Long duration) {
         String generatedKey = generateCertificationKey();
         String message = "Connectable 회원가입을 위한 인증번호는 " + generatedKey + "입니다.";
@@ -52,7 +54,7 @@ public class AuthService {
     }
 
     private void sendSms(String content, String target) {
-        defaultMessageService = NurigoApp.INSTANCE.initialize(smsApiKey, smsApiSecret, "https://api.coolsms.co.kr");
+        defaultMessageService = NurigoApp.INSTANCE.initialize(smsApiKey, smsApiSecret, smsApiDomain);
         Message message = new Message();
         message.setFrom(sourcePhoneNumber);
         message.setTo(target.replace("-", ""));
