@@ -111,7 +111,7 @@ public class UserService {
         return userTicketService.generateUserTicketEntranceVerification(user, ticketId);
     }
 
-    public UserTicketEntranceResponse verifyTicketEntrance(Long ticketId, UserTicketEntranceRequest userTicketEntranceRequest) {
-        return userTicketService.verifyTicketEntrance(ticketId, userTicketEntranceRequest);
+    public UserTicketEntranceResponse useTicketToEnter(Long ticketId, UserTicketEntranceRequest userTicketEntranceRequest) {
+        return userTicketService.useTicketToEnter(ticketId, userTicketEntranceRequest);
     }
 }

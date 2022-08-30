@@ -56,7 +56,7 @@ public class UserTicketService {
         userTicketEntranceRedisRepository.save(userTicketEntrance);
     }
 
-    public UserTicketEntranceResponse verifyTicketEntrance(Long ticketId, UserTicketEntranceRequest userTicketEntranceRequest) {
+    public UserTicketEntranceResponse useTicketToEnter(Long ticketId, UserTicketEntranceRequest userTicketEntranceRequest) {
         Ticket ticket = eventService.findTicketById(ticketId);
         validateTicketEntrance(ticket, userTicketEntranceRequest);
         ticket.useToEnter();

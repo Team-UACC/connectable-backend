@@ -69,9 +69,9 @@ public class UserController {
     }
 
     @PostMapping("/tickets/{ticket-id}/enter")
-    public ResponseEntity<UserTicketEntranceResponse> verifyTicketEntrance(@PathVariable("ticket-id") Long ticketId,
-                                                                           @RequestBody UserTicketEntranceRequest userTicketEntranceRequest) {
-        UserTicketEntranceResponse userTicketEntranceResponse = userService.verifyTicketEntrance(ticketId, userTicketEntranceRequest);
+    public ResponseEntity<UserTicketEntranceResponse> useTicketToEnter(@PathVariable("ticket-id") Long ticketId,
+                                                                       @RequestBody UserTicketEntranceRequest userTicketEntranceRequest) {
+        UserTicketEntranceResponse userTicketEntranceResponse = userService.useTicketToEnter(ticketId, userTicketEntranceRequest);
         return ResponseEntity.ok(userTicketEntranceResponse);
     }
 }
