@@ -1,18 +1,13 @@
 package com.backend.connectable.user.service;
 
-import com.backend.connectable.event.domain.Ticket;
-import com.backend.connectable.event.service.EventService;
 import com.backend.connectable.exception.ConnectableException;
 import com.backend.connectable.exception.ErrorType;
-import com.backend.connectable.global.common.util.RandomStringUtil;
 import com.backend.connectable.klip.service.KlipService;
 import com.backend.connectable.klip.service.dto.KlipAuthLoginResponse;
 import com.backend.connectable.security.ConnectableUserDetails;
 import com.backend.connectable.security.JwtProvider;
 import com.backend.connectable.user.domain.User;
 import com.backend.connectable.user.domain.repository.UserRepository;
-import com.backend.connectable.user.redis.UserTicketEntrance;
-import com.backend.connectable.user.redis.UserTicketEntranceRedisRepository;
 import com.backend.connectable.user.ui.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -32,8 +26,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final KlipService klipService;
     private final JwtProvider jwtProvider;
-    private final EventService eventService;
-    private final UserTicketEntranceRedisRepository userTicketEntranceRedisRepository;
+    private final UserTicketService userTicketService;
 
     @Transactional
     public UserLoginResponse login(UserLoginRequest userLoginRequest) {
@@ -101,13 +94,6 @@ public class UserService {
         return UserModifyResponse.ofSuccess();
     }
 
-    public UserTicketListResponse getUserTicketsByUserDetails(ConnectableUserDetails userDetails) {
-        String userKlaytnAddress = userDetails.getKlaytnAddress();
-        List<Ticket> tickets = eventService.findTicketByUserAddress(userKlaytnAddress);
-        List<UserTicketResponse> userTicketResponses = UserTicketResponse.toList(tickets);
-        return UserTicketListResponse.of(userTicketResponses);
-    }
-
     public UserValidationResponse validateNickname(String nickname) {
         boolean isExistingNickname = userRepository.existsByNickname(nickname);
         if (isExistingNickname) {
@@ -116,25 +102,16 @@ public class UserService {
         return UserValidationResponse.ofAvailable();
     }
 
-    public UserTicketVerificationResponse getUserTicketEntranceVerification(ConnectableUserDetails userDetails, Long ticketId) {
-        User user = findUser(userDetails.getKlaytnAddress());
-        Ticket ticket = eventService.findTicketById(ticketId);
-        if (ticket.isUsed()) {
-            throw new ConnectableException(HttpStatus.BAD_REQUEST, ErrorType.ENTRANCE_ALREADY_DONE);
-        }
-
-        String klaytnAddress = user.getKlaytnAddress();
-        String verification = RandomStringUtil.generate();
-        saveUserTicketEntrance(klaytnAddress, ticketId, verification);
-        return UserTicketVerificationResponse.of(klaytnAddress, ticketId, verification);
+    public UserTicketListResponse getUserTicketsByUserDetails(ConnectableUserDetails userDetails) {
+        return userTicketService.getUserTicketsByUserDetails(userDetails);
     }
 
-    private void saveUserTicketEntrance(String klaytnAddress, Long ticketId, String verification) {
-        UserTicketEntrance userTicketEntrance = UserTicketEntrance.builder()
-            .klaytnAddress(klaytnAddress)
-            .ticketId(ticketId)
-            .verification(verification)
-            .build();
-        userTicketEntranceRedisRepository.save(userTicketEntrance);
+    public UserTicketVerificationResponse generateUserTicketEntranceVerification(ConnectableUserDetails userDetails, Long ticketId) {
+        User user = findUser(userDetails.getKlaytnAddress());
+        return userTicketService.generateUserTicketEntranceVerification(user, ticketId);
+    }
+
+    public UserTicketEntranceResponse verifyTicketEntrance(Long ticketId, UserTicketEntranceRequest userTicketEntranceRequest) {
+        return userTicketService.verifyTicketEntrance(ticketId, userTicketEntranceRequest);
     }
 }

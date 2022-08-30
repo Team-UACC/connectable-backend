@@ -329,7 +329,7 @@ class UserServiceTest {
         given(eventService.findTicketById(ticketId)).willReturn(ticket1);
 
         // when
-        UserTicketVerificationResponse userTicketEntranceVerification = userService.getUserTicketEntranceVerification(connectableUserDetails, ticketId);
+        UserTicketVerificationResponse userTicketEntranceVerification = userService.generateUserTicketEntranceVerification(connectableUserDetails, ticketId);
 
         // then
         assertThat(userTicketEntranceVerification.getKlaytnAddress()).isEqualTo(user1KlaytnAddress);
