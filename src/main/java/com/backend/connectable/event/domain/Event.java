@@ -52,7 +52,7 @@ public class Event {
 
     @Enumerated(EnumType.STRING)
     private EventSalesOption eventSalesOption;
-
+  
     @Builder
     public Event(Long id, Artist artist, String description, LocalDateTime salesFrom, LocalDateTime salesTo, String contractAddress,
                  String contractName, String eventName, String location, String eventImage, String twitterUrl,
