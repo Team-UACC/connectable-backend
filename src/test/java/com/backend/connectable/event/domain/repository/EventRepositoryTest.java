@@ -3,7 +3,7 @@ package com.backend.connectable.event.domain.repository;
 import com.backend.connectable.artist.domain.Artist;
 import com.backend.connectable.artist.domain.repository.ArtistRepository;
 import com.backend.connectable.event.domain.Event;
-import com.backend.connectable.event.domain.EventSalesOption;
+import com.backend.connectable.event.domain.SalesOption;
 import com.backend.connectable.event.domain.Ticket;
 import com.backend.connectable.event.domain.TicketSalesStatus;
 import com.backend.connectable.event.domain.dto.EventTicket;
@@ -68,7 +68,7 @@ class EventRepositoryTest {
         .webpageUrl("https://papimon.tistory.com/")
         .startTime(LocalDateTime.of(2022, 8, 1, 18, 0))
         .endTime(LocalDateTime.of(2022, 8, 1, 19, 0))
-        .eventSalesOption(EventSalesOption.FLAT_PRICE)
+        .salesOption(SalesOption.FLAT_PRICE)
         .location("서울특별시 강남구 테헤란로 311 아남타워빌딩 7층")
         .artist(bigNaughty)
         .build();
@@ -86,7 +86,7 @@ class EventRepositoryTest {
         .webpageUrl("https://nextjs.org/")
         .startTime(LocalDateTime.of(2022, 6, 22, 19, 30))
         .endTime(LocalDateTime.of(2022, 6, 22, 21, 30))
-        .eventSalesOption(EventSalesOption.FLAT_PRICE)
+        .salesOption(SalesOption.FLAT_PRICE)
         .location("예술의 전당")
         .artist(bigNaughty)
         .build();

@@ -71,7 +71,7 @@ public class DataLoader implements ApplicationRunner {
             .webpageUrl("https://nextjs.org/")
             .startTime(LocalDateTime.of(2022, 10, 17, 19, 30))
             .endTime(LocalDateTime.of(2022, 10, 17, 21, 30))
-            .eventSalesOption(EventSalesOption.FLAT_PRICE)
+            .salesOption(SalesOption.FLAT_PRICE)
             .location("예술의 전당")
             .artist(bigNaughty)
             .build();

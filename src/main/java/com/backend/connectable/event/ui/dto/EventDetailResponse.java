@@ -1,6 +1,6 @@
 package com.backend.connectable.event.ui.dto;
 
-import com.backend.connectable.event.domain.EventSalesOption;
+import com.backend.connectable.event.domain.SalesOption;
 import com.backend.connectable.global.common.util.DateTimeUtil;
 import com.backend.connectable.global.common.util.OpenseaCollectionNamingUtil;
 import lombok.Builder;
@@ -34,13 +34,13 @@ public class EventDetailResponse {
     private Long endTime;
     private int price;
     private String location;
-    private EventSalesOption eventSalesOption;
+    private SalesOption salesOption;
 
     @Builder
     public EventDetailResponse(Long id, String name, String image, String artistName, String artistImage, String description,
                                String contractAddress, String contractName, LocalDateTime salesFrom, LocalDateTime salesTo, String twitterUrl,
                                String instagramUrl, String webpageUrl, int totalTicketCount, int onSaleTicketCount,
-                               LocalDateTime startTime, LocalDateTime endTime, int price, String location, EventSalesOption eventSalesOption) {
+                               LocalDateTime startTime, LocalDateTime endTime, int price, String location, SalesOption salesOption) {
         this.id = id;
         this.name = name;
         this.image = image;
@@ -60,6 +60,6 @@ public class EventDetailResponse {
         this.endTime = DateTimeUtil.toEpochMilliSeconds(endTime);
         this.price = price;
         this.location = location;
-        this.eventSalesOption = eventSalesOption;
+        this.salesOption = salesOption;
     }
 }

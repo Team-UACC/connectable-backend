@@ -1,6 +1,6 @@
 package com.backend.connectable.event.domain.dto;
 
-import com.backend.connectable.event.domain.EventSalesOption;
+import com.backend.connectable.event.domain.SalesOption;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,5 +33,5 @@ public class EventDetail {
     private LocalDateTime endTime;
     private int price;
     private String location;
-    private EventSalesOption eventSalesOption;
+    private SalesOption salesOption;
 }

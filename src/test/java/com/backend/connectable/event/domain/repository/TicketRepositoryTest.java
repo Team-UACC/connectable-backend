@@ -67,7 +67,7 @@ class TicketRepositoryTest {
             .webpageUrl("https://papimon.tistory.com/")
             .startTime(LocalDateTime.of(2022, 8, 1, 18, 0))
             .endTime(LocalDateTime.of(2022, 8, 1, 19, 0))
-            .eventSalesOption(EventSalesOption.FLAT_PRICE)
+            .salesOption(SalesOption.FLAT_PRICE)
             .artist(artist)
             .build();
 
