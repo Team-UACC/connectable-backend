@@ -24,5 +24,6 @@ public interface EventMapper {
     @Mapping(target="date", source = "startTime")
     EventResponse eventToResponse(Event event);
 
+    @Mapping(target="ownedBy", ignore = true)
     TicketResponse ticketToResponse(EventTicket eventTicket);
 }

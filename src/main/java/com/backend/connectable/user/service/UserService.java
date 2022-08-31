@@ -1,7 +1,5 @@
 package com.backend.connectable.user.service;
 
-import com.backend.connectable.event.domain.Ticket;
-import com.backend.connectable.event.service.EventService;
 import com.backend.connectable.exception.ConnectableException;
 import com.backend.connectable.exception.ErrorType;
 import com.backend.connectable.klip.service.KlipService;
@@ -17,7 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -29,7 +26,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final KlipService klipService;
     private final JwtProvider jwtProvider;
-    private final EventService eventService;
+    private final UserTicketService userTicketService;
 
     @Transactional
     public UserLoginResponse login(UserLoginRequest userLoginRequest) {
@@ -97,18 +94,25 @@ public class UserService {
         return UserModifyResponse.ofSuccess();
     }
 
-    public UserTicketListResponse getUserTicketsByUserDetails(ConnectableUserDetails userDetails) {
-        String userKlaytnAddress = userDetails.getKlaytnAddress();
-        List<Ticket> tickets = eventService.findTicketByUserAddress(userKlaytnAddress);
-        List<UserTicketResponse> userTicketResponses = UserTicketResponse.toList(tickets);
-        return UserTicketListResponse.of(userTicketResponses);
-    }
-
     public UserValidationResponse validateNickname(String nickname) {
         boolean isExistingNickname = userRepository.existsByNickname(nickname);
         if (isExistingNickname) {
             return UserValidationResponse.ofUnavailable();
         }
         return UserValidationResponse.ofAvailable();
+    }
+
+    public UserTicketListResponse getUserTicketsByUserDetails(ConnectableUserDetails userDetails) {
+        return userTicketService.getUserTicketsByUserDetails(userDetails);
+    }
+
+    public UserTicketVerificationResponse generateUserTicketEntranceVerification(ConnectableUserDetails userDetails, Long ticketId) {
+        User user = findUser(userDetails.getKlaytnAddress());
+        return userTicketService.generateUserTicketEntranceVerification(user, ticketId);
+    }
+
+    @Transactional
+    public UserTicketEntranceResponse useTicketToEnter(Long ticketId, UserTicketEntranceRequest userTicketEntranceRequest) {
+        return userTicketService.useTicketToEnter(ticketId, userTicketEntranceRequest);
     }
 }

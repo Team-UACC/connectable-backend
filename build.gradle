@@ -103,6 +103,16 @@ dependencies {
 
     // Slack
     implementation 'com.github.maricn:logback-slack-appender:1.6.1'
+
+    // Flyway
+    implementation('org.flywaydb:flyway-core:6.4.2')
+
+    // Redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation group: 'it.ozimov', name: 'embedded-redis', version: '0.7.2'
+
+    // Sms
+    implementation 'net.nurigo:sdk:4.2.3'
 }
 
 tasks.named('test') {

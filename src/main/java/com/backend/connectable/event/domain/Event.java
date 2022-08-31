@@ -32,6 +32,8 @@ public class Event {
 
     private String contractAddress;
 
+    private String contractName;
+
     private String eventName;
 
     private String location;
@@ -50,10 +52,10 @@ public class Event {
 
     @Enumerated(EnumType.STRING)
     private EventSalesOption eventSalesOption;
-
+  
     @Builder
-    public Event(Long id, Artist artist, String description, LocalDateTime salesFrom, LocalDateTime salesTo,
-                 String contractAddress, String eventName, String location, String eventImage, String twitterUrl,
+    public Event(Long id, Artist artist, String description, LocalDateTime salesFrom, LocalDateTime salesTo, String contractAddress,
+                 String contractName, String eventName, String location, String eventImage, String twitterUrl,
                  String instagramUrl, String webpageUrl, LocalDateTime startTime, LocalDateTime endTime, EventSalesOption eventSalesOption) {
         this.id = id;
         this.artist = artist;
@@ -61,6 +63,7 @@ public class Event {
         this.salesFrom = salesFrom;
         this.salesTo = salesTo;
         this.contractAddress = contractAddress;
+        this.contractName = contractName;
         this.eventName = eventName;
         this.location = location;
         this.eventImage = eventImage;

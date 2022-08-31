@@ -113,7 +113,6 @@ class AdminServiceTest {
         .build();
 
     Ticket joelTicket4 = Ticket.builder()
-        .user(admin)
         .event(joelEvent)
         .tokenUri("https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/4.json")
         .tokenId(4)
@@ -134,7 +133,6 @@ class AdminServiceTest {
         .build();
 
     Ticket joelTicket5 = Ticket.builder()
-        .user(admin)
         .event(joelEvent)
         .tokenUri("https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/5.json")
         .tokenId(5)
@@ -183,7 +181,6 @@ class AdminServiceTest {
         OrderDetail resultOrderDetail = orderDetailRepository.findById(orderDetailId).get();
         assertThat(resultOrderDetail.getOrderStatus()).isEqualTo(OrderStatus.TRANSFER_SUCCESS);
         assertThat(resultOrderDetail.getTxHash()).isEqualTo("0x1234abcd");
-        assertThat(resultOrderDetail.getTicket().getUser().getId()).isEqualTo(joel.getId());
         assertThat(resultOrderDetail.getTicket().getTicketSalesStatus()).isEqualTo(TicketSalesStatus.SOLD_OUT);
     }
 

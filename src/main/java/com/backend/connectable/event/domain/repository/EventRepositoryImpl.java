@@ -44,6 +44,7 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
             event.endTime,
             event.description,
             event.contractAddress,
+            event.contractName,
             event.salesFrom,
             event.salesTo,
             event.twitterUrl,
@@ -79,6 +80,7 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
             ticket.ticketSalesStatus,
             ticket.tokenId,
             ticket.tokenUri,
+            ticket.isUsed,
             ticket.ticketMetadata,
             event.contractAddress.as("contractAddress")
             ))
@@ -104,6 +106,7 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
             ticket.ticketSalesStatus,
             ticket.tokenId,
             ticket.tokenUri,
+            ticket.isUsed,
             ticket.ticketMetadata,
             event.contractAddress
             ))

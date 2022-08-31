@@ -6,18 +6,23 @@ import com.backend.connectable.event.domain.*;
 import com.backend.connectable.event.domain.repository.EventRepository;
 import com.backend.connectable.event.domain.repository.TicketRepository;
 import com.backend.connectable.event.service.EventService;
+import com.backend.connectable.exception.ConnectableException;
 import com.backend.connectable.klip.service.KlipService;
 import com.backend.connectable.klip.service.dto.KlipAuthLoginResponse;
 import com.backend.connectable.security.ConnectableUserDetails;
 import com.backend.connectable.user.domain.User;
 import com.backend.connectable.user.domain.repository.UserRepository;
+import com.backend.connectable.user.redis.UserTicketEntrance;
+import com.backend.connectable.user.redis.UserTicketEntranceRedisRepository;
 import com.backend.connectable.user.ui.dto.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
@@ -25,6 +30,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
 
@@ -47,6 +53,9 @@ class UserServiceTest {
     UserService userService;
 
     @Autowired
+    UserTicketEntranceRedisRepository userTicketEntranceRedisRepository;
+
+    @Autowired
     EntityManager em;
 
     @MockBean
@@ -54,6 +63,9 @@ class UserServiceTest {
 
     @MockBean
     EventService eventService;
+
+    @Value("${entrance.device-secret}")
+    String deviceSecret;
 
     private User user1;
     private Artist artist1;
@@ -124,7 +136,6 @@ class UserServiceTest {
             .build();
 
         ticket1 = Ticket.builder()
-            .user(user1)
             .event(event1)
             .tokenUri("https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/1.json")
             .price(100000)
@@ -144,7 +155,6 @@ class UserServiceTest {
             .build();
 
         ticket2 = Ticket.builder()
-            .user(user1)
             .event(event1)
             .tokenUri("https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/2.json")
             .price(100000)
@@ -315,5 +325,87 @@ class UserServiceTest {
         // then
         assertThat(unavailable.getAvailable()).isFalse();
         assertThat(available.getAvailable()).isTrue();
+    }
+
+    @DisplayName("User가 입장을 위해 Ticket Verification을 받을 수 있다.")
+    @Test
+    void getUserTicketEntranceVerification() {
+        // given
+        ConnectableUserDetails connectableUserDetails = new ConnectableUserDetails(user1KlaytnAddress);
+        Long ticketId = ticket1.getId();
+        given(eventService.findTicketById(ticketId)).willReturn(ticket1);
+
+        // when
+        UserTicketVerificationResponse userTicketEntranceVerification = userService.generateUserTicketEntranceVerification(connectableUserDetails, ticketId);
+
+        // then
+        assertThat(userTicketEntranceVerification.getKlaytnAddress()).isEqualTo(user1KlaytnAddress);
+        assertThat(userTicketEntranceVerification.getTicketId()).isEqualTo(ticketId);
+
+        UserTicketEntrance userTicketEntrance = userTicketEntranceRedisRepository.findById(user1KlaytnAddress).get();
+        assertThat(userTicketEntranceVerification.getKlaytnAddress()).isEqualTo(userTicketEntrance.getKlaytnAddress());
+        assertThat(userTicketEntranceVerification.getTicketId()).isEqualTo(userTicketEntrance.getTicketId());
+        assertThat(userTicketEntranceVerification.getVerification()).isEqualTo(userTicketEntrance.getVerification());
+    }
+
+    @DisplayName("사전에 생성된 QR 정보를 매칭하여 입장에 사용할 수 있다.")
+    @Test
+    @Transactional
+    void useTicketToEnter() {
+        // given
+        given(eventService.findTicketById(ticket1.getId())).willReturn(ticket1);
+
+        ConnectableUserDetails connectableUserDetails = new ConnectableUserDetails(user1KlaytnAddress);
+        UserTicketVerificationResponse userTicketEntranceVerification = userService.generateUserTicketEntranceVerification(connectableUserDetails, ticket1.getId());
+
+        UserTicketEntranceRequest userTicketEntranceRequest = new UserTicketEntranceRequest(
+            userTicketEntranceVerification.getKlaytnAddress(),
+            userTicketEntranceVerification.getVerification(),
+            deviceSecret
+        );
+
+        // when
+        UserTicketEntranceResponse userTicketEntranceResponse = userService.useTicketToEnter(ticket1.getId(), userTicketEntranceRequest);
+        em.flush();
+        em.clear();
+
+        // then
+        assertThat(userTicketEntranceResponse.getStatus()).isEqualTo("success");
+        Ticket usedTicket = ticketRepository.findById(ticket1.getId()).get();
+        assertThat(usedTicket.isUsed()).isTrue();
+    }
+
+    @DisplayName("사전에 생성된 QR 정보에서 device-secret이 다르면 예외가 발생한다.")
+    @Test
+    void useTicketToEnterInvalidDeviceSecret() {
+        // given
+        given(eventService.findTicketById(ticket1.getId())).willReturn(ticket1);
+
+        ConnectableUserDetails connectableUserDetails = new ConnectableUserDetails(user1KlaytnAddress);
+        UserTicketVerificationResponse userTicketEntranceVerification = userService.generateUserTicketEntranceVerification(connectableUserDetails, ticket1.getId());
+
+        UserTicketEntranceRequest userTicketEntranceRequest = new UserTicketEntranceRequest(
+            userTicketEntranceVerification.getKlaytnAddress(),
+            userTicketEntranceVerification.getVerification(),
+            "invalid-device-secret"
+        );
+
+        assertThatThrownBy(() -> userService.useTicketToEnter(ticket1.getId(), userTicketEntranceRequest))
+            .isInstanceOf(ConnectableException.class);
+    }
+
+    @DisplayName("사전에 QR이 생성되지 않았다면 예외가 발생한다.")
+    @Test
+    void useTicketToEnterInvalidKlaytnAddress() {
+        // given
+        given(eventService.findTicketById(ticket1.getId())).willReturn(ticket1);
+        UserTicketEntranceRequest userTicketEntranceRequest = new UserTicketEntranceRequest(
+            user1KlaytnAddress,
+            "random-string",
+            deviceSecret
+        );
+
+        assertThatThrownBy(() -> userService.useTicketToEnter(ticket1.getId(), userTicketEntranceRequest))
+            .isInstanceOf(ConnectableException.class);
     }
 }

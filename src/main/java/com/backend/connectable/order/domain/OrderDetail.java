@@ -67,7 +67,7 @@ public class OrderDetail extends BaseEntity {
     public void transferSuccess(String txHash) {
         this.orderStatus = orderStatus.toTransferSuccess();
         this.txHash = txHash;
-        this.ticket.transferredTo(order.getUser());
+        this.ticket.soldOut();
     }
 
     public void transferFail() {

@@ -9,6 +9,7 @@ public enum ErrorType {
     USER_NOT_FOUND("AUTH-001", "해당 유저를 찾을 수 없습니다."),
     INVALID_TOKEN("AUTH-002", "유효하지 않은 토큰입니다."),
     TOKEN_PAYLOAD_EXTRACTION_FAILURE("AUTH-003", "토큰 페이로드 추출에 실패했습니다"),
+    INVALID_AUTH_KEY("AUTH-004", "올바르지 않은 인증키입니다."),
 
     MISSING_REQUIRED_VALUE_ERROR("COMMON-001", "필수 요청값이 누락되었습니다."),
     NOT_ALLOWED_PERMISSION_ERROR("COMMON-002", "허용되지 않은 권한입니다."),
@@ -31,12 +32,18 @@ public enum ErrorType {
     TICKET_TO_ON_SALE_UNAVAILABLE("TICKET-004", "PENDING 상태만 ON_SALE로 변할 수 있습니다."),
     TICKET_METADATA_TO_JSON_FAILURE("TICKET-005", "티켓 메타데이터를 JSON으로 변환하는데 실패했습니다"),
     TICKET_JSON_TO_METADATA_FAILURE("TICKET-006", "JSON을 티켓 메타데이터로 변환하는데 실패했습니다"),
+    TICKET_ALREADY_USED("TICKET-007", "이미 입장에 사용된 티켓입니다"),
 
     ORDER_TO_PAID_UNAVAILABLE("ORDER-001", "PAID 상태로 변경이 불가합니다."),
     ORDER_TO_UNPAID_UNAVAILABLE("ORDER-002", "UNPAID 상태로 변경이 불가합니다."),
     ORDER_TO_REFUND_UNAVAILABLE("ORDER-003", "REFUND 상태로 변경이 불가합니다."),
     ORDER_TO_TRANSFER_SUCCESS_UNAVAILABLE("ORDER-004", "TRANSFER SUCCESS 상태로 변경이 불가합니다."),
     ORDER_TO_TRANSFER_FAIL_UNAVAILABLE("ORDER-005", "TRANSFER FAIL 상태로 변경이 불가합니다."),
+
+    ENTRANCE_ALREADY_DONE("ENTRANCE-001", "입장 처리가 완료된 티켓입니다."),
+    ENTRANCE_AUTHORIZATION_NEEDED("ENTRANCE-002", "입장 처리에 대한 권한이 없습니다"),
+    ENTRANCE_INFO_NOT_FOUND("ENTRANCE-003", "QR 정보가 만료되었거나 생성되지 않았습니다."),
+    ENTRANCE_INFO_INVALID("ENTRANCE-004", "올바르지 않은 입장 정보입니다."),
 
     ORDER_DETAIL_NOT_EXISTS("ADMIN-001", "존재하지 않는 주문 상세입니다."),
     ADMIN_TOKEN_VERIFY_FAILURE("ADMIN-002", "어드민 토큰이 아닙니다.");

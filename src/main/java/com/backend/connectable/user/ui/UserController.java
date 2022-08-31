@@ -49,15 +49,29 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(userModifyResponse);
     }
 
+    @GetMapping("/validation")
+    public ResponseEntity<UserValidationResponse> validateNickname(@RequestParam String nickname) {
+        UserValidationResponse userValidationResponse = userService.validateNickname(nickname);
+        return ResponseEntity.ok(userValidationResponse);
+    }
+
     @GetMapping("/tickets")
     public ResponseEntity<UserTicketListResponse> getUserTickets(@AuthenticationPrincipal ConnectableUserDetails userDetails) {
         UserTicketListResponse userTicketListResponse = userService.getUserTicketsByUserDetails(userDetails);
         return ResponseEntity.ok(userTicketListResponse);
     }
 
-    @GetMapping("/validation")
-    public ResponseEntity<UserValidationResponse> validateNickname(@RequestParam String nickname) {
-        UserValidationResponse userValidationResponse = userService.validateNickname(nickname);
-        return ResponseEntity.ok(userValidationResponse);
+    @GetMapping("/tickets/{ticket-id}/entrance-verification")
+    public ResponseEntity<UserTicketVerificationResponse> generateUserTicketEntranceVerification(@AuthenticationPrincipal ConnectableUserDetails userDetails,
+                                                                                                 @PathVariable("ticket-id") Long ticketId) {
+        UserTicketVerificationResponse userTicketVerificationResponse = userService.generateUserTicketEntranceVerification(userDetails, ticketId);
+        return ResponseEntity.ok(userTicketVerificationResponse);
+    }
+
+    @PostMapping("/tickets/{ticket-id}/enter")
+    public ResponseEntity<UserTicketEntranceResponse> useTicketToEnter(@PathVariable("ticket-id") Long ticketId,
+                                                                       @RequestBody UserTicketEntranceRequest userTicketEntranceRequest) {
+        UserTicketEntranceResponse userTicketEntranceResponse = userService.useTicketToEnter(ticketId, userTicketEntranceRequest);
+        return ResponseEntity.ok(userTicketEntranceResponse);
     }
 }

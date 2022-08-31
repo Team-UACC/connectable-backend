@@ -47,14 +47,7 @@ public class EventService {
     public EventDetailResponse getEventDetail(Long eventId) {
         EventDetail eventDetail = eventRepository.findEventDetailByEventId(eventId)
             .orElseThrow(() -> new ConnectableException(HttpStatus.BAD_REQUEST, ErrorType.EVENT_NOT_EXISTS));
-        EventDetailResponse eventDetailResponse = EventMapper.INSTANCE.eventDetailToResponse(eventDetail);
-
-        // Todo : Contract Name을 DB에 저장할 것
-        ContractItemResponse eventContractInformation = kasService.getMyContract(eventDetail.getContractAddress());
-        String contractName = eventContractInformation.getName();
-        String openseaUrl = OpenseaCollectionNamingUtil.toOpenseaCollectionUrl(contractName);
-        eventDetailResponse.setOpenseaUrl(openseaUrl);
-        return eventDetailResponse;
+        return EventMapper.INSTANCE.eventDetailToResponse(eventDetail);
     }
 
     public List<TicketResponse> getTicketList(Long eventId) {
@@ -77,6 +70,7 @@ public class EventService {
             .ticketSalesStatus(eventTicket.getTicketSalesStatus())
             .tokenId(eventTicket.getTokenId())
             .tokenUri(eventTicket.getTokenUri())
+            .isUsed(eventTicket.isUsed())
             .metadata(eventTicket.getMetadata())
             .contractAddress(eventTicket.getContractAddress())
             .ownedBy(tokenResponse.getOwner())
@@ -93,5 +87,10 @@ public class EventService {
             .collect(Collectors.toList());
 
         return ticketRepository.findAllByTokenUri(userTokenUris);
+    }
+
+    public Ticket findTicketById(Long ticketId) {
+        return ticketRepository.findById(ticketId)
+            .orElseThrow(() -> new ConnectableException(HttpStatus.BAD_REQUEST, ErrorType.TICKET_NOT_EXISTS));
     }
 }
