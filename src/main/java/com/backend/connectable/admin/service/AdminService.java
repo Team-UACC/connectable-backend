@@ -114,7 +114,7 @@ public class AdminService {
             .webpageUrl(eventDeploymentRequest.getEventWebpageUrl())
             .startTime(eventDeploymentRequest.getEventStartTime())
             .endTime(eventDeploymentRequest.getEventEndTime())
-            .eventSalesOption(EventSalesOption.FLAT_PRICE)
+            .salesOption(SalesOption.FLAT_PRICE)
             .location(eventDeploymentRequest.getEventLocation())
             .artist(eventArtist)
             .build();

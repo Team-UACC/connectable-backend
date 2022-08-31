@@ -51,12 +51,12 @@ public class Event {
     private LocalDateTime endTime;
 
     @Enumerated(EnumType.STRING)
-    private EventSalesOption eventSalesOption;
+    private SalesOption salesOption;
   
     @Builder
     public Event(Long id, Artist artist, String description, LocalDateTime salesFrom, LocalDateTime salesTo, String contractAddress,
                  String contractName, String eventName, String location, String eventImage, String twitterUrl,
-                 String instagramUrl, String webpageUrl, LocalDateTime startTime, LocalDateTime endTime, EventSalesOption eventSalesOption) {
+                 String instagramUrl, String webpageUrl, LocalDateTime startTime, LocalDateTime endTime, SalesOption salesOption) {
         this.id = id;
         this.artist = artist;
         this.description = description;
@@ -72,7 +72,7 @@ public class Event {
         this.webpageUrl = webpageUrl;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.eventSalesOption = eventSalesOption;
+        this.salesOption = salesOption;
     }
 
     public String getArtistName() {

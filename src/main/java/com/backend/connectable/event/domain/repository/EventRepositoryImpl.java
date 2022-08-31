@@ -56,7 +56,7 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
             , "onSaleTicketCount"),
             ticket.price,
             event.location,
-            event.eventSalesOption
+            event.salesOption
             ))
             .from(event)
             .innerJoin(ticket).on(ticket.event.id.eq(event.id))

@@ -96,7 +96,7 @@ class AdminServiceTest {
         .webpageUrl("https://papimon.tistory.com/")
         .startTime(LocalDateTime.of(2022, 8, 1, 18, 0))
         .endTime(LocalDateTime.of(2022, 8, 1, 19, 0))
-        .eventSalesOption(EventSalesOption.FLAT_PRICE)
+        .salesOption(SalesOption.FLAT_PRICE)
         .location("서울특별시 강남구 테헤란로 311 아남타워빌딩 7층")
         .artist(bigNaughty)
         .build();
