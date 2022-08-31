@@ -1,5 +1,6 @@
 package com.backend.connectable.event.domain.repository;
 
+import com.backend.connectable.event.domain.Ticket;
 import com.backend.connectable.event.domain.TicketSalesStatus;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -28,5 +29,15 @@ public class TicketRepositoryImpl implements TicketRepositoryCustom {
             .execute();
 
         return fetchedRowCount;
+    }
+
+    @Override
+    public Ticket findOneOnSaleOfEvent(Long eventId) {
+        return queryFactory.select(ticket)
+            .from(ticket)
+            .where(ticket.event.id.eq(eventId)
+                .and(ticket.ticketSalesStatus.eq(TicketSalesStatus.ON_SALE)))
+            .limit(1)
+            .fetchOne();
     }
 }

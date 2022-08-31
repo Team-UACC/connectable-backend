@@ -133,4 +133,17 @@ class TicketRepositoryTest {
         // then
         assertThat(foundTickets).contains(joelTicket1, joelTicket2);
     }
+
+    @DisplayName("EventId로 Onsale 상태의 Ticket을 조회할 수 있다.")
+    @Test
+    void getOnsaleTicket() {
+        // given
+        ticketRepository.saveAll(Arrays.asList(joelTicket1, joelTicket2));
+
+        // when
+        Ticket ticket = ticketRepository.findOneOnSaleOfEvent(joelEvent.getId());
+
+        // then
+        assertThat(ticket.getTicketSalesStatus()).isEqualTo(TicketSalesStatus.ON_SALE);
+    }
 }
