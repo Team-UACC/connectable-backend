@@ -75,7 +75,7 @@ public class AdminService {
     public void deployEvent(EventDeploymentRequest eventDeploymentRequest) throws InterruptedException {
         deployContract(eventDeploymentRequest);
         String contractAddress = getContractAddress(eventDeploymentRequest.getContractAlias());
-        saveEvent(eventDeploymentRequest, contractAddress);
+        saveEvent(eventDeploymentRequest, contractAddress, eventDeploymentRequest.getContractName());
         log.info("$$ [ADMIN] DEPLOYED CONTRACT ADDRESS : " + contractAddress + " $$");
     }
 
@@ -84,15 +84,20 @@ public class AdminService {
         String contractSymbol = eventDeploymentRequest.getContractSymbol();
         String contractAlias = eventDeploymentRequest.getContractAlias();
         kasService.deployMyContract(contractName, contractSymbol, contractAlias);
-        Thread.sleep(1000);
+        Thread.sleep(2000);
     }
 
-    private String getContractAddress(String contractAlias) {
-        ContractItemResponse contractItemResponse = kasService.getMyContractMyAlias(contractAlias);
-        return contractItemResponse.getAddress();
+    private String getContractAddress(String contractAlias) throws InterruptedException {
+        String address = "updateme";
+        while (address.equals("updateme")) {
+            ContractItemResponse contractItemResponse = kasService.getMyContractMyAlias(contractAlias);
+            address = contractItemResponse.getAddress();
+            Thread.sleep(1000);
+        }
+        return address;
     }
 
-    private void saveEvent(EventDeploymentRequest eventDeploymentRequest, String contractAddress) {
+    private void saveEvent(EventDeploymentRequest eventDeploymentRequest, String contractAddress, String contractName) {
         Artist eventArtist = artistRepository.findById(eventDeploymentRequest.getEventArtistId())
             .orElseThrow(() -> new ConnectableException(HttpStatus.BAD_REQUEST, ErrorType.ARTIST_NOT_FOUND));
 
@@ -101,6 +106,7 @@ public class AdminService {
             .salesFrom(eventDeploymentRequest.getEventSalesFrom())
             .salesTo(eventDeploymentRequest.getEventSalesTo())
             .contractAddress(contractAddress)
+            .contractName(contractName)
             .eventName(eventDeploymentRequest.getEventName())
             .eventImage(eventDeploymentRequest.getEventImage())
             .twitterUrl(eventDeploymentRequest.getEventTwitterUrl())
@@ -117,7 +123,8 @@ public class AdminService {
 
     @Transactional
     public void mintTokens(TokenMintingRequest tokenMintingRequest) {
-        int ticketNumbers = tokenMintingRequest.getTicketNumbers();
+        int startTokenId = tokenMintingRequest.getStartTokenId();
+        int endTokenId = tokenMintingRequest.getEndTokenId();
         String contractAddress = tokenMintingRequest.getContractAddress();
         String tokenUri = tokenMintingRequest.getTokenUri();
         int price = tokenMintingRequest.getPrice();
@@ -125,7 +132,7 @@ public class AdminService {
         Event event = eventRepository.findByContractAddress(contractAddress)
             .orElseThrow(() -> new ConnectableException(HttpStatus.BAD_REQUEST, ErrorType.EVENT_NOT_FOUND));
 
-        for (int tokenId = 1; tokenId <= ticketNumbers; tokenId++) {
+        for (int tokenId = startTokenId; tokenId <= endTokenId; tokenId++) {
             mintAndSave(contractAddress, tokenUri, price, event, tokenId);
         }
     }
