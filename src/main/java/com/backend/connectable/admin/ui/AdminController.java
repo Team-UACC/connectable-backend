@@ -1,12 +1,11 @@
 package com.backend.connectable.admin.ui;
 
 import com.backend.connectable.admin.service.AdminService;
+import com.backend.connectable.admin.ui.dto.EventDeploymentRequest;
+import com.backend.connectable.admin.ui.dto.TokenMintingRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,6 +29,18 @@ public class AdminController {
     @PatchMapping("/order-details/{order-detail-id}/refund")
     public ResponseEntity<Void> orderDetailToRefund(@PathVariable("order-detail-id") Long orderDetailId) {
         adminService.orderDetailToRefund(orderDetailId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/deploy-event")
+    public ResponseEntity<Void> deployEvent(@RequestBody EventDeploymentRequest eventDeploymentRequest) throws InterruptedException {
+        adminService.deployEvent(eventDeploymentRequest);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/mint-tokens")
+    public ResponseEntity<Void> mintTokens(@RequestBody TokenMintingRequest tokenMintingRequest) {
+        adminService.mintTokens(tokenMintingRequest);
         return ResponseEntity.ok().build();
     }
 }

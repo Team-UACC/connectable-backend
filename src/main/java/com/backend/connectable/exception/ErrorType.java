@@ -10,6 +10,7 @@ public enum ErrorType {
     INVALID_TOKEN("AUTH-002", "유효하지 않은 토큰입니다."),
     TOKEN_PAYLOAD_EXTRACTION_FAILURE("AUTH-003", "토큰 페이로드 추출에 실패했습니다"),
     INVALID_AUTH_KEY("AUTH-004", "올바르지 않은 인증키입니다."),
+    NURIGO_EXCEPTION("AUTH-005", "서버 내 외부모듈 통신에러"),
 
     MISSING_REQUIRED_VALUE_ERROR("COMMON-001", "필수 요청값이 누락되었습니다."),
     NOT_ALLOWED_PERMISSION_ERROR("COMMON-002", "허용되지 않은 권한입니다."),
@@ -46,7 +47,9 @@ public enum ErrorType {
     ENTRANCE_INFO_INVALID("ENTRANCE-004", "올바르지 않은 입장 정보입니다."),
 
     ORDER_DETAIL_NOT_EXISTS("ADMIN-001", "존재하지 않는 주문 상세입니다."),
-    ADMIN_TOKEN_VERIFY_FAILURE("ADMIN-002", "어드민 토큰이 아닙니다.");
+    ADMIN_TOKEN_VERIFY_FAILURE("ADMIN-002", "어드민 토큰이 아닙니다."),
+    ARTIST_NOT_FOUND("ADMIN-003", "해당 ID에 대응되는 아티스트가 없습니다."),
+    EVENT_NOT_FOUND("ADMIN-004", "해당 ID에 대응되는 이벤트가 없습니다."),;
 
     private final String errorCode;
     private final String message;

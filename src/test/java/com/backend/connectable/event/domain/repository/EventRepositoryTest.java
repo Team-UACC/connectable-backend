@@ -177,4 +177,14 @@ class EventRepositoryTest {
         assertThat(allTickets.get(4).getTokenId()).isEqualTo(ticket1SoldOut.getTokenId());
         assertThat(allTickets.get(5).getTokenId()).isEqualTo(ticket2SoldOut.getTokenId());
     }
+
+    @DisplayName("contractAddress로 이벤트를 조회할 수 있다.")
+    @Test
+    void getEventByContractAddress() {
+        // given && when
+        Event event = eventRepository.findByContractAddress(joelEventContractAddress).get();
+
+        // then
+        assertThat(event).isEqualTo(joelEvent);
+    }
 }
