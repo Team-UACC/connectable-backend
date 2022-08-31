@@ -4,7 +4,9 @@ import com.backend.connectable.exception.ConnectableException;
 import com.backend.connectable.exception.ErrorType;
 import com.backend.connectable.global.common.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.nurigo.sdk.NurigoApp;
+import net.nurigo.sdk.message.exception.NurigoException;
 import net.nurigo.sdk.message.model.Message;
 import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
 import net.nurigo.sdk.message.service.DefaultMessageService;
@@ -17,6 +19,7 @@ import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthService {
 
     private DefaultMessageService defaultMessageService;
@@ -60,7 +63,12 @@ public class AuthService {
         message.setTo(target.replace("-", ""));
         message.setText(content);
         SingleMessageSendingRequest singleMessageSendingRequest = new SingleMessageSendingRequest(message);
-        defaultMessageService.sendOne(singleMessageSendingRequest);
+        try {
+            defaultMessageService.sendOne(singleMessageSendingRequest);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw new ConnectableException(HttpStatus.INTERNAL_SERVER_ERROR, ErrorType.NURIGO_EXCEPTION);
+        }
     }
 
     private String generateCertificationKey() {
