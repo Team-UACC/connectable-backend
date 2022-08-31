@@ -111,6 +111,7 @@ public class UserService {
         return userTicketService.generateUserTicketEntranceVerification(user, ticketId);
     }
 
+    @Transactional
     public UserTicketEntranceResponse useTicketToEnter(Long ticketId, UserTicketEntranceRequest userTicketEntranceRequest) {
         return userTicketService.useTicketToEnter(ticketId, userTicketEntranceRequest);
     }
