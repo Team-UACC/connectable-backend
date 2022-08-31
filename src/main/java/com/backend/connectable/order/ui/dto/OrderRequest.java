@@ -1,6 +1,7 @@
 package com.backend.connectable.order.ui.dto;
 
 import com.backend.connectable.exception.sequence.ValidationGroups;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,6 +13,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class OrderRequest {
 
     @NotBlank(message = "입금자 확인을 위해 주문자명은 필수 입력값 입니다.")
@@ -24,14 +26,7 @@ public class OrderRequest {
         groups = ValidationGroups.PatternCheckGroup.class)
     private String phoneNumber;
 
+    private Long eventId;
+
     private List<Long> ticketIds;
-
-    private int amount;
-
-    public OrderRequest(String userName, String phoneNumber, List<Long> ticketIds, int amount) {
-        this.userName = userName;
-        this.phoneNumber = phoneNumber;
-        this.ticketIds = ticketIds;
-        this.amount = amount;
-    }
 }
