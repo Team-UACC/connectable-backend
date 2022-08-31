@@ -1,0 +1,1 @@
+ALTER TABLE event CHANGE event_sales_option sales_option varchar(255);
