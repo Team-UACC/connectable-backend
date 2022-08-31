@@ -12,7 +12,8 @@ import lombok.Setter;
 public class TokenMintingRequest {
 
     private String contractAddress;
-    private int ticketNumbers;
+    private int startTokenId;
+    private int endTokenId;
     private String tokenUri;
     private int price;
 }
