@@ -183,8 +183,8 @@ class OrderServiceTest {
     void createOrder() {
         // given
         ConnectableUserDetails connectableUserDetails = new ConnectableUserDetails(user.getKlaytnAddress());
-        OrderRequest orderRequest = new OrderRequest("이정필", "010-3333-7777",
-            Arrays.asList(ticket1.getId(), ticket2.getId()), 30000);
+        OrderRequest orderRequest = new OrderRequest("이정필", "010-3333-7777", event.getId(),
+            Arrays.asList(ticket1.getId(), ticket2.getId()));
 
         // when
         OrderResponse orderResponse = orderService.createOrder(connectableUserDetails, orderRequest);
@@ -202,10 +202,10 @@ class OrderServiceTest {
     void getOrderDetailList() {
         // given
         ConnectableUserDetails connectableUserDetails = new ConnectableUserDetails(user.getKlaytnAddress());
-        OrderRequest orderRequest1 = new OrderRequest("이정필", "010-3333-7777",
-            Arrays.asList(ticket1.getId(), ticket2.getId()), 200000);
-        OrderRequest orderRequest2 = new OrderRequest("이정필", "010-3333-7777",
-            Arrays.asList(ticket3.getId()), 100000);
+        OrderRequest orderRequest1 = new OrderRequest("이정필", "010-3333-7777", event.getId(),
+            Arrays.asList(ticket1.getId(), ticket2.getId()));
+        OrderRequest orderRequest2 = new OrderRequest("이정필", "010-3333-7777", event.getId(),
+            Arrays.asList(ticket3.getId()));
 
         // when
         orderService.createOrder(connectableUserDetails, orderRequest1);
@@ -226,5 +226,22 @@ class OrderServiceTest {
         assertThat(orderDetailResponses.get(1).getEventId()).isNotNull();
         assertThat(orderDetailResponses.get(1).getPrice()).isEqualTo(100000);
         assertThat(orderDetailResponses.get(0).getModifiedDate()).isGreaterThanOrEqualTo(orderDetailResponses.get(1).getModifiedDate());
+    }
+
+    @DisplayName("티켓 id가 0이고, 이거만 List에 있다면, event에 대응되는 티켓중 판매가능한 티켓을 orderDetail로 주문한다.")
+    @Test
+    void ticketIdZero() {
+        // given
+        ConnectableUserDetails connectableUserDetails = new ConnectableUserDetails(user.getKlaytnAddress());
+        OrderRequest orderRequest = new OrderRequest("조영상", "010-9999-5555", event.getId(),
+            List.of(0L));
+
+        // when
+        OrderResponse orderResponse = orderService.createOrder(connectableUserDetails, orderRequest);
+
+        // then
+        assertThat(orderResponse.getStatus()).isEqualTo("success");
+        Ticket updatedTicket1 = ticketRepository.findById(ticket1.getId()).get();
+        assertThat(updatedTicket1.getTicketSalesStatus()).isEqualTo(TicketSalesStatus.PENDING);
     }
 }

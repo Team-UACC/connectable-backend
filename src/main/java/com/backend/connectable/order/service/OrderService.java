@@ -56,7 +56,7 @@ public class OrderService {
     }
 
     private Order generateOrder(User user, OrderRequest orderRequest) {
-        List<OrderDetail> orderDetails = generateOrderDetails(orderRequest.getTicketIds());
+        List<OrderDetail> orderDetails = generateOrderDetails(orderRequest.getTicketIds(), orderRequest.getEventId());
         Order order = Order.builder()
             .user(user)
             .ordererName(orderRequest.getUserName())
@@ -66,12 +66,27 @@ public class OrderService {
         return order;
     }
 
-    private List<OrderDetail> generateOrderDetails(List<Long> ticketIds) {
+    private List<OrderDetail> generateOrderDetails(List<Long> ticketIds, Long eventId) {
+        if (checkRandomTicketSelection(ticketIds)) {
+            return generateRandomTicketOrderDetail(eventId);
+        }
+
         List<Ticket> tickets = ticketRepository.findAllById(ticketIds);
         tickets.forEach(Ticket::toPending);
         return tickets.stream()
             .map(this::toOrderDetail)
             .collect(Collectors.toList());
+    }
+
+    private boolean checkRandomTicketSelection(List<Long> ticketIds) {
+        return ticketIds.contains(0L) && ticketIds.size() == 1;
+    }
+
+    private List<OrderDetail> generateRandomTicketOrderDetail(Long eventId) {
+        Ticket ticket = ticketRepository.findOneOnSaleOfEvent(eventId);
+        ticket.toPending();
+        OrderDetail orderDetail = toOrderDetail(ticket);
+        return List.of(orderDetail);
     }
 
     private OrderDetail toOrderDetail(Ticket ticket) {
