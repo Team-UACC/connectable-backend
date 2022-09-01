@@ -15,4 +15,6 @@ public interface TicketRepository extends JpaRepository<Ticket, Long>, TicketRep
         "join fetch event.artist as artist " +
         "where ticket.tokenUri in :tokenUris")
     List<Ticket> findAllByTokenUri(@Param("tokenUris") List<String> tokenUris);
+
+    Ticket findByTokenIdAndTokenUri(Integer tokenId, String tokenUri);
 }
