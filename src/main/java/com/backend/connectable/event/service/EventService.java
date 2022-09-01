@@ -13,6 +13,7 @@ import com.backend.connectable.event.ui.dto.TicketResponse;
 import com.backend.connectable.exception.ConnectableException;
 import com.backend.connectable.exception.ErrorType;
 import com.backend.connectable.kas.service.KasService;
+import com.backend.connectable.kas.service.dto.TokenIdentifier;
 import com.backend.connectable.kas.service.dto.TokenResponse;
 import com.backend.connectable.kas.service.dto.TokensResponse;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -79,12 +78,17 @@ public class EventService {
         List<String> contractAddresses = eventRepository.findAllContractAddresses();
         Map<String, TokensResponse> userTokens = kasService.findAllTokensOfContractAddressesOwnedByUser(contractAddresses, userKlaytnAddress);
 
-        List<String> userTokenUris = userTokens.values().stream()
-            .map(TokensResponse::getTokenUris)
+        List<TokenIdentifier> tokenIdentifiers = userTokens.values().stream()
+            .map(TokensResponse::getTokenIdentifiers)
             .flatMap(Collection::stream)
             .collect(Collectors.toList());
 
-        return ticketRepository.findAllByTokenUri(userTokenUris);
+        List<Ticket> userTickets = new ArrayList<>();
+        for (TokenIdentifier tokenIdentifier : tokenIdentifiers) {
+            Ticket ticket = ticketRepository.findByTokenIdAndTokenUri(tokenIdentifier.getTokenId(), tokenIdentifier.getTokenUri());
+            userTickets.add(ticket);
+        }
+        return userTickets;
     }
 
     public Ticket findTicketById(Long ticketId) {

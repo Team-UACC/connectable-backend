@@ -83,18 +83,22 @@ class TicketRepositoryTest {
             .build();
 
     String tokenUri1 = "https://token.uri.1";
+    int tokenId1 = 1;
     Ticket joelTicket1 = Ticket.builder()
-            .event(joelEvent)
-            .tokenUri(tokenUri1)
-            .price(100000)
-            .ticketSalesStatus(TicketSalesStatus.ON_SALE)
-            .ticketMetadata(joelTicket1Metadata)
-            .build();
+        .event(joelEvent)
+        .tokenUri(tokenUri1)
+        .tokenId(tokenId1)
+        .price(100000)
+        .ticketSalesStatus(TicketSalesStatus.ON_SALE)
+        .ticketMetadata(joelTicket1Metadata)
+        .build();
 
     String tokenUri2 = "https://token.uri.2";
+    int tokenId2 = 2;
     Ticket joelTicket2 = Ticket.builder()
         .event(joelEvent)
         .tokenUri(tokenUri2)
+        .tokenId(tokenId2)
         .price(100000)
         .ticketSalesStatus(TicketSalesStatus.ON_SALE)
         .ticketMetadata(joelTicket1Metadata)
@@ -145,5 +149,20 @@ class TicketRepositoryTest {
 
         // then
         assertThat(ticket.getTicketSalesStatus()).isEqualTo(TicketSalesStatus.ON_SALE);
+    }
+
+    @DisplayName("토큰 ID와 토큰 URI로 티켓을 찾을 수 있다")
+    @Test
+    void findByTokenIdAndTokenUri() {
+        // given
+        ticketRepository.saveAll(Arrays.asList(joelTicket1, joelTicket2));
+
+        // when
+        Ticket foundTicket1 = ticketRepository.findByTokenIdAndTokenUri(tokenId1, tokenUri1);
+        Ticket foundTicket2 = ticketRepository.findByTokenIdAndTokenUri(tokenId2, tokenUri2);
+
+        // then
+        assertThat(foundTicket1).isEqualTo(joelTicket1);
+        assertThat(foundTicket2).isEqualTo(joelTicket2);
     }
 }
