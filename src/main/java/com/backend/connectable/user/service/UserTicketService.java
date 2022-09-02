@@ -7,10 +7,12 @@ import com.backend.connectable.exception.ErrorType;
 import com.backend.connectable.global.common.util.RandomStringUtil;
 import com.backend.connectable.security.ConnectableUserDetails;
 import com.backend.connectable.user.domain.User;
+import com.backend.connectable.user.domain.repository.UserRepository;
 import com.backend.connectable.user.redis.UserTicketEntrance;
 import com.backend.connectable.user.redis.UserTicketEntranceRedisRepository;
 import com.backend.connectable.user.ui.dto.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -20,9 +22,11 @@ import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserTicketService {
 
     private final EventService eventService;
+    private final UserRepository userRepository;
     private final UserTicketEntranceRedisRepository userTicketEntranceRedisRepository;
 
     @Value("${entrance.device-secret}")
@@ -59,6 +63,8 @@ public class UserTicketService {
     public UserTicketEntranceResponse useTicketToEnter(Long ticketId, UserTicketEntranceRequest userTicketEntranceRequest) {
         Ticket ticket = eventService.findTicketById(ticketId);
         validateTicketEntrance(ticket, userTicketEntranceRequest);
+        User user = userRepository.findByKlaytnAddress(userTicketEntranceRequest.getKlaytnAddress()).get();
+        log.info("##USER::{}ENTERED@@CONTACT::{}@@TICKETS::{}", user.getNickname(), user.getPhoneNumber(), ticketId);
         ticket.useToEnter();
         return UserTicketEntranceResponse.ofSuccess();
     }
