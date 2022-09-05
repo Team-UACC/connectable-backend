@@ -1,11 +1,11 @@
 package com.backend.connectable.event.domain;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
+
 import com.backend.connectable.exception.ConnectableException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 
 class TicketTest {
 
@@ -13,11 +13,7 @@ class TicketTest {
     @Test
     void isUsedFalseWhenCreated() {
         // given
-        Ticket ticket = Ticket.builder()
-            .tokenId(1)
-            .tokenUri("tokenUri")
-            .price(10000)
-            .build();
+        Ticket ticket = Ticket.builder().tokenId(1).tokenUri("tokenUri").price(10000).build();
 
         // when & then
         assertThat(ticket.isUsed()).isFalse();
@@ -27,11 +23,7 @@ class TicketTest {
     @Test
     void useTicket() {
         // given
-        Ticket ticket = Ticket.builder()
-            .tokenId(1)
-            .tokenUri("tokenUri")
-            .price(10000)
-            .build();
+        Ticket ticket = Ticket.builder().tokenId(1).tokenUri("tokenUri").price(10000).build();
 
         // when & then
         assertThatCode(ticket::useToEnter).doesNotThrowAnyException();
@@ -41,15 +33,10 @@ class TicketTest {
     @Test
     void usedTicketCannotBeReused() {
         // given
-        Ticket ticket = Ticket.builder()
-            .tokenId(1)
-            .tokenUri("tokenUri")
-            .price(10000)
-            .build();
+        Ticket ticket = Ticket.builder().tokenId(1).tokenUri("tokenUri").price(10000).build();
         ticket.useToEnter();
 
         // when & then
-        assertThatCode(ticket::useToEnter)
-            .isInstanceOf(ConnectableException.class);
+        assertThatCode(ticket::useToEnter).isInstanceOf(ConnectableException.class);
     }
 }

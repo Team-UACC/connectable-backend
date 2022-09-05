@@ -1,6 +1,5 @@
 package com.backend.connectable.auth.ui;
 
-
 import com.backend.connectable.auth.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,18 +17,16 @@ public class AuthController {
 
     @GetMapping("/sms/key")
     public ResponseEntity<String> getAuthKey(
-        @RequestParam("phoneNumber") String phoneNumber,
-        @RequestParam("duration") Long duration
-    ) {
+            @RequestParam("phoneNumber") String phoneNumber,
+            @RequestParam("duration") Long duration) {
         String authKey = authService.getAuthKey(phoneNumber, duration);
         return ResponseEntity.ok(authKey);
     }
 
     @GetMapping("/sms/certification")
     public ResponseEntity<Boolean> certifyAuthKey(
-        @RequestParam("phoneNumber") String phoneNumber,
-        @RequestParam("authKey") String authKey
-    ) {
+            @RequestParam("phoneNumber") String phoneNumber,
+            @RequestParam("authKey") String authKey) {
         boolean isCertified = authService.certifyKey(phoneNumber, authKey);
         return ResponseEntity.ok(isCertified);
     }

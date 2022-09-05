@@ -19,7 +19,8 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<UserLoginResponse> loginUser(@RequestBody UserLoginRequest userLoginRequest) {
+    public ResponseEntity<UserLoginResponse> loginUser(
+            @RequestBody UserLoginRequest userLoginRequest) {
         UserLoginResponse userLoginResponse = userService.login(userLoginRequest);
         if (userLoginResponse.checkStatusFailed()) {
             return ResponseEntity.badRequest().body(userLoginResponse);
@@ -28,7 +29,8 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<UserResponse> getUser(@AuthenticationPrincipal ConnectableUserDetails userDetails) {
+    public ResponseEntity<UserResponse> getUser(
+            @AuthenticationPrincipal ConnectableUserDetails userDetails) {
         UserResponse userResponse = userService.getUserByUserDetails(userDetails);
         if (userResponse.checkSuccess()) {
             return ResponseEntity.ok(userResponse);
@@ -37,15 +39,18 @@ public class UserController {
     }
 
     @DeleteMapping
-    public ResponseEntity<UserModifyResponse> deleteUser(@AuthenticationPrincipal ConnectableUserDetails userDetails) {
+    public ResponseEntity<UserModifyResponse> deleteUser(
+            @AuthenticationPrincipal ConnectableUserDetails userDetails) {
         UserModifyResponse userModifyResponse = userService.deleteUserByUserDetails(userDetails);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(userModifyResponse);
     }
 
     @PutMapping
-    public ResponseEntity<UserModifyResponse> modifyUser(@AuthenticationPrincipal ConnectableUserDetails userDetails,
-                                                         @RequestBody @Validated(ValidationSequence.class) UserModifyRequest userModifyRequest) {
-        UserModifyResponse userModifyResponse = userService.modifyUserByUserDetails(userDetails, userModifyRequest);
+    public ResponseEntity<UserModifyResponse> modifyUser(
+            @AuthenticationPrincipal ConnectableUserDetails userDetails,
+            @RequestBody @Validated(ValidationSequence.class) UserModifyRequest userModifyRequest) {
+        UserModifyResponse userModifyResponse =
+                userService.modifyUserByUserDetails(userDetails, userModifyRequest);
         return ResponseEntity.status(HttpStatus.OK).body(userModifyResponse);
     }
 
@@ -56,22 +61,28 @@ public class UserController {
     }
 
     @GetMapping("/tickets")
-    public ResponseEntity<UserTicketListResponse> getUserTickets(@AuthenticationPrincipal ConnectableUserDetails userDetails) {
-        UserTicketListResponse userTicketListResponse = userService.getUserTicketsByUserDetails(userDetails);
+    public ResponseEntity<UserTicketListResponse> getUserTickets(
+            @AuthenticationPrincipal ConnectableUserDetails userDetails) {
+        UserTicketListResponse userTicketListResponse =
+                userService.getUserTicketsByUserDetails(userDetails);
         return ResponseEntity.ok(userTicketListResponse);
     }
 
     @GetMapping("/tickets/{ticket-id}/entrance-verification")
-    public ResponseEntity<UserTicketVerificationResponse> generateUserTicketEntranceVerification(@AuthenticationPrincipal ConnectableUserDetails userDetails,
-                                                                                                 @PathVariable("ticket-id") Long ticketId) {
-        UserTicketVerificationResponse userTicketVerificationResponse = userService.generateUserTicketEntranceVerification(userDetails, ticketId);
+    public ResponseEntity<UserTicketVerificationResponse> generateUserTicketEntranceVerification(
+            @AuthenticationPrincipal ConnectableUserDetails userDetails,
+            @PathVariable("ticket-id") Long ticketId) {
+        UserTicketVerificationResponse userTicketVerificationResponse =
+                userService.generateUserTicketEntranceVerification(userDetails, ticketId);
         return ResponseEntity.ok(userTicketVerificationResponse);
     }
 
     @PostMapping("/tickets/{ticket-id}/enter")
-    public ResponseEntity<UserTicketEntranceResponse> useTicketToEnter(@PathVariable("ticket-id") Long ticketId,
-                                                                       @RequestBody UserTicketEntranceRequest userTicketEntranceRequest) {
-        UserTicketEntranceResponse userTicketEntranceResponse = userService.useTicketToEnter(ticketId, userTicketEntranceRequest);
+    public ResponseEntity<UserTicketEntranceResponse> useTicketToEnter(
+            @PathVariable("ticket-id") Long ticketId,
+            @RequestBody UserTicketEntranceRequest userTicketEntranceRequest) {
+        UserTicketEntranceResponse userTicketEntranceResponse =
+                userService.useTicketToEnter(ticketId, userTicketEntranceRequest);
         return ResponseEntity.ok(userTicketEntranceResponse);
     }
 }

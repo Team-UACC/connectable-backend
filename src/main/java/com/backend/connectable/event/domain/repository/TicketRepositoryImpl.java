@@ -1,16 +1,15 @@
 package com.backend.connectable.event.domain.repository;
 
+import static com.backend.connectable.event.domain.QEvent.event;
+import static com.backend.connectable.event.domain.QTicket.ticket;
+
 import com.backend.connectable.event.domain.Ticket;
 import com.backend.connectable.event.domain.TicketSalesStatus;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import org.springframework.stereotype.Repository;
-
-import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
-
-import static com.backend.connectable.event.domain.QEvent.event;
-import static com.backend.connectable.event.domain.QTicket.ticket;
+import javax.persistence.EntityManager;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public class TicketRepositoryImpl implements TicketRepositoryCustom {
@@ -22,22 +21,31 @@ public class TicketRepositoryImpl implements TicketRepositoryCustom {
     }
 
     public long modifyTicketSalesStatusExpire() {
-        long fetchedRowCount = queryFactory
-            .update(ticket)
-            .set(ticket.ticketSalesStatus, TicketSalesStatus.EXPIRED)
-            .where(ticket.event.id.in(JPAExpressions.select(event.id).from(event).where(event.salesTo.before(LocalDateTime.now()))))
-            .execute();
+        long fetchedRowCount =
+                queryFactory
+                        .update(ticket)
+                        .set(ticket.ticketSalesStatus, TicketSalesStatus.EXPIRED)
+                        .where(
+                                ticket.event.id.in(
+                                        JPAExpressions.select(event.id)
+                                                .from(event)
+                                                .where(event.salesTo.before(LocalDateTime.now()))))
+                        .execute();
 
         return fetchedRowCount;
     }
 
     @Override
     public Ticket findOneOnSaleOfEvent(Long eventId) {
-        return queryFactory.select(ticket)
-            .from(ticket)
-            .where(ticket.event.id.eq(eventId)
-                .and(ticket.ticketSalesStatus.eq(TicketSalesStatus.ON_SALE)))
-            .limit(1)
-            .fetchOne();
+        return queryFactory
+                .select(ticket)
+                .from(ticket)
+                .where(
+                        ticket.event
+                                .id
+                                .eq(eventId)
+                                .and(ticket.ticketSalesStatus.eq(TicketSalesStatus.ON_SALE)))
+                .limit(1)
+                .fetchOne();
     }
 }

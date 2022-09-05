@@ -2,14 +2,13 @@ package com.backend.connectable.event.domain;
 
 import com.backend.connectable.exception.ConnectableException;
 import com.backend.connectable.exception.ErrorType;
+import java.time.LocalDateTime;
+import java.util.Objects;
+import javax.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
-
-import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Entity
 @Getter
@@ -40,8 +39,14 @@ public class Ticket {
     private TicketMetadata ticketMetadata;
 
     @Builder
-    public Ticket(Long id, Event event, int tokenId, String tokenUri, int price,
-                  TicketSalesStatus ticketSalesStatus, TicketMetadata ticketMetadata) {
+    public Ticket(
+            Long id,
+            Event event,
+            int tokenId,
+            String tokenUri,
+            int price,
+            TicketSalesStatus ticketSalesStatus,
+            TicketMetadata ticketMetadata) {
         this.id = id;
         this.event = event;
         this.tokenId = tokenId;

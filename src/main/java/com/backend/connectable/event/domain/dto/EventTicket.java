@@ -3,12 +3,11 @@ package com.backend.connectable.event.domain.dto;
 import com.backend.connectable.event.domain.TicketMetadata;
 import com.backend.connectable.event.domain.TicketSalesStatus;
 import com.querydsl.core.annotations.QueryProjection;
+import java.time.LocalDateTime;
+import javax.persistence.Convert;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import javax.persistence.Convert;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -24,14 +23,25 @@ public class EventTicket {
     private int tokenId;
     private String tokenUri;
     private boolean isUsed;
+
     @Convert(converter = TicketMetadata.class)
     private TicketMetadata metadata;
+
     private String contractAddress;
 
     @QueryProjection
-    public EventTicket(Long id, int price, String artistName, LocalDateTime eventDate, String eventName,
-                       TicketSalesStatus ticketSalesStatus, int tokenId, String tokenUri, boolean isUsed,
-                       TicketMetadata metadata, String contractAddress) {
+    public EventTicket(
+            Long id,
+            int price,
+            String artistName,
+            LocalDateTime eventDate,
+            String eventName,
+            TicketSalesStatus ticketSalesStatus,
+            int tokenId,
+            String tokenUri,
+            boolean isUsed,
+            TicketMetadata metadata,
+            String contractAddress) {
         this.id = id;
         this.price = price;
         this.artistName = artistName;

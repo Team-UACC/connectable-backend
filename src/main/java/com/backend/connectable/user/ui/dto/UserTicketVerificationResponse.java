@@ -15,11 +15,8 @@ public class UserTicketVerificationResponse {
     private Long ticketId;
     private String verification;
 
-    public static UserTicketVerificationResponse of(String klaytnAddress, Long ticketId, String verification) {
-        return new UserTicketVerificationResponse(
-            klaytnAddress,
-            ticketId,
-            verification
-        );
+    public static UserTicketVerificationResponse of(
+            String klaytnAddress, Long ticketId, String verification) {
+        return new UserTicketVerificationResponse(klaytnAddress, ticketId, verification);
     }
 }

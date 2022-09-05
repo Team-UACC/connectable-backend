@@ -1,108 +1,112 @@
 package com.backend.connectable.event.domain.repository;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.backend.connectable.artist.domain.Artist;
 import com.backend.connectable.artist.domain.repository.ArtistRepository;
 import com.backend.connectable.event.domain.*;
 import com.backend.connectable.user.domain.User;
 import com.backend.connectable.user.domain.repository.UserRepository;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import javax.persistence.EntityManager;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
 @DataJpaTest
 class TicketRepositoryTest {
 
-    @Autowired
-    TicketRepository ticketRepository;
+    @Autowired TicketRepository ticketRepository;
 
-    @Autowired
-    UserRepository userRepository;
+    @Autowired UserRepository userRepository;
 
-    @Autowired
-    EventRepository eventRepository;
+    @Autowired EventRepository eventRepository;
 
-    @Autowired
-    ArtistRepository artistRepository;
+    @Autowired ArtistRepository artistRepository;
 
-    @Autowired
-    EntityManager em;
+    @Autowired EntityManager em;
 
-    User joel = User.builder()
-            .klaytnAddress("0x1234")
-            .nickname("Joel")
-            .phoneNumber("010-1234-5678")
-            .privacyAgreement(true)
-            .isActive(true)
-            .build();
+    User joel =
+            User.builder()
+                    .klaytnAddress("0x1234")
+                    .nickname("Joel")
+                    .phoneNumber("010-1234-5678")
+                    .privacyAgreement(true)
+                    .isActive(true)
+                    .build();
 
-    Artist artist = Artist.builder()
-            .bankCompany("NH")
-            .bankAccount("9000000000099")
-            .artistName("빅나티")
-            .email("bignaughty@gmail.com")
-            .password("temptemp1234")
-            .phoneNumber("01012345678")
-            .artistImage("https://image.url")
-            .build();
+    Artist artist =
+            Artist.builder()
+                    .bankCompany("NH")
+                    .bankAccount("9000000000099")
+                    .artistName("빅나티")
+                    .email("bignaughty@gmail.com")
+                    .password("temptemp1234")
+                    .phoneNumber("01012345678")
+                    .artistImage("https://image.url")
+                    .build();
 
-    Event joelEvent = Event.builder()
-            .description("조엘의 콘서트 at Connectable")
-            .salesFrom(LocalDateTime.of(2022, 7, 12, 0, 0))
-            .salesTo(LocalDateTime.of(2022, 7, 30, 0, 0))
-            .contractAddress("0x123456")
-            .eventName("조엘의 콘서트")
-            .eventImage("https://image.url")
-            .twitterUrl("https://github.com/joelonsw")
-            .instagramUrl("https://www.instagram.com/jyoung_with/")
-            .webpageUrl("https://papimon.tistory.com/")
-            .startTime(LocalDateTime.of(2022, 8, 1, 18, 0))
-            .endTime(LocalDateTime.of(2022, 8, 1, 19, 0))
-            .salesOption(SalesOption.FLAT_PRICE)
-            .artist(artist)
-            .build();
+    Event joelEvent =
+            Event.builder()
+                    .description("조엘의 콘서트 at Connectable")
+                    .salesFrom(LocalDateTime.of(2022, 7, 12, 0, 0))
+                    .salesTo(LocalDateTime.of(2022, 7, 30, 0, 0))
+                    .contractAddress("0x123456")
+                    .eventName("조엘의 콘서트")
+                    .eventImage("https://image.url")
+                    .twitterUrl("https://github.com/joelonsw")
+                    .instagramUrl("https://www.instagram.com/jyoung_with/")
+                    .webpageUrl("https://papimon.tistory.com/")
+                    .startTime(LocalDateTime.of(2022, 8, 1, 18, 0))
+                    .endTime(LocalDateTime.of(2022, 8, 1, 19, 0))
+                    .salesOption(SalesOption.FLAT_PRICE)
+                    .artist(artist)
+                    .build();
 
-    TicketMetadata joelTicket1Metadata = TicketMetadata.builder()
-            .name("조엘 콘서트 #1")
-            .description("조엘의 콘서트 at Connectable")
-            .image("https://connectable-events.s3.ap-northeast-2.amazonaws.com/ticket_test1.png")
-            .attributes(new HashMap<>(){{
-                put("Background", "Yellow");
-                put("Artist", "Joel");
-                put("Seat", "A6");
-            }})
-            .build();
+    TicketMetadata joelTicket1Metadata =
+            TicketMetadata.builder()
+                    .name("조엘 콘서트 #1")
+                    .description("조엘의 콘서트 at Connectable")
+                    .image(
+                            "https://connectable-events.s3.ap-northeast-2.amazonaws.com/ticket_test1.png")
+                    .attributes(
+                            new HashMap<>() {
+                                {
+                                    put("Background", "Yellow");
+                                    put("Artist", "Joel");
+                                    put("Seat", "A6");
+                                }
+                            })
+                    .build();
 
     String tokenUri1 = "https://token.uri.1";
     int tokenId1 = 1;
-    Ticket joelTicket1 = Ticket.builder()
-        .event(joelEvent)
-        .tokenUri(tokenUri1)
-        .tokenId(tokenId1)
-        .price(100000)
-        .ticketSalesStatus(TicketSalesStatus.ON_SALE)
-        .ticketMetadata(joelTicket1Metadata)
-        .build();
+    Ticket joelTicket1 =
+            Ticket.builder()
+                    .event(joelEvent)
+                    .tokenUri(tokenUri1)
+                    .tokenId(tokenId1)
+                    .price(100000)
+                    .ticketSalesStatus(TicketSalesStatus.ON_SALE)
+                    .ticketMetadata(joelTicket1Metadata)
+                    .build();
 
     String tokenUri2 = "https://token.uri.2";
     int tokenId2 = 2;
-    Ticket joelTicket2 = Ticket.builder()
-        .event(joelEvent)
-        .tokenUri(tokenUri2)
-        .tokenId(tokenId2)
-        .price(100000)
-        .ticketSalesStatus(TicketSalesStatus.ON_SALE)
-        .ticketMetadata(joelTicket1Metadata)
-        .build();
+    Ticket joelTicket2 =
+            Ticket.builder()
+                    .event(joelEvent)
+                    .tokenUri(tokenUri2)
+                    .tokenId(tokenId2)
+                    .price(100000)
+                    .ticketSalesStatus(TicketSalesStatus.ON_SALE)
+                    .ticketMetadata(joelTicket1Metadata)
+                    .build();
 
     @BeforeEach
     void setUp() {
@@ -132,7 +136,8 @@ class TicketRepositoryTest {
         ticketRepository.saveAll(Arrays.asList(joelTicket1, joelTicket2));
 
         // when
-        List<Ticket> foundTickets = ticketRepository.findAllByTokenUri(Arrays.asList(tokenUri1, tokenUri2));
+        List<Ticket> foundTickets =
+                ticketRepository.findAllByTokenUri(Arrays.asList(tokenUri1, tokenUri2));
 
         // then
         assertThat(foundTickets).contains(joelTicket1, joelTicket2);

@@ -43,8 +43,12 @@ public class AdminService {
     }
 
     private OrderDetail findOrderDetail(Long orderDetailId) {
-        return orderDetailRepository.findById(orderDetailId)
-            .orElseThrow(() -> new ConnectableException(HttpStatus.BAD_REQUEST, ErrorType.ORDER_DETAIL_NOT_EXISTS));
+        return orderDetailRepository
+                .findById(orderDetailId)
+                .orElseThrow(
+                        () ->
+                                new ConnectableException(
+                                        HttpStatus.BAD_REQUEST, ErrorType.ORDER_DETAIL_NOT_EXISTS));
     }
 
     private void sendTicket(OrderDetail orderDetail) {
@@ -52,7 +56,8 @@ public class AdminService {
         int tokenId = orderDetail.getTokenId();
         String receiverAddress = orderDetail.getKlaytnAddress();
         try {
-            TransactionResponse transactionResponse = kasService.sendMyToken(contractAddress, tokenId, receiverAddress);
+            TransactionResponse transactionResponse =
+                    kasService.sendMyToken(contractAddress, tokenId, receiverAddress);
             orderDetail.transferSuccess(transactionResponse.getTransactionHash());
         } catch (KasException kasException) {
             orderDetail.transferFail();
@@ -72,14 +77,17 @@ public class AdminService {
     }
 
     @Transactional
-    public void deployEvent(EventDeploymentRequest eventDeploymentRequest) throws InterruptedException {
+    public void deployEvent(EventDeploymentRequest eventDeploymentRequest)
+            throws InterruptedException {
         deployContract(eventDeploymentRequest);
         String contractAddress = getContractAddress(eventDeploymentRequest.getContractAlias());
-        saveEvent(eventDeploymentRequest, contractAddress, eventDeploymentRequest.getContractName());
+        saveEvent(
+                eventDeploymentRequest, contractAddress, eventDeploymentRequest.getContractName());
         log.info("$$ [ADMIN] DEPLOYED CONTRACT ADDRESS : " + contractAddress + " $$");
     }
 
-    private void deployContract(EventDeploymentRequest eventDeploymentRequest) throws InterruptedException {
+    private void deployContract(EventDeploymentRequest eventDeploymentRequest)
+            throws InterruptedException {
         String contractName = eventDeploymentRequest.getContractName();
         String contractSymbol = eventDeploymentRequest.getContractSymbol();
         String contractAlias = eventDeploymentRequest.getContractAlias();
@@ -90,34 +98,45 @@ public class AdminService {
     private String getContractAddress(String contractAlias) throws InterruptedException {
         String address = "updateme";
         while (address.equals("updateme")) {
-            ContractItemResponse contractItemResponse = kasService.getMyContractMyAlias(contractAlias);
+            ContractItemResponse contractItemResponse =
+                    kasService.getMyContractMyAlias(contractAlias);
             address = contractItemResponse.getAddress();
             Thread.sleep(1000);
         }
         return address;
     }
 
-    private void saveEvent(EventDeploymentRequest eventDeploymentRequest, String contractAddress, String contractName) {
-        Artist eventArtist = artistRepository.findById(eventDeploymentRequest.getEventArtistId())
-            .orElseThrow(() -> new ConnectableException(HttpStatus.BAD_REQUEST, ErrorType.ARTIST_NOT_FOUND));
+    private void saveEvent(
+            EventDeploymentRequest eventDeploymentRequest,
+            String contractAddress,
+            String contractName) {
+        Artist eventArtist =
+                artistRepository
+                        .findById(eventDeploymentRequest.getEventArtistId())
+                        .orElseThrow(
+                                () ->
+                                        new ConnectableException(
+                                                HttpStatus.BAD_REQUEST,
+                                                ErrorType.ARTIST_NOT_FOUND));
 
-        Event event = Event.builder()
-            .description(eventDeploymentRequest.getEventDescription())
-            .salesFrom(eventDeploymentRequest.getEventSalesFrom())
-            .salesTo(eventDeploymentRequest.getEventSalesTo())
-            .contractAddress(contractAddress)
-            .contractName(contractName)
-            .eventName(eventDeploymentRequest.getEventName())
-            .eventImage(eventDeploymentRequest.getEventImage())
-            .twitterUrl(eventDeploymentRequest.getEventTwitterUrl())
-            .instagramUrl(eventDeploymentRequest.getEventInstagramUrl())
-            .webpageUrl(eventDeploymentRequest.getEventWebpageUrl())
-            .startTime(eventDeploymentRequest.getEventStartTime())
-            .endTime(eventDeploymentRequest.getEventEndTime())
-            .salesOption(SalesOption.FLAT_PRICE)
-            .location(eventDeploymentRequest.getEventLocation())
-            .artist(eventArtist)
-            .build();
+        Event event =
+                Event.builder()
+                        .description(eventDeploymentRequest.getEventDescription())
+                        .salesFrom(eventDeploymentRequest.getEventSalesFrom())
+                        .salesTo(eventDeploymentRequest.getEventSalesTo())
+                        .contractAddress(contractAddress)
+                        .contractName(contractName)
+                        .eventName(eventDeploymentRequest.getEventName())
+                        .eventImage(eventDeploymentRequest.getEventImage())
+                        .twitterUrl(eventDeploymentRequest.getEventTwitterUrl())
+                        .instagramUrl(eventDeploymentRequest.getEventInstagramUrl())
+                        .webpageUrl(eventDeploymentRequest.getEventWebpageUrl())
+                        .startTime(eventDeploymentRequest.getEventStartTime())
+                        .endTime(eventDeploymentRequest.getEventEndTime())
+                        .salesOption(SalesOption.FLAT_PRICE)
+                        .location(eventDeploymentRequest.getEventLocation())
+                        .artist(eventArtist)
+                        .build();
         eventRepository.save(event);
     }
 
@@ -129,26 +148,38 @@ public class AdminService {
         String tokenUri = tokenMintingRequest.getTokenUri();
         int price = tokenMintingRequest.getPrice();
 
-        Event event = eventRepository.findByContractAddress(contractAddress)
-            .orElseThrow(() -> new ConnectableException(HttpStatus.BAD_REQUEST, ErrorType.EVENT_NOT_FOUND));
+        Event event =
+                eventRepository
+                        .findByContractAddress(contractAddress)
+                        .orElseThrow(
+                                () ->
+                                        new ConnectableException(
+                                                HttpStatus.BAD_REQUEST, ErrorType.EVENT_NOT_FOUND));
 
         for (int tokenId = startTokenId; tokenId <= endTokenId; tokenId++) {
             mintAndSave(contractAddress, tokenUri, price, event, tokenId);
         }
     }
 
-    private void mintAndSave(String contractAddress, String tokenUri, int price, Event event, int tokenId) {
+    private void mintAndSave(
+            String contractAddress, String tokenUri, int price, Event event, int tokenId) {
         kasService.mintMyToken(contractAddress, tokenId, tokenUri);
         TicketMetadata ticketMetadata = s3Service.fetchMetadata(tokenUri).toTicketMetadata();
-        Ticket ticket = Ticket.builder()
-            .event(event)
-            .tokenUri(tokenUri)
-            .tokenId(tokenId)
-            .price(price)
-            .ticketSalesStatus(TicketSalesStatus.ON_SALE)
-            .ticketMetadata(ticketMetadata)
-            .build();
+        Ticket ticket =
+                Ticket.builder()
+                        .event(event)
+                        .tokenUri(tokenUri)
+                        .tokenId(tokenId)
+                        .price(price)
+                        .ticketSalesStatus(TicketSalesStatus.ON_SALE)
+                        .ticketMetadata(ticketMetadata)
+                        .build();
         ticketRepository.save(ticket);
-        log.info("$$ [ADMIN] TOKEN MINTED AT ADDRESS : " + contractAddress + " - TOKEN ID : " + tokenId + " $$");
+        log.info(
+                "$$ [ADMIN] TOKEN MINTED AT ADDRESS : "
+                        + contractAddress
+                        + " - TOKEN ID : "
+                        + tokenId
+                        + " $$");
     }
 }

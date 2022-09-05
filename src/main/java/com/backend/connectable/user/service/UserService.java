@@ -9,13 +9,12 @@ import com.backend.connectable.security.JwtProvider;
 import com.backend.connectable.user.domain.User;
 import com.backend.connectable.user.domain.repository.UserRepository;
 import com.backend.connectable.user.ui.dto.*;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -42,29 +41,25 @@ public class UserService {
     }
 
     private UserLoginSuccessResponse completeLogin(String klaytnAddress) {
-        Optional<User> optionalUser = userRepository.findByKlaytnAddressAndIsActive(klaytnAddress, true);
-        return optionalUser.map(user -> completeRegisteredUserLogin(klaytnAddress, user))
+        Optional<User> optionalUser =
+                userRepository.findByKlaytnAddressAndIsActive(klaytnAddress, true);
+        return optionalUser
+                .map(user -> completeRegisteredUserLogin(klaytnAddress, user))
                 .orElseGet(() -> completeNewUserLogin(klaytnAddress));
     }
 
     private UserLoginSuccessResponse completeRegisteredUserLogin(String klaytnAddress, User user) {
         if (user.hasNickname() && user.hasPhoneNumber()) {
-            return UserLoginSuccessResponse.of(user, jwtProvider.generateToken(klaytnAddress), false);
+            return UserLoginSuccessResponse.of(
+                    user, jwtProvider.generateToken(klaytnAddress), false);
         }
         return UserLoginSuccessResponse.of(user, jwtProvider.generateToken(klaytnAddress), true);
     }
 
     private UserLoginSuccessResponse completeNewUserLogin(String klaytnAddress) {
-        User user = User.builder()
-                .klaytnAddress(klaytnAddress)
-                .isActive(true)
-                .build();
+        User user = User.builder().klaytnAddress(klaytnAddress).isActive(true).build();
         userRepository.save(user);
-        return UserLoginSuccessResponse.of(
-                user,
-                jwtProvider.generateToken(klaytnAddress),
-                true
-        );
+        return UserLoginSuccessResponse.of(user, jwtProvider.generateToken(klaytnAddress), true);
     }
 
     public UserResponse getUserByUserDetails(ConnectableUserDetails userDetails) {
@@ -76,8 +71,12 @@ public class UserService {
     }
 
     private User findUser(String klaytnAddress) {
-        return userRepository.findByKlaytnAddress(klaytnAddress)
-            .orElseThrow(() -> new ConnectableException(HttpStatus.BAD_REQUEST, ErrorType.USER_NOT_FOUND));
+        return userRepository
+                .findByKlaytnAddress(klaytnAddress)
+                .orElseThrow(
+                        () ->
+                                new ConnectableException(
+                                        HttpStatus.BAD_REQUEST, ErrorType.USER_NOT_FOUND));
     }
 
     @Transactional
@@ -88,7 +87,8 @@ public class UserService {
     }
 
     @Transactional
-    public UserModifyResponse modifyUserByUserDetails(ConnectableUserDetails userDetails, UserModifyRequest userModifyRequest) {
+    public UserModifyResponse modifyUserByUserDetails(
+            ConnectableUserDetails userDetails, UserModifyRequest userModifyRequest) {
         User user = findUser(userDetails.getKlaytnAddress());
         user.modifyInformation(userModifyRequest.getNickname(), userModifyRequest.getPhoneNumber());
         return UserModifyResponse.ofSuccess();
@@ -106,13 +106,15 @@ public class UserService {
         return userTicketService.getUserTicketsByUserDetails(userDetails);
     }
 
-    public UserTicketVerificationResponse generateUserTicketEntranceVerification(ConnectableUserDetails userDetails, Long ticketId) {
+    public UserTicketVerificationResponse generateUserTicketEntranceVerification(
+            ConnectableUserDetails userDetails, Long ticketId) {
         User user = findUser(userDetails.getKlaytnAddress());
         return userTicketService.generateUserTicketEntranceVerification(user, ticketId);
     }
 
     @Transactional
-    public UserTicketEntranceResponse useTicketToEnter(Long ticketId, UserTicketEntranceRequest userTicketEntranceRequest) {
+    public UserTicketEntranceResponse useTicketToEnter(
+            Long ticketId, UserTicketEntranceRequest userTicketEntranceRequest) {
         return userTicketService.useTicketToEnter(ticketId, userTicketEntranceRequest);
     }
 }
