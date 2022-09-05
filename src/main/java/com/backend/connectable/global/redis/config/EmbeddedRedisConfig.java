@@ -1,13 +1,5 @@
 package com.backend.connectable.global.redis.config;
 
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
-import redis.embedded.RedisServer;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -15,6 +7,13 @@ import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Objects;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import redis.embedded.RedisServer;
 
 @Configuration
 @Profile("local")
@@ -39,7 +38,10 @@ public class EmbeddedRedisConfig {
     }
 
     private File getRedisFileForArcMac() throws URISyntaxException {
-        URL resource = getClass().getClassLoader().getResource("binary/redis/redis-server-6.2.5-mac-arm64");
+        URL resource =
+                getClass()
+                        .getClassLoader()
+                        .getResource("binary/redis/redis-server-6.2.5-mac-arm64");
         assert resource != null;
         File file = new File(resource.toURI());
         file.setExecutable(true);
@@ -47,8 +49,8 @@ public class EmbeddedRedisConfig {
     }
 
     private boolean isArmMac() {
-        return Objects.equals(System.getProperty("os.arch"), "aarch64") &&
-            Objects.equals(System.getProperty("os.name"), "Mac OS X");
+        return Objects.equals(System.getProperty("os.arch"), "aarch64")
+                && Objects.equals(System.getProperty("os.name"), "Mac OS X");
     }
 
     @PreDestroy
@@ -69,7 +71,8 @@ public class EmbeddedRedisConfig {
                 return port;
             }
         }
-        throw new IllegalArgumentException("[EMBEDDED-REDIS] Not Found Available port: 10000 ~ 65535");
+        throw new IllegalArgumentException(
+                "[EMBEDDED-REDIS] Not Found Available port: 10000 ~ 65535");
     }
 
     private Process executeGrepProcessCommand(int port) throws IOException {
@@ -87,7 +90,8 @@ public class EmbeddedRedisConfig {
         String line;
         StringBuilder pidInfo = new StringBuilder();
 
-        try (BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+        try (BufferedReader input =
+                new BufferedReader(new InputStreamReader(process.getInputStream()))) {
             while ((line = input.readLine()) != null) {
                 pidInfo.append(line);
             }

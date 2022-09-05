@@ -1,5 +1,10 @@
 package com.backend.connectable.user.service;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.BDDMockito.given;
+
 import com.backend.connectable.artist.domain.Artist;
 import com.backend.connectable.artist.domain.repository.ArtistRepository;
 import com.backend.connectable.event.domain.*;
@@ -15,6 +20,10 @@ import com.backend.connectable.user.domain.repository.UserRepository;
 import com.backend.connectable.user.redis.UserTicketEntrance;
 import com.backend.connectable.user.redis.UserTicketEntranceRedisRepository;
 import com.backend.connectable.user.ui.dto.*;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.HashMap;
+import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,45 +33,26 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.HashMap;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.BDDMockito.given;
-
 @SpringBootTest
 class UserServiceTest {
 
-    @Autowired
-    UserRepository userRepository;
+    @Autowired UserRepository userRepository;
 
-    @Autowired
-    ArtistRepository artistRepository;
+    @Autowired ArtistRepository artistRepository;
 
-    @Autowired
-    EventRepository eventRepository;
+    @Autowired EventRepository eventRepository;
 
-    @Autowired
-    TicketRepository ticketRepository;
+    @Autowired TicketRepository ticketRepository;
 
-    @Autowired
-    UserService userService;
+    @Autowired UserService userService;
 
-    @Autowired
-    UserTicketEntranceRedisRepository userTicketEntranceRedisRepository;
+    @Autowired UserTicketEntranceRedisRepository userTicketEntranceRedisRepository;
 
-    @Autowired
-    EntityManager em;
+    @Autowired EntityManager em;
 
-    @MockBean
-    KlipService klipService;
+    @MockBean KlipService klipService;
 
-    @MockBean
-    EventService eventService;
+    @MockBean EventService eventService;
 
     @Value("${entrance.device-secret}")
     String deviceSecret;
@@ -90,77 +80,94 @@ class UserServiceTest {
         artistRepository.deleteAll();
         userRepository.deleteAll();
 
-        user1 = User.builder()
-                .klaytnAddress(user1KlaytnAddress)
-                .nickname(user1Nickname)
-                .phoneNumber(user1PhoneNumber)
-                .privacyAgreement(user1PrivacyAgreement)
-                .isActive(user1IsActive)
-                .build();
+        user1 =
+                User.builder()
+                        .klaytnAddress(user1KlaytnAddress)
+                        .nickname(user1Nickname)
+                        .phoneNumber(user1PhoneNumber)
+                        .privacyAgreement(user1PrivacyAgreement)
+                        .isActive(user1IsActive)
+                        .build();
 
-        artist1 = Artist.builder()
-            .bankCompany("NH")
-            .bankAccount("9000000000099")
-            .artistName("빅나티")
-            .email("bignaughty@gmail.com")
-            .password("temptemp1234")
-            .phoneNumber("01012345678")
-            .artistImage("https://image.url")
-            .build();
+        artist1 =
+                Artist.builder()
+                        .bankCompany("NH")
+                        .bankAccount("9000000000099")
+                        .artistName("빅나티")
+                        .email("bignaughty@gmail.com")
+                        .password("temptemp1234")
+                        .phoneNumber("01012345678")
+                        .artistImage("https://image.url")
+                        .build();
 
-        event1 = Event.builder()
-            .description("조엘의 콘서트 at Connectable")
-            .salesFrom(LocalDateTime.of(2022, 7, 12, 0, 0))
-            .salesTo(LocalDateTime.of(2022, 7, 30, 0, 0))
-            .contractAddress("0x123456")
-            .eventName("조엘의 콘서트")
-            .eventImage("https://image.url")
-            .twitterUrl("https://github.com/joelonsw")
-            .instagramUrl("https://www.instagram.com/jyoung_with/")
-            .webpageUrl("https://papimon.tistory.com/")
-            .startTime(LocalDateTime.of(2022, 8, 1, 18, 0))
-            .endTime(LocalDateTime.of(2022, 8, 1, 19, 0))
-            .salesOption(SalesOption.FLAT_PRICE)
-            .artist(artist1)
-            .build();
+        event1 =
+                Event.builder()
+                        .description("조엘의 콘서트 at Connectable")
+                        .salesFrom(LocalDateTime.of(2022, 7, 12, 0, 0))
+                        .salesTo(LocalDateTime.of(2022, 7, 30, 0, 0))
+                        .contractAddress("0x123456")
+                        .eventName("조엘의 콘서트")
+                        .eventImage("https://image.url")
+                        .twitterUrl("https://github.com/joelonsw")
+                        .instagramUrl("https://www.instagram.com/jyoung_with/")
+                        .webpageUrl("https://papimon.tistory.com/")
+                        .startTime(LocalDateTime.of(2022, 8, 1, 18, 0))
+                        .endTime(LocalDateTime.of(2022, 8, 1, 19, 0))
+                        .salesOption(SalesOption.FLAT_PRICE)
+                        .artist(artist1)
+                        .build();
 
-        ticket1Metadata = TicketMetadata.builder()
-            .name("조엘 콘서트 #1")
-            .description("조엘의 콘서트 at Connectable")
-            .image("https://connectable-events.s3.ap-northeast-2.amazonaws.com/ticket_test1.png")
-            .attributes(new HashMap<>(){{
-                put("Background", "Yellow");
-                put("Artist", "Joel");
-                put("Seat", "A6");
-            }})
-            .build();
+        ticket1Metadata =
+                TicketMetadata.builder()
+                        .name("조엘 콘서트 #1")
+                        .description("조엘의 콘서트 at Connectable")
+                        .image(
+                                "https://connectable-events.s3.ap-northeast-2.amazonaws.com/ticket_test1.png")
+                        .attributes(
+                                new HashMap<>() {
+                                    {
+                                        put("Background", "Yellow");
+                                        put("Artist", "Joel");
+                                        put("Seat", "A6");
+                                    }
+                                })
+                        .build();
 
-        ticket1 = Ticket.builder()
-            .event(event1)
-            .tokenUri("https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/1.json")
-            .price(100000)
-            .ticketSalesStatus(TicketSalesStatus.ON_SALE)
-            .ticketMetadata(ticket1Metadata)
-            .build();
+        ticket1 =
+                Ticket.builder()
+                        .event(event1)
+                        .tokenUri(
+                                "https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/1.json")
+                        .price(100000)
+                        .ticketSalesStatus(TicketSalesStatus.ON_SALE)
+                        .ticketMetadata(ticket1Metadata)
+                        .build();
 
-        ticket2Metadata = TicketMetadata.builder()
-            .name("조엘 콘서트 #2")
-            .description("조엘의 콘서트 at Connectable")
-            .image("https://connectable-events.s3.ap-northeast-2.amazonaws.com/ticket_test2.png")
-            .attributes(new HashMap<>(){{
-                put("Background", "Yellow");
-                put("Artist", "Joel");
-                put("Seat", "A5");
-            }})
-            .build();
+        ticket2Metadata =
+                TicketMetadata.builder()
+                        .name("조엘 콘서트 #2")
+                        .description("조엘의 콘서트 at Connectable")
+                        .image(
+                                "https://connectable-events.s3.ap-northeast-2.amazonaws.com/ticket_test2.png")
+                        .attributes(
+                                new HashMap<>() {
+                                    {
+                                        put("Background", "Yellow");
+                                        put("Artist", "Joel");
+                                        put("Seat", "A5");
+                                    }
+                                })
+                        .build();
 
-        ticket2 = Ticket.builder()
-            .event(event1)
-            .tokenUri("https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/2.json")
-            .price(100000)
-            .ticketSalesStatus(TicketSalesStatus.SOLD_OUT)
-            .ticketMetadata(ticket2Metadata)
-            .build();
+        ticket2 =
+                Ticket.builder()
+                        .event(event1)
+                        .tokenUri(
+                                "https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/2.json")
+                        .price(100000)
+                        .ticketSalesStatus(TicketSalesStatus.SOLD_OUT)
+                        .ticketMetadata(ticket2Metadata)
+                        .build();
 
         userRepository.save(user1);
         artistRepository.save(artist1);
@@ -172,7 +179,8 @@ class UserServiceTest {
     @Test
     void getUserByUserDetails() {
         // given
-        ConnectableUserDetails connectableUserDetails = new ConnectableUserDetails(user1.getKlaytnAddress());
+        ConnectableUserDetails connectableUserDetails =
+                new ConnectableUserDetails(user1.getKlaytnAddress());
 
         // when
         UserResponse userResponse = userService.getUserByUserDetails(connectableUserDetails);
@@ -188,39 +196,47 @@ class UserServiceTest {
     @Test
     void deleteUser() {
         // given
-        ConnectableUserDetails connectableUserDetails = new ConnectableUserDetails(user1.getKlaytnAddress());
+        ConnectableUserDetails connectableUserDetails =
+                new ConnectableUserDetails(user1.getKlaytnAddress());
 
         // when
-        UserModifyResponse userModifyResponse = userService.deleteUserByUserDetails(connectableUserDetails);
+        UserModifyResponse userModifyResponse =
+                userService.deleteUserByUserDetails(connectableUserDetails);
 
         // then
         assertThat(userModifyResponse.getStatus()).isEqualTo("success");
     }
-    
+
     @DisplayName("ConnectableUserDetails로 특정 사용자 수정을 실행할 수 있다.")
     @Test
     void modifyUser() {
         // given
-        ConnectableUserDetails connectableUserDetails = new ConnectableUserDetails(user1.getKlaytnAddress());
+        ConnectableUserDetails connectableUserDetails =
+                new ConnectableUserDetails(user1.getKlaytnAddress());
         UserModifyRequest userModifyRequest = new UserModifyRequest("mrlee7", "01085161399");
 
         // when
-        UserModifyResponse userModifyResponse = userService.modifyUserByUserDetails(connectableUserDetails, userModifyRequest);
+        UserModifyResponse userModifyResponse =
+                userService.modifyUserByUserDetails(connectableUserDetails, userModifyRequest);
 
         // then
         assertThat(userModifyResponse.getStatus()).isEqualTo("success");
     }
 
-    @DisplayName("Klip에서 로그인이 completed 되었고, 이미 가입된 회원이라면 completed, klaytnAddress, jwt, isNew=False 를 받게된다")
+    @DisplayName(
+            "Klip에서 로그인이 completed 되었고, 이미 가입된 회원이라면 completed, klaytnAddress, jwt, isNew=False 를"
+                    + " 받게된다")
     @Test
     void loginExistingUser() {
         // given
-        KlipAuthLoginResponse klipAuthLoginResponse = KlipAuthLoginResponse.ofCompleted(user1KlaytnAddress);
+        KlipAuthLoginResponse klipAuthLoginResponse =
+                KlipAuthLoginResponse.ofCompleted(user1KlaytnAddress);
         given(klipService.authLogin("properKey")).willReturn(klipAuthLoginResponse);
 
         // when
         UserLoginResponse userLoginResponse = userService.login(new UserLoginRequest("properKey"));
-        UserLoginSuccessResponse userLoginSuccessResponse = (UserLoginSuccessResponse) userLoginResponse;
+        UserLoginSuccessResponse userLoginSuccessResponse =
+                (UserLoginSuccessResponse) userLoginResponse;
 
         // then
         assertThat(userLoginSuccessResponse.getStatus()).isEqualTo("completed");
@@ -229,35 +245,44 @@ class UserServiceTest {
         assertThat(userLoginSuccessResponse.getJwt()).isNotEmpty();
     }
 
-    @DisplayName("Klip에서 로그인이 completed 되었지만, 등록만 된 회원이라면 completed, klaytnAddress, jwt, isNew=True 를 받게된다")
+    @DisplayName(
+            "Klip에서 로그인이 completed 되었지만, 등록만 된 회원이라면 completed, klaytnAddress, jwt, isNew=True 를"
+                    + " 받게된다")
     @Test
     void loginOnlyRegisteredUser() {
         // given
-        KlipAuthLoginResponse klipAuthLoginResponse = KlipAuthLoginResponse.ofCompleted(noNicknameUserKlaytnAddress);
+        KlipAuthLoginResponse klipAuthLoginResponse =
+                KlipAuthLoginResponse.ofCompleted(noNicknameUserKlaytnAddress);
         given(klipService.authLogin("properKey")).willReturn(klipAuthLoginResponse);
 
         // when
         UserLoginResponse userLoginResponse = userService.login(new UserLoginRequest("properKey"));
-        UserLoginSuccessResponse userLoginSuccessResponse = (UserLoginSuccessResponse) userLoginResponse;
+        UserLoginSuccessResponse userLoginSuccessResponse =
+                (UserLoginSuccessResponse) userLoginResponse;
 
         // then
         assertThat(userLoginSuccessResponse.getStatus()).isEqualTo("completed");
-        assertThat(userLoginSuccessResponse.getKlaytnAddress()).isEqualTo(noNicknameUserKlaytnAddress);
+        assertThat(userLoginSuccessResponse.getKlaytnAddress())
+                .isEqualTo(noNicknameUserKlaytnAddress);
         assertThat(userLoginSuccessResponse.getIsNew()).isTrue();
         assertThat(userLoginSuccessResponse.getJwt()).isNotEmpty();
     }
 
-    @DisplayName("Klip에서 로그인이 completed 되었고, 새로 가입한 회원이라면 completed, klaytnAddress, jwt, isNew=True 를 받게된다")
+    @DisplayName(
+            "Klip에서 로그인이 completed 되었고, 새로 가입한 회원이라면 completed, klaytnAddress, jwt, isNew=True 를"
+                    + " 받게된다")
     @Test
     void loginNewUser() {
         // given
         String newKlaytnAddress = "0x9dsf8xc12x9c0v";
-        KlipAuthLoginResponse klipAuthLoginResponse = KlipAuthLoginResponse.ofCompleted(newKlaytnAddress);
+        KlipAuthLoginResponse klipAuthLoginResponse =
+                KlipAuthLoginResponse.ofCompleted(newKlaytnAddress);
         given(klipService.authLogin("properKey")).willReturn(klipAuthLoginResponse);
 
         // when
         UserLoginResponse userLoginResponse = userService.login(new UserLoginRequest("properKey"));
-        UserLoginSuccessResponse userLoginSuccessResponse = (UserLoginSuccessResponse) userLoginResponse;
+        UserLoginSuccessResponse userLoginSuccessResponse =
+                (UserLoginSuccessResponse) userLoginResponse;
 
         // then
         assertThat(userLoginSuccessResponse.getStatus()).isEqualTo("completed");
@@ -265,7 +290,6 @@ class UserServiceTest {
         assertThat(userLoginSuccessResponse.getIsNew()).isTrue();
         assertThat(userLoginSuccessResponse.getJwt()).isNotEmpty();
     }
-
 
     @DisplayName("Klip에서 로그인이 prepared 라면, status=prepared 를 받게된다")
     @Test
@@ -299,20 +323,26 @@ class UserServiceTest {
     @Test
     void getUserTicketsByUserDetails() {
         // given
-        given(eventService.findTicketByUserAddress(user1KlaytnAddress)).willReturn(Arrays.asList(ticket1, ticket2));
-        ConnectableUserDetails connectableUserDetails = new ConnectableUserDetails(user1.getKlaytnAddress());
+        given(eventService.findTicketByUserAddress(user1KlaytnAddress))
+                .willReturn(Arrays.asList(ticket1, ticket2));
+        ConnectableUserDetails connectableUserDetails =
+                new ConnectableUserDetails(user1.getKlaytnAddress());
 
         // when
-        UserTicketListResponse userTicketListResponse = userService.getUserTicketsByUserDetails(connectableUserDetails);
+        UserTicketListResponse userTicketListResponse =
+                userService.getUserTicketsByUserDetails(connectableUserDetails);
 
         // then
         assertEquals("success", userTicketListResponse.getStatus());
         assertEquals(2L, userTicketListResponse.getTickets().size());
-        assertThat(userTicketListResponse.getTickets().get(0).getContractAddress()).isEqualTo("0x123456");
+        assertThat(userTicketListResponse.getTickets().get(0).getContractAddress())
+                .isEqualTo("0x123456");
         assertThat(userTicketListResponse.getTickets().get(0).getTokenUri())
-            .isEqualTo("https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/1.json");
+                .isEqualTo(
+                        "https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/1.json");
         assertThat(userTicketListResponse.getTickets().get(1).getTokenUri())
-            .isEqualTo("https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/2.json");
+                .isEqualTo(
+                        "https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/2.json");
     }
 
     @DisplayName("ValidateNickname을 통해 특정 사용자의 닉네임을 사용가능한지를 검증할 수 있다.")
@@ -331,21 +361,28 @@ class UserServiceTest {
     @Test
     void getUserTicketEntranceVerification() {
         // given
-        ConnectableUserDetails connectableUserDetails = new ConnectableUserDetails(user1KlaytnAddress);
+        ConnectableUserDetails connectableUserDetails =
+                new ConnectableUserDetails(user1KlaytnAddress);
         Long ticketId = ticket1.getId();
         given(eventService.findTicketById(ticketId)).willReturn(ticket1);
 
         // when
-        UserTicketVerificationResponse userTicketEntranceVerification = userService.generateUserTicketEntranceVerification(connectableUserDetails, ticketId);
+        UserTicketVerificationResponse userTicketEntranceVerification =
+                userService.generateUserTicketEntranceVerification(
+                        connectableUserDetails, ticketId);
 
         // then
         assertThat(userTicketEntranceVerification.getKlaytnAddress()).isEqualTo(user1KlaytnAddress);
         assertThat(userTicketEntranceVerification.getTicketId()).isEqualTo(ticketId);
 
-        UserTicketEntrance userTicketEntrance = userTicketEntranceRedisRepository.findById(user1KlaytnAddress).get();
-        assertThat(userTicketEntranceVerification.getKlaytnAddress()).isEqualTo(userTicketEntrance.getKlaytnAddress());
-        assertThat(userTicketEntranceVerification.getTicketId()).isEqualTo(userTicketEntrance.getTicketId());
-        assertThat(userTicketEntranceVerification.getVerification()).isEqualTo(userTicketEntrance.getVerification());
+        UserTicketEntrance userTicketEntrance =
+                userTicketEntranceRedisRepository.findById(user1KlaytnAddress).get();
+        assertThat(userTicketEntranceVerification.getKlaytnAddress())
+                .isEqualTo(userTicketEntrance.getKlaytnAddress());
+        assertThat(userTicketEntranceVerification.getTicketId())
+                .isEqualTo(userTicketEntrance.getTicketId());
+        assertThat(userTicketEntranceVerification.getVerification())
+                .isEqualTo(userTicketEntrance.getVerification());
     }
 
     @DisplayName("사전에 생성된 QR 정보를 매칭하여 입장에 사용할 수 있다.")
@@ -355,17 +392,21 @@ class UserServiceTest {
         // given
         given(eventService.findTicketById(ticket1.getId())).willReturn(ticket1);
 
-        ConnectableUserDetails connectableUserDetails = new ConnectableUserDetails(user1KlaytnAddress);
-        UserTicketVerificationResponse userTicketEntranceVerification = userService.generateUserTicketEntranceVerification(connectableUserDetails, ticket1.getId());
+        ConnectableUserDetails connectableUserDetails =
+                new ConnectableUserDetails(user1KlaytnAddress);
+        UserTicketVerificationResponse userTicketEntranceVerification =
+                userService.generateUserTicketEntranceVerification(
+                        connectableUserDetails, ticket1.getId());
 
-        UserTicketEntranceRequest userTicketEntranceRequest = new UserTicketEntranceRequest(
-            userTicketEntranceVerification.getKlaytnAddress(),
-            userTicketEntranceVerification.getVerification(),
-            deviceSecret
-        );
+        UserTicketEntranceRequest userTicketEntranceRequest =
+                new UserTicketEntranceRequest(
+                        userTicketEntranceVerification.getKlaytnAddress(),
+                        userTicketEntranceVerification.getVerification(),
+                        deviceSecret);
 
         // when
-        UserTicketEntranceResponse userTicketEntranceResponse = userService.useTicketToEnter(ticket1.getId(), userTicketEntranceRequest);
+        UserTicketEntranceResponse userTicketEntranceResponse =
+                userService.useTicketToEnter(ticket1.getId(), userTicketEntranceRequest);
         em.flush();
         em.clear();
 
@@ -381,17 +422,23 @@ class UserServiceTest {
         // given
         given(eventService.findTicketById(ticket1.getId())).willReturn(ticket1);
 
-        ConnectableUserDetails connectableUserDetails = new ConnectableUserDetails(user1KlaytnAddress);
-        UserTicketVerificationResponse userTicketEntranceVerification = userService.generateUserTicketEntranceVerification(connectableUserDetails, ticket1.getId());
+        ConnectableUserDetails connectableUserDetails =
+                new ConnectableUserDetails(user1KlaytnAddress);
+        UserTicketVerificationResponse userTicketEntranceVerification =
+                userService.generateUserTicketEntranceVerification(
+                        connectableUserDetails, ticket1.getId());
 
-        UserTicketEntranceRequest userTicketEntranceRequest = new UserTicketEntranceRequest(
-            userTicketEntranceVerification.getKlaytnAddress(),
-            userTicketEntranceVerification.getVerification(),
-            "invalid-device-secret"
-        );
+        UserTicketEntranceRequest userTicketEntranceRequest =
+                new UserTicketEntranceRequest(
+                        userTicketEntranceVerification.getKlaytnAddress(),
+                        userTicketEntranceVerification.getVerification(),
+                        "invalid-device-secret");
 
-        assertThatThrownBy(() -> userService.useTicketToEnter(ticket1.getId(), userTicketEntranceRequest))
-            .isInstanceOf(ConnectableException.class);
+        assertThatThrownBy(
+                        () ->
+                                userService.useTicketToEnter(
+                                        ticket1.getId(), userTicketEntranceRequest))
+                .isInstanceOf(ConnectableException.class);
     }
 
     @DisplayName("사전에 QR이 생성되지 않았다면 예외가 발생한다.")
@@ -399,13 +446,13 @@ class UserServiceTest {
     void useTicketToEnterInvalidKlaytnAddress() {
         // given
         given(eventService.findTicketById(ticket1.getId())).willReturn(ticket1);
-        UserTicketEntranceRequest userTicketEntranceRequest = new UserTicketEntranceRequest(
-            user1KlaytnAddress,
-            "random-string",
-            deviceSecret
-        );
+        UserTicketEntranceRequest userTicketEntranceRequest =
+                new UserTicketEntranceRequest(user1KlaytnAddress, "random-string", deviceSecret);
 
-        assertThatThrownBy(() -> userService.useTicketToEnter(ticket1.getId(), userTicketEntranceRequest))
-            .isInstanceOf(ConnectableException.class);
+        assertThatThrownBy(
+                        () ->
+                                userService.useTicketToEnter(
+                                        ticket1.getId(), userTicketEntranceRequest))
+                .isInstanceOf(ConnectableException.class);
     }
 }

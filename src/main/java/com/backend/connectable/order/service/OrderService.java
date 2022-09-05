@@ -16,13 +16,12 @@ import com.backend.connectable.order.ui.dto.OrderResponse;
 import com.backend.connectable.security.ConnectableUserDetails;
 import com.backend.connectable.user.domain.User;
 import com.backend.connectable.user.domain.repository.UserRepository;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +33,8 @@ public class OrderService {
     private final TicketRepository ticketRepository;
 
     @Transactional
-    public OrderResponse createOrder(ConnectableUserDetails userDetails, OrderRequest orderRequest) {
+    public OrderResponse createOrder(
+            ConnectableUserDetails userDetails, OrderRequest orderRequest) {
         User user = findUser(userDetails.getKlaytnAddress());
         Order order = generateOrder(user, orderRequest);
         orderRepository.save(order);
@@ -43,25 +43,32 @@ public class OrderService {
 
     public List<OrderDetailResponse> getOrderDetailList(ConnectableUserDetails userDetails) {
         String klaytnAddress = userDetails.getKlaytnAddress();
-        List<TicketOrderDetail> orderDetailResponses = orderRepository.getOrderDetailList(klaytnAddress);
+        List<TicketOrderDetail> orderDetailResponses =
+                orderRepository.getOrderDetailList(klaytnAddress);
 
         return orderDetailResponses.stream()
-            .map(OrderMapper.INSTANCE::ticketOrderDetailToResponse)
-            .collect(Collectors.toList());
+                .map(OrderMapper.INSTANCE::ticketOrderDetailToResponse)
+                .collect(Collectors.toList());
     }
 
     private User findUser(String klaytnAddress) {
-        return userRepository.findByKlaytnAddress(klaytnAddress)
-            .orElseThrow(() -> new ConnectableException(HttpStatus.BAD_REQUEST, ErrorType.USER_NOT_FOUND));
+        return userRepository
+                .findByKlaytnAddress(klaytnAddress)
+                .orElseThrow(
+                        () ->
+                                new ConnectableException(
+                                        HttpStatus.BAD_REQUEST, ErrorType.USER_NOT_FOUND));
     }
 
     private Order generateOrder(User user, OrderRequest orderRequest) {
-        List<OrderDetail> orderDetails = generateOrderDetails(orderRequest.getTicketIds(), orderRequest.getEventId());
-        Order order = Order.builder()
-            .user(user)
-            .ordererName(orderRequest.getUserName())
-            .ordererPhoneNumber(orderRequest.getPhoneNumber())
-            .build();
+        List<OrderDetail> orderDetails =
+                generateOrderDetails(orderRequest.getTicketIds(), orderRequest.getEventId());
+        Order order =
+                Order.builder()
+                        .user(user)
+                        .ordererName(orderRequest.getUserName())
+                        .ordererPhoneNumber(orderRequest.getPhoneNumber())
+                        .build();
         order.addOrderDetails(orderDetails);
         return order;
     }
@@ -73,9 +80,7 @@ public class OrderService {
 
         List<Ticket> tickets = ticketRepository.findAllById(ticketIds);
         tickets.forEach(Ticket::toPending);
-        return tickets.stream()
-            .map(this::toOrderDetail)
-            .collect(Collectors.toList());
+        return tickets.stream().map(this::toOrderDetail).collect(Collectors.toList());
     }
 
     private boolean checkRandomTicketSelection(List<Long> ticketIds) {
@@ -90,10 +95,6 @@ public class OrderService {
     }
 
     private OrderDetail toOrderDetail(Ticket ticket) {
-        return new OrderDetail(
-            OrderStatus.REQUESTED,
-            null,
-            ticket
-        );
+        return new OrderDetail(OrderStatus.REQUESTED, null, ticket);
     }
 }

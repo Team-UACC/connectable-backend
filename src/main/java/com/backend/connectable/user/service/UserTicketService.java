@@ -11,14 +11,13 @@ import com.backend.connectable.user.domain.repository.UserRepository;
 import com.backend.connectable.user.redis.UserTicketEntrance;
 import com.backend.connectable.user.redis.UserTicketEntranceRedisRepository;
 import com.backend.connectable.user.ui.dto.*;
+import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +38,8 @@ public class UserTicketService {
         return UserTicketListResponse.of(userTicketResponses);
     }
 
-    public UserTicketVerificationResponse generateUserTicketEntranceVerification(User user, Long ticketId) {
+    public UserTicketVerificationResponse generateUserTicketEntranceVerification(
+            User user, Long ticketId) {
         Ticket ticket = eventService.findTicketById(ticketId);
         if (ticket.isUsed()) {
             throw new ConnectableException(HttpStatus.BAD_REQUEST, ErrorType.ENTRANCE_ALREADY_DONE);
@@ -52,39 +52,58 @@ public class UserTicketService {
     }
 
     private void saveUserTicketEntrance(String klaytnAddress, Long ticketId, String verification) {
-        UserTicketEntrance userTicketEntrance = UserTicketEntrance.builder()
-            .klaytnAddress(klaytnAddress)
-            .ticketId(ticketId)
-            .verification(verification)
-            .build();
+        UserTicketEntrance userTicketEntrance =
+                UserTicketEntrance.builder()
+                        .klaytnAddress(klaytnAddress)
+                        .ticketId(ticketId)
+                        .verification(verification)
+                        .build();
         userTicketEntranceRedisRepository.save(userTicketEntrance);
     }
 
-    public UserTicketEntranceResponse useTicketToEnter(Long ticketId, UserTicketEntranceRequest userTicketEntranceRequest) {
+    public UserTicketEntranceResponse useTicketToEnter(
+            Long ticketId, UserTicketEntranceRequest userTicketEntranceRequest) {
         Ticket ticket = eventService.findTicketById(ticketId);
         validateTicketEntrance(ticket, userTicketEntranceRequest);
-        User user = userRepository.findByKlaytnAddress(userTicketEntranceRequest.getKlaytnAddress()).get();
-        log.info("##USER::{}ENTERED@@CONTACT::{}@@TICKETS::{}", user.getNickname(), user.getPhoneNumber(), ticketId);
+        User user =
+                userRepository
+                        .findByKlaytnAddress(userTicketEntranceRequest.getKlaytnAddress())
+                        .get();
+        log.info(
+                "##USER::{}ENTERED@@CONTACT::{}@@TICKETS::{}",
+                user.getNickname(),
+                user.getPhoneNumber(),
+                ticketId);
         ticket.useToEnter();
         return UserTicketEntranceResponse.ofSuccess();
     }
 
-    private void validateTicketEntrance(Ticket ticket, UserTicketEntranceRequest userTicketEntranceRequest) {
+    private void validateTicketEntrance(
+            Ticket ticket, UserTicketEntranceRequest userTicketEntranceRequest) {
         if (ticket.isUsed()) {
             throw new ConnectableException(HttpStatus.BAD_REQUEST, ErrorType.ENTRANCE_ALREADY_DONE);
         }
 
         String deviceSecret = userTicketEntranceRequest.getDeviceSecret();
         if (!this.deviceSecret.equals(deviceSecret)) {
-            throw new ConnectableException(HttpStatus.BAD_REQUEST, ErrorType.ENTRANCE_AUTHORIZATION_NEEDED);
+            throw new ConnectableException(
+                    HttpStatus.BAD_REQUEST, ErrorType.ENTRANCE_AUTHORIZATION_NEEDED);
         }
 
         String klaytnAddress = userTicketEntranceRequest.getKlaytnAddress();
-        UserTicketEntrance userTicketEntrance = userTicketEntranceRedisRepository.findById(klaytnAddress)
-            .orElseThrow(() -> new ConnectableException(HttpStatus.BAD_REQUEST, ErrorType.ENTRANCE_INFO_NOT_FOUND));
+        UserTicketEntrance userTicketEntrance =
+                userTicketEntranceRedisRepository
+                        .findById(klaytnAddress)
+                        .orElseThrow(
+                                () ->
+                                        new ConnectableException(
+                                                HttpStatus.BAD_REQUEST,
+                                                ErrorType.ENTRANCE_INFO_NOT_FOUND));
 
-        if (!Objects.equals(userTicketEntrance.getVerification(), userTicketEntranceRequest.getVerification()) ||
-            !Objects.equals(userTicketEntrance.getTicketId(), ticket.getId())) {
+        if (!Objects.equals(
+                        userTicketEntrance.getVerification(),
+                        userTicketEntranceRequest.getVerification())
+                || !Objects.equals(userTicketEntrance.getTicketId(), ticket.getId())) {
             throw new ConnectableException(HttpStatus.BAD_REQUEST, ErrorType.ENTRANCE_INFO_INVALID);
         }
     }

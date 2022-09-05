@@ -1,17 +1,16 @@
 package com.backend.connectable.user.redis;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-
 @SpringBootTest
 class UserTicketEntranceRedisRepositoryTest {
 
-    @Autowired
-    private UserTicketEntranceRedisRepository userTicketEntranceRedisRepository;
+    @Autowired private UserTicketEntranceRedisRepository userTicketEntranceRedisRepository;
 
     @DisplayName("KlaytnAddress를 id로 가진 UserTicketEntrance 객체를 저장한다.")
     @Test
@@ -22,15 +21,17 @@ class UserTicketEntranceRedisRepositoryTest {
         String verification = "randomly-generated";
 
         // when
-        UserTicketEntrance userTicketEntrance = UserTicketEntrance.builder()
-            .klaytnAddress(klaytnAddress)
-            .ticketId(ticketId)
-            .verification(verification)
-            .build();
+        UserTicketEntrance userTicketEntrance =
+                UserTicketEntrance.builder()
+                        .klaytnAddress(klaytnAddress)
+                        .ticketId(ticketId)
+                        .verification(verification)
+                        .build();
         userTicketEntranceRedisRepository.save(userTicketEntrance);
 
         // then
-        UserTicketEntrance savedUserTicketEntrance = userTicketEntranceRedisRepository.findById(klaytnAddress).get();
+        UserTicketEntrance savedUserTicketEntrance =
+                userTicketEntranceRedisRepository.findById(klaytnAddress).get();
         assertThat(savedUserTicketEntrance.getKlaytnAddress()).isEqualTo(klaytnAddress);
         assertThat(savedUserTicketEntrance.getTicketId()).isEqualTo(ticketId);
         assertThat(savedUserTicketEntrance.getVerification()).isEqualTo(verification);
@@ -42,25 +43,28 @@ class UserTicketEntranceRedisRepositoryTest {
         // given
         String klaytnAddress = "0x1234abcd";
 
-        UserTicketEntrance prevTicketEntrance = UserTicketEntrance.builder()
-            .klaytnAddress(klaytnAddress)
-            .ticketId(1L)
-            .verification("verification")
-            .build();
+        UserTicketEntrance prevTicketEntrance =
+                UserTicketEntrance.builder()
+                        .klaytnAddress(klaytnAddress)
+                        .ticketId(1L)
+                        .verification("verification")
+                        .build();
         userTicketEntranceRedisRepository.save(prevTicketEntrance);
 
         // when
         Long ticketId = 10L;
         String verification = "randomly-generated";
-        UserTicketEntrance userTicketEntrance = UserTicketEntrance.builder()
-            .klaytnAddress(klaytnAddress)
-            .ticketId(ticketId)
-            .verification(verification)
-            .build();
+        UserTicketEntrance userTicketEntrance =
+                UserTicketEntrance.builder()
+                        .klaytnAddress(klaytnAddress)
+                        .ticketId(ticketId)
+                        .verification(verification)
+                        .build();
         userTicketEntranceRedisRepository.save(userTicketEntrance);
 
         // then
-        UserTicketEntrance savedUserTicketEntrance = userTicketEntranceRedisRepository.findById(klaytnAddress).get();
+        UserTicketEntrance savedUserTicketEntrance =
+                userTicketEntranceRedisRepository.findById(klaytnAddress).get();
         assertThat(savedUserTicketEntrance.getKlaytnAddress()).isEqualTo(klaytnAddress);
         assertThat(savedUserTicketEntrance.getTicketId()).isEqualTo(ticketId);
         assertThat(savedUserTicketEntrance.getVerification()).isEqualTo(verification);

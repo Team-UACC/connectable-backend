@@ -1,13 +1,12 @@
 package com.backend.connectable.event.domain;
 
 import com.backend.connectable.artist.domain.Artist;
+import java.time.LocalDateTime;
+import java.util.Objects;
+import javax.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Entity
 @Getter
@@ -52,11 +51,25 @@ public class Event {
 
     @Enumerated(EnumType.STRING)
     private SalesOption salesOption;
-  
+
     @Builder
-    public Event(Long id, Artist artist, String description, LocalDateTime salesFrom, LocalDateTime salesTo, String contractAddress,
-                 String contractName, String eventName, String location, String eventImage, String twitterUrl,
-                 String instagramUrl, String webpageUrl, LocalDateTime startTime, LocalDateTime endTime, SalesOption salesOption) {
+    public Event(
+            Long id,
+            Artist artist,
+            String description,
+            LocalDateTime salesFrom,
+            LocalDateTime salesTo,
+            String contractAddress,
+            String contractName,
+            String eventName,
+            String location,
+            String eventImage,
+            String twitterUrl,
+            String instagramUrl,
+            String webpageUrl,
+            LocalDateTime startTime,
+            LocalDateTime endTime,
+            SalesOption salesOption) {
         this.id = id;
         this.artist = artist;
         this.description = description;
