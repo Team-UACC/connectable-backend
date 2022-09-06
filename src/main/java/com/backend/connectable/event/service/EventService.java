@@ -37,7 +37,7 @@ public class EventService {
     private final TicketRepository ticketRepository;
 
     public List<EventResponse> getList() {
-        List<Event> events = eventRepository.findAll(Sort.by(Sort.Direction.DESC, "salesTo"));
+        List<Event> events = eventRepository.findAll(Sort.by(Sort.Direction.ASC, "salesTo"));
         return events.stream()
                 .map(EventMapper.INSTANCE::eventToResponse)
                 .collect(Collectors.toList());
