@@ -17,16 +17,16 @@ public class AuthController {
 
     @GetMapping("/sms/key")
     public ResponseEntity<String> getAuthKey(
-            @RequestParam("phoneNumber") String phoneNumber,
-            @RequestParam("duration") Long duration) {
+            @RequestParam(name = "phoneNumber") String phoneNumber,
+            @RequestParam(name = "duration") Long duration) {
         String authKey = authService.getAuthKey(phoneNumber, duration);
         return ResponseEntity.ok(authKey);
     }
 
     @GetMapping("/sms/certification")
     public ResponseEntity<Boolean> certifyAuthKey(
-            @RequestParam("phoneNumber") String phoneNumber,
-            @RequestParam("authKey") String authKey) {
+            @RequestParam(name = "phoneNumber") String phoneNumber,
+            @RequestParam(name = "authKey") String authKey) {
         boolean isCertified = authService.certifyKey(phoneNumber, authKey);
         return ResponseEntity.ok(isCertified);
     }
