@@ -107,6 +107,24 @@ class EventRepositoryTest {
                 .contains(joelEventContractAddress, ryanEventContractAddress);
     }
 
+    @DisplayName("이벤트 목록을 받아올 수 있다.")
+    @Test
+    void findAllEventWithOrder() {
+        List<Event> events = eventRepository.findAllEventWithOrder();
+        boolean result =
+                List.of(ryanEvent, joelEvent).stream()
+                        .allMatch(
+                                item ->
+                                        events.stream()
+                                                .map(Event::getEventName)
+                                                .filter(
+                                                        eventName ->
+                                                                eventName == item.getEventName())
+                                                .findAny()
+                                                .isPresent());
+        assertThat(result).isTrue();
+    }
+
     @DisplayName("이벤트의 티켓들을 ON_SALE, PENDING, SOLD_OUT, EXPIRED로 가져오며, 이를 id 순으로 정렬하여 가져올 수 있다.")
     @Test
     void findAllTickets() {

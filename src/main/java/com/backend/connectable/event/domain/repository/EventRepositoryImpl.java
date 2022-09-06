@@ -4,6 +4,7 @@ import static com.backend.connectable.artist.domain.QArtist.artist;
 import static com.backend.connectable.event.domain.QEvent.event;
 import static com.backend.connectable.event.domain.QTicket.ticket;
 
+import com.backend.connectable.event.domain.Event;
 import com.backend.connectable.event.domain.TicketSalesStatus;
 import com.backend.connectable.event.domain.dto.EventDetail;
 import com.backend.connectable.event.domain.dto.EventTicket;
@@ -16,6 +17,7 @@ import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
@@ -137,6 +139,27 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
                         .fetchOne();
 
         return Optional.ofNullable(result);
+    }
+
+    @Override
+    public List<Event> findAllEventWithOrder() {
+        List<Event> result =
+                queryFactory
+                        .selectFrom(event)
+                        .orderBy(eventSortSpecifier(), event.salesTo.asc())
+                        .fetch();
+
+        return result;
+    }
+
+    private OrderSpecifier<Integer> eventSortSpecifier() {
+        NumberExpression<Integer> cases =
+                new CaseBuilder()
+                        .when(event.salesTo.after(LocalDateTime.now()))
+                        .then(1)
+                        .otherwise(2);
+
+        return new OrderSpecifier<>(Order.ASC, cases);
     }
 
     private OrderSpecifier<Integer> ticketSortSpecifier() {
