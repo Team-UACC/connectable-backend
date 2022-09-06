@@ -10,7 +10,7 @@ import com.backend.connectable.event.domain.*;
 import com.backend.connectable.event.domain.repository.EventRepository;
 import com.backend.connectable.event.domain.repository.TicketRepository;
 import com.backend.connectable.kas.service.KasService;
-import com.backend.connectable.kas.service.dto.TransactionResponse;
+import com.backend.connectable.kas.service.common.dto.TransactionResponse;
 import com.backend.connectable.order.domain.Order;
 import com.backend.connectable.order.domain.OrderDetail;
 import com.backend.connectable.order.domain.OrderStatus;

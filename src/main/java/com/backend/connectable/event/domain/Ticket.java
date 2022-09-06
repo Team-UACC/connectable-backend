@@ -2,13 +2,14 @@ package com.backend.connectable.event.domain;
 
 import com.backend.connectable.exception.ConnectableException;
 import com.backend.connectable.exception.ErrorType;
-import java.time.LocalDateTime;
-import java.util.Objects;
-import javax.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
+
+import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Getter

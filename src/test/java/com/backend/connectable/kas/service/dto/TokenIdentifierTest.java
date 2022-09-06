@@ -2,6 +2,7 @@ package com.backend.connectable.kas.service.dto;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
+import com.backend.connectable.kas.service.token.dto.TokenIdentifier;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

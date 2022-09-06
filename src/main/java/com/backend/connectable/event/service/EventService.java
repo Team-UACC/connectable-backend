@@ -13,19 +13,20 @@ import com.backend.connectable.event.ui.dto.TicketResponse;
 import com.backend.connectable.exception.ConnectableException;
 import com.backend.connectable.exception.ErrorType;
 import com.backend.connectable.kas.service.KasService;
-import com.backend.connectable.kas.service.dto.TokenIdentifier;
-import com.backend.connectable.kas.service.dto.TokenResponse;
-import com.backend.connectable.kas.service.dto.TokensResponse;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import com.backend.connectable.kas.service.token.dto.TokenIdentifier;
+import com.backend.connectable.kas.service.token.dto.TokenResponse;
+import com.backend.connectable.kas.service.token.dto.TokensResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

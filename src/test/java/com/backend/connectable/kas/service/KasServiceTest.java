@@ -1,6 +1,11 @@
 package com.backend.connectable.kas.service;
 
-import com.backend.connectable.kas.service.dto.*;
+import com.backend.connectable.kas.service.common.dto.TransactionResponse;
+import com.backend.connectable.kas.service.contract.dto.ContractDeployResponse;
+import com.backend.connectable.kas.service.contract.dto.ContractItemResponse;
+import com.backend.connectable.kas.service.contract.dto.ContractItemsResponse;
+import com.backend.connectable.kas.service.token.dto.TokenResponse;
+import com.backend.connectable.kas.service.token.dto.TokensResponse;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;

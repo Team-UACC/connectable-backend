@@ -3,7 +3,6 @@ package com.backend.connectable.auth.service;
 import com.backend.connectable.exception.ConnectableException;
 import com.backend.connectable.exception.ErrorType;
 import com.backend.connectable.global.common.util.RedisUtil;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.nurigo.sdk.NurigoApp;
@@ -14,6 +13,8 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor

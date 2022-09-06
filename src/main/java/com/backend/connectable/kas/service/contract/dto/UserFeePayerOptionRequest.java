@@ -1,4 +1,4 @@
-package com.backend.connectable.kas.service.dto;
+package com.backend.connectable.kas.service.contract.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TransactionOptionRequest {
-    private boolean enableGlobalFeePayer;
+public class UserFeePayerOptionRequest {
+    private String krn;
+    private String address;
 }
