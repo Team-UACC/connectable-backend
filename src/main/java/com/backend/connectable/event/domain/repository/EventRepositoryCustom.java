@@ -14,5 +14,5 @@ public interface EventRepositoryCustom {
 
     Optional<EventTicket> findTicketByEventIdAndTicketId(Long eventId, Long ticketId);
 
-    List<Event> findAllEvents();
+    List<Event> findAllEventWithOrder();
 }

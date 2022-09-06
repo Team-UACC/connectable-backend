@@ -36,7 +36,7 @@ public class EventService {
     private final TicketRepository ticketRepository;
 
     public List<EventResponse> getList() {
-        List<Event> events = eventRepository.findAllEvents();
+        List<Event> events = eventRepository.findAllEventWithOrder();
         return events.stream()
                 .map(EventMapper.INSTANCE::eventToResponse)
                 .collect(Collectors.toList());

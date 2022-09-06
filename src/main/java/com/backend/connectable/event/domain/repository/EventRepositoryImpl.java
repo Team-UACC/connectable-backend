@@ -142,7 +142,7 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
     }
 
     @Override
-    public List<Event> findAllEvents() {
+    public List<Event> findAllEventWithOrder() {
         List<Event> result =
                 queryFactory
                         .selectFrom(event)
