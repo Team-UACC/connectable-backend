@@ -22,14 +22,17 @@ public class KasWebClientConfiguration {
     private String chainId;
 
     @Bean
-    public WebClient kasWebClient() {
+    public WebClient webClientForKas() {
         return WebClient.builder()
-            .defaultHeaders(headers -> {
-                headers.add("x-chain-id", chainId);
-                headers.add("Content-Type", "application/json");
-                headers.add("Authorization",  Credentials.basic(accessKeyId, secretAccessKey));
-                headers.add("x-krn", accountPoolKrn);
-            })
-            .build();
+                .defaultHeaders(
+                        headers -> {
+                            headers.add("x-chain-id", chainId);
+                            headers.add("Content-Type", "application/json");
+                            headers.add(
+                                    "Authorization",
+                                    Credentials.basic(accessKeyId, secretAccessKey));
+                            headers.add("x-krn", accountPoolKrn);
+                        })
+                .build();
     }
 }

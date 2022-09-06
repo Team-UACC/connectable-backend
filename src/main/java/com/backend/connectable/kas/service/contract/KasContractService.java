@@ -1,15 +1,12 @@
 package com.backend.connectable.kas.service.contract;
 
-import com.backend.connectable.exception.KasException;
-import com.backend.connectable.exception.KasExceptionResponse;
+import com.backend.connectable.kas.config.KasWebClient;
 import com.backend.connectable.kas.service.contract.dto.*;
+import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
-
-import javax.annotation.PostConstruct;
+import reactor.core.publisher.Mono;
 
 @Service
 @RequiredArgsConstructor
@@ -17,7 +14,7 @@ public class KasContractService {
 
     private static final String CONTRACT_API_URL = "https://kip17-api.klaytnapi.com/v2/contract";
 
-    private final WebClient kasWebClient;
+    private final KasWebClient kasWebClient;
 
     @Value("${kas.settings.enable-global-fee-payer}")
     private Boolean enableGlobalFeePayer;
@@ -34,37 +31,32 @@ public class KasContractService {
     private TransactionOptionRequest options;
 
     @PostConstruct
-    private void setRequestOptions() {
+    private void setTransactionOptionRequest() {
         if (enableGlobalFeePayer) {
             options = new TransactionOptionRequest(true);
         } else {
-            options = new TransactionOptionFeePayerRequest(false,
-                new UserFeePayerOptionRequest(userFeePayerKrn, userFeePayerAddress));
+            options =
+                    new TransactionOptionFeePayerRequest(
+                            false,
+                            new UserFeePayerOptionRequest(userFeePayerKrn, userFeePayerAddress));
         }
     }
 
-    public ContractDeployResponse deployContract(String name, String symbol, String alias, String owner) {
-        ContractDeployRequest contractDeployRequest = ContractDeployRequest.builder()
-            .name(name)
-            .symbol(symbol)
-            .alias(alias)
-            .owner(owner)
-            .options(options)
-            .build();
+    public ContractDeployResponse deployContract(
+            String name, String symbol, String alias, String owner) {
+        ContractDeployRequest contractDeployRequest =
+                ContractDeployRequest.builder()
+                        .name(name)
+                        .symbol(symbol)
+                        .alias(alias)
+                        .owner(owner)
+                        .options(options)
+                        .build();
 
-        Object responseObject = kasWebClient.post()
-            .uri(CONTRACT_API_URL)
-            .bodyValue(contractDeployRequest)
-            .exchangeToMono(response -> {
-                if (response.statusCode().equals(HttpStatus.OK)) {
-                    return response.bodyToMono(ContractDeployResponse.class);
-                }
-                return response.bodyToMono(KasExceptionResponse.class);
-            })
-            .block();
-
-        handleKasException(responseObject);
-        return (ContractDeployResponse) responseObject;
+        Mono<ContractDeployResponse> response =
+                kasWebClient.postForObject(
+                        CONTRACT_API_URL, contractDeployRequest, ContractDeployResponse.class);
+        return response.block();
     }
 
     public ContractDeployResponse deployMyContract(String name, String symbol, String alias) {
@@ -72,54 +64,22 @@ public class KasContractService {
     }
 
     public ContractItemsResponse getMyContracts() {
-        Object responseObject = kasWebClient.get()
-            .uri(CONTRACT_API_URL)
-            .exchangeToMono(response -> {
-                if (response.statusCode().equals(HttpStatus.OK)) {
-                    return response.bodyToMono(ContractItemsResponse.class);
-                }
-                return response.bodyToMono(KasExceptionResponse.class);
-            })
-            .block();
-
-        handleKasException(responseObject);
-        return (ContractItemsResponse) responseObject;
+        Mono<ContractItemsResponse> response =
+                kasWebClient.getForObject(CONTRACT_API_URL, ContractItemsResponse.class);
+        return response.block();
     }
 
     public ContractItemResponse getMyContract(String contractAddress) {
-        Object responseObject = kasWebClient.get()
-            .uri(CONTRACT_API_URL + "/" + contractAddress)
-            .exchangeToMono(response -> {
-                if (response.statusCode().equals(HttpStatus.OK)) {
-                    return response.bodyToMono(ContractItemResponse.class);
-                }
-                return response.bodyToMono(KasExceptionResponse.class);
-            })
-            .block();
-
-        handleKasException(responseObject);
-        return (ContractItemResponse) responseObject;
+        Mono<ContractItemResponse> response =
+                kasWebClient.getForObject(
+                        CONTRACT_API_URL + "/" + contractAddress, ContractItemResponse.class);
+        return response.block();
     }
 
     public ContractItemResponse getMyContractMyAlias(String alias) {
-        Object responseObject = kasWebClient.get()
-            .uri(CONTRACT_API_URL + "/" + alias)
-            .exchangeToMono(response -> {
-                if (response.statusCode().equals(HttpStatus.OK)) {
-                    return response.bodyToMono(ContractItemResponse.class);
-                }
-                return response.bodyToMono(KasExceptionResponse.class);
-            })
-            .block();
-
-        handleKasException(responseObject);
-        return (ContractItemResponse) responseObject;
-    }
-
-    private void handleKasException(Object responseObject) {
-        if (responseObject instanceof KasExceptionResponse) {
-            KasExceptionResponse kasExceptionResponse = (KasExceptionResponse) responseObject;
-            throw new KasException(kasExceptionResponse);
-        }
+        Mono<ContractItemResponse> response =
+                kasWebClient.getForObject(
+                        CONTRACT_API_URL + "/" + alias, ContractItemResponse.class);
+        return response.block();
     }
 }

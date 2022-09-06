@@ -1,12 +1,11 @@
 package com.backend.connectable.event.domain.dto;
 
 import com.backend.connectable.event.domain.SalesOption;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter

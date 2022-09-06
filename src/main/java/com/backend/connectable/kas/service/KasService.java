@@ -9,11 +9,10 @@ import com.backend.connectable.kas.service.token.KasTokenService;
 import com.backend.connectable.kas.service.token.dto.TokenHistoriesResponse;
 import com.backend.connectable.kas.service.token.dto.TokenResponse;
 import com.backend.connectable.kas.service.token.dto.TokensResponse;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Map;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +21,8 @@ public class KasService {
     private final KasContractService kasContractService;
     private final KasTokenService kasTokenService;
 
-    public ContractDeployResponse deployContract(String name, String symbol, String alias, String owner) {
+    public ContractDeployResponse deployContract(
+            String name, String symbol, String alias, String owner) {
         return kasContractService.deployContract(name, symbol, alias, owner);
     }
 
@@ -42,11 +42,13 @@ public class KasService {
         return kasContractService.getMyContractMyAlias(alias);
     }
 
-    public TransactionResponse mintToken(String contractAddress, String tokenId, String tokenUri, String tokenOwner) {
+    public TransactionResponse mintToken(
+            String contractAddress, String tokenId, String tokenUri, String tokenOwner) {
         return kasTokenService.mintToken(contractAddress, tokenId, tokenUri, tokenOwner);
     }
 
-    public TransactionResponse mintMyToken(String contractAddress, String tokenId, String tokenUri) {
+    public TransactionResponse mintMyToken(
+            String contractAddress, String tokenId, String tokenUri) {
         return kasTokenService.mintMyToken(contractAddress, tokenId, tokenUri);
     }
 
@@ -66,7 +68,8 @@ public class KasService {
         return kasTokenService.getToken(contractAddress, tokenId);
     }
 
-    public TransactionResponse sendMyToken(String contractAddress, String tokenId, String receiver) {
+    public TransactionResponse sendMyToken(
+            String contractAddress, String tokenId, String receiver) {
         return kasTokenService.sendMyToken(contractAddress, tokenId, receiver);
     }
 
@@ -90,8 +93,9 @@ public class KasService {
         return kasTokenService.getTokenHistory(contractAddress, tokenId);
     }
 
-    public Map<String, TokensResponse> findAllTokensOfContractAddressesOwnedByUser(List<String> contractAddresses,
-                                                                                   String userKlaytnAddress) {
-        return kasTokenService.findAllTokensOfContractAddressesOwnedByUser(contractAddresses, userKlaytnAddress);
+    public Map<String, TokensResponse> findAllTokensOfContractAddressesOwnedByUser(
+            List<String> contractAddresses, String userKlaytnAddress) {
+        return kasTokenService.findAllTokensOfContractAddressesOwnedByUser(
+                contractAddresses, userKlaytnAddress);
     }
 }

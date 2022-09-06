@@ -1,5 +1,9 @@
 package com.backend.connectable.event.domain.repository;
 
+import static com.backend.connectable.artist.domain.QArtist.artist;
+import static com.backend.connectable.event.domain.QEvent.event;
+import static com.backend.connectable.event.domain.QTicket.ticket;
+
 import com.backend.connectable.event.domain.TicketSalesStatus;
 import com.backend.connectable.event.domain.dto.EventDetail;
 import com.backend.connectable.event.domain.dto.EventTicket;
@@ -12,15 +16,10 @@ import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import org.springframework.stereotype.Repository;
-
-import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
-
-import static com.backend.connectable.artist.domain.QArtist.artist;
-import static com.backend.connectable.event.domain.QEvent.event;
-import static com.backend.connectable.event.domain.QTicket.ticket;
+import javax.persistence.EntityManager;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public class EventRepositoryImpl implements EventRepositoryCustom {

@@ -10,7 +10,8 @@ import lombok.Setter;
 public class TransactionOptionFeePayerRequest extends TransactionOptionRequest {
     private UserFeePayerOptionRequest userFeePayer;
 
-    public TransactionOptionFeePayerRequest(boolean enableGlobalFeePayer, UserFeePayerOptionRequest userFeePayer) {
+    public TransactionOptionFeePayerRequest(
+            boolean enableGlobalFeePayer, UserFeePayerOptionRequest userFeePayer) {
         super(enableGlobalFeePayer);
         this.userFeePayer = userFeePayer;
     }
