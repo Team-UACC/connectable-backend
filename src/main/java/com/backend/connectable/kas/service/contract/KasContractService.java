@@ -1,8 +1,8 @@
 package com.backend.connectable.kas.service.contract;
 
 import com.backend.connectable.kas.config.KasWebClient;
+import com.backend.connectable.kas.service.common.util.KasUrlGenerator;
 import com.backend.connectable.kas.service.contract.dto.*;
-import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -12,35 +12,11 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class KasContractService {
 
-    private static final String CONTRACT_API_URL = "https://kip17-api.klaytnapi.com/v2/contract";
-
     private final KasWebClient kasWebClient;
-
-    @Value("${kas.settings.enable-global-fee-payer}")
-    private Boolean enableGlobalFeePayer;
+    private final TransactionOptionManager transactionOptionManager;
 
     @Value("${kas.settings.account-pool-address}")
     private String accountPoolAddress;
-
-    @Value("${kas.settings.user-fee-payer-krn}")
-    private String userFeePayerKrn;
-
-    @Value("${kas.settings.user-fee-payer-address}")
-    private String userFeePayerAddress;
-
-    private TransactionOptionRequest options;
-
-    @PostConstruct
-    private void setTransactionOptionRequest() {
-        if (enableGlobalFeePayer) {
-            options = new TransactionOptionRequest(true);
-        } else {
-            options =
-                    new TransactionOptionFeePayerRequest(
-                            false,
-                            new UserFeePayerOptionRequest(userFeePayerKrn, userFeePayerAddress));
-        }
-    }
 
     public ContractDeployResponse deployContract(
             String name, String symbol, String alias, String owner) {
@@ -50,12 +26,13 @@ public class KasContractService {
                         .symbol(symbol)
                         .alias(alias)
                         .owner(owner)
-                        .options(options)
+                        .options(transactionOptionManager.getTransactionOption())
                         .build();
 
+        String url = KasUrlGenerator.contractBaseUrl();
         Mono<ContractDeployResponse> response =
                 kasWebClient.postForObject(
-                        CONTRACT_API_URL, contractDeployRequest, ContractDeployResponse.class);
+                        url, contractDeployRequest, ContractDeployResponse.class);
         return response.block();
     }
 
@@ -64,22 +41,23 @@ public class KasContractService {
     }
 
     public ContractItemsResponse getMyContracts() {
+        String url = KasUrlGenerator.contractBaseUrl();
         Mono<ContractItemsResponse> response =
-                kasWebClient.getForObject(CONTRACT_API_URL, ContractItemsResponse.class);
+                kasWebClient.getForObject(url, ContractItemsResponse.class);
         return response.block();
     }
 
     public ContractItemResponse getMyContract(String contractAddress) {
+        String url = KasUrlGenerator.contractByContractAddressUrl(contractAddress);
         Mono<ContractItemResponse> response =
-                kasWebClient.getForObject(
-                        CONTRACT_API_URL + "/" + contractAddress, ContractItemResponse.class);
+                kasWebClient.getForObject(url, ContractItemResponse.class);
         return response.block();
     }
 
     public ContractItemResponse getMyContractMyAlias(String alias) {
+        String url = KasUrlGenerator.contractByAliasUrl(alias);
         Mono<ContractItemResponse> response =
-                kasWebClient.getForObject(
-                        CONTRACT_API_URL + "/" + alias, ContractItemResponse.class);
+                kasWebClient.getForObject(url, ContractItemResponse.class);
         return response.block();
     }
 }

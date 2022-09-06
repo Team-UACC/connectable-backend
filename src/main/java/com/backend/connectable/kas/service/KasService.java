@@ -95,7 +95,6 @@ public class KasService {
 
     public Map<String, TokensResponse> findAllTokensOfContractAddressesOwnedByUser(
             List<String> contractAddresses, String userKlaytnAddress) {
-        return kasTokenService.findAllTokensOfContractAddressesOwnedByUser(
-                contractAddresses, userKlaytnAddress);
+        return kasTokenService.findAllTokensOwnedByUser(contractAddresses, userKlaytnAddress);
     }
 }

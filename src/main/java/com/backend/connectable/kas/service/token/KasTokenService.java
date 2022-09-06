@@ -4,23 +4,22 @@ import com.backend.connectable.exception.ConnectableException;
 import com.backend.connectable.exception.ErrorType;
 import com.backend.connectable.kas.config.KasWebClient;
 import com.backend.connectable.kas.service.common.dto.TransactionResponse;
+import com.backend.connectable.kas.service.common.util.KasUrlGenerator;
 import com.backend.connectable.kas.service.token.dto.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CountDownLatch;
-
 @Service
 @RequiredArgsConstructor
 public class KasTokenService {
 
-    private static final String CONTRACT_API_URL = "https://kip17-api.klaytnapi.com/v2/contract";
     private static final String TOKEN_ID_PREFIX = "0x";
 
     private final KasWebClient kasWebClient;
@@ -33,7 +32,9 @@ public class KasTokenService {
         TokenRequest tokenRequest =
                 TokenRequest.builder().id(tokenId).uri(tokenUri).to(tokenOwner).build();
 
-        Mono<TransactionResponse> response = kasWebClient.postForObject(CONTRACT_API_URL + "/" + contractAddress + "/token", tokenRequest, TransactionResponse.class);
+        String url = KasUrlGenerator.tokenBaseUrl(contractAddress);
+        Mono<TransactionResponse> response =
+                kasWebClient.postForObject(url, tokenRequest, TransactionResponse.class);
         return response.block();
     }
 
@@ -51,12 +52,14 @@ public class KasTokenService {
     }
 
     public TokensResponse getTokens(String contractAddress) {
-        Mono<TokensResponse> response = kasWebClient.getForObject(CONTRACT_API_URL + "/" + contractAddress + "/token", TokensResponse.class);
+        String url = KasUrlGenerator.tokenBaseUrl(contractAddress);
+        Mono<TokensResponse> response = kasWebClient.getForObject(url, TokensResponse.class);
         return response.block();
     }
 
     public TokenResponse getToken(String contractAddress, String tokenId) {
-        Mono<TokenResponse> response = kasWebClient.getForObject(CONTRACT_API_URL + "/" + contractAddress + "/token/" + tokenId, TokenResponse.class);
+        String url = KasUrlGenerator.tokenByTokenIdUrl(contractAddress, tokenId);
+        Mono<TokenResponse> response = kasWebClient.getForObject(url, TokenResponse.class);
         return response.block();
     }
 
@@ -73,7 +76,9 @@ public class KasTokenService {
                         .to(receiver)
                         .build();
 
-        Mono<TransactionResponse> request = kasWebClient.postForObject(CONTRACT_API_URL + "/" + contractAddress + "/token/" + tokenId, tokenRequest, TransactionResponse.class);
+        String url = KasUrlGenerator.tokenByTokenIdUrl(contractAddress, tokenId);
+        Mono<TransactionResponse> request =
+                kasWebClient.postForObject(url, tokenRequest, TransactionResponse.class);
         return request.block();
     }
 
@@ -86,7 +91,9 @@ public class KasTokenService {
         TokenDeleteRequest tokenDeleteRequest =
                 TokenDeleteRequest.builder().from(accountPoolAddress).build();
 
-        Mono<TransactionResponse> request = kasWebClient.deleteForObject(CONTRACT_API_URL + "/" + contractAddress + "/token/" + tokenId, tokenDeleteRequest, TransactionResponse.class);
+        String url = KasUrlGenerator.tokenByTokenIdUrl(contractAddress, tokenId);
+        Mono<TransactionResponse> request =
+                kasWebClient.deleteForObject(url, tokenDeleteRequest, TransactionResponse.class);
         return request.block();
     }
 
@@ -95,12 +102,9 @@ public class KasTokenService {
     }
 
     public TokenHistoriesResponse getTokenHistory(String contractAddress, String tokenId) {
-        Mono<TokenHistoriesResponse> request = kasWebClient.getForObject(CONTRACT_API_URL
-            + "/"
-            + contractAddress
-            + "/token/"
-            + tokenId
-            + "/history", TokenHistoriesResponse.class);
+        String url = KasUrlGenerator.tokenByTokenIdHistoryUrl(contractAddress, tokenId);
+        Mono<TokenHistoriesResponse> request =
+                kasWebClient.getForObject(url, TokenHistoriesResponse.class);
         return request.block();
     }
 
@@ -108,14 +112,14 @@ public class KasTokenService {
         return getTokenHistory(contractAddress, TOKEN_ID_PREFIX + Integer.toHexString(tokenId));
     }
 
-    public Map<String, TokensResponse> findAllTokensOfContractAddressesOwnedByUser(
+    public Map<String, TokensResponse> findAllTokensOwnedByUser(
             List<String> contractAddresses, String userKlaytnAddress) {
         Map<String, TokensResponse> tokensResponses = new HashMap<>();
         CountDownLatch countDownLatch = new CountDownLatch(contractAddresses.size());
 
         for (String contractAddress : contractAddresses) {
             Mono<TokensResponse> tokensResponseMono =
-                kasWebClient.getForObject(CONTRACT_API_URL + "/" + contractAddress + "/owner/" + userKlaytnAddress, TokensResponse.class);
+                    findTokensOwnedByUser(contractAddress, userKlaytnAddress);
             tokensResponseMono.subscribe(
                     tokensResponse -> {
                         tokensResponses.put(contractAddress, tokensResponse);
@@ -130,5 +134,11 @@ public class KasTokenService {
             throw new ConnectableException(
                     HttpStatus.INTERNAL_SERVER_ERROR, ErrorType.ASYNC_HANDLING_ERROR);
         }
+    }
+
+    private Mono<TokensResponse> findTokensOwnedByUser(
+            String contractAddress, String userKlaytnAddress) {
+        String url = KasUrlGenerator.tokenByKlaytnAddressUrl(contractAddress, userKlaytnAddress);
+        return kasWebClient.getForObject(url, TokensResponse.class);
     }
 }
