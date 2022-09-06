@@ -3,12 +3,11 @@ package com.backend.connectable.event.ui.dto;
 import com.backend.connectable.event.domain.SalesOption;
 import com.backend.connectable.global.common.util.DateTimeUtil;
 import com.backend.connectable.global.common.util.OpenseaCollectionNamingUtil;
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @Getter
@@ -37,10 +36,27 @@ public class EventDetailResponse {
     private SalesOption salesOption;
 
     @Builder
-    public EventDetailResponse(Long id, String name, String image, String artistName, String artistImage, String description,
-                               String contractAddress, String contractName, LocalDateTime salesFrom, LocalDateTime salesTo, String twitterUrl,
-                               String instagramUrl, String webpageUrl, int totalTicketCount, int onSaleTicketCount,
-                               LocalDateTime startTime, LocalDateTime endTime, int price, String location, SalesOption salesOption) {
+    public EventDetailResponse(
+            Long id,
+            String name,
+            String image,
+            String artistName,
+            String artistImage,
+            String description,
+            String contractAddress,
+            String contractName,
+            LocalDateTime salesFrom,
+            LocalDateTime salesTo,
+            String twitterUrl,
+            String instagramUrl,
+            String webpageUrl,
+            int totalTicketCount,
+            int onSaleTicketCount,
+            LocalDateTime startTime,
+            LocalDateTime endTime,
+            int price,
+            String location,
+            SalesOption salesOption) {
         this.id = id;
         this.name = name;
         this.image = image;

@@ -15,15 +15,15 @@ public interface EventMapper {
 
     EventMapper INSTANCE = Mappers.getMapper(EventMapper.class);
 
-    @Mapping(target="name", source = "eventName")
-    @Mapping(target="image", source = "eventImage")
+    @Mapping(target = "name", source = "eventName")
+    @Mapping(target = "image", source = "eventImage")
     EventDetailResponse eventDetailToResponse(EventDetail eventDetail);
 
-    @Mapping(target="name", source = "eventName")
-    @Mapping(target="image", source = "eventImage")
-    @Mapping(target="date", source = "startTime")
+    @Mapping(target = "name", source = "eventName")
+    @Mapping(target = "image", source = "eventImage")
+    @Mapping(target = "date", source = "startTime")
     EventResponse eventToResponse(Event event);
 
-    @Mapping(target="ownedBy", ignore = true)
+    @Mapping(target = "ownedBy", ignore = true)
     TicketResponse ticketToResponse(EventTicket eventTicket);
 }

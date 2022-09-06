@@ -49,7 +49,8 @@ public enum ErrorType {
     ORDER_DETAIL_NOT_EXISTS("ADMIN-001", "존재하지 않는 주문 상세입니다."),
     ADMIN_TOKEN_VERIFY_FAILURE("ADMIN-002", "어드민 토큰이 아닙니다."),
     ARTIST_NOT_FOUND("ADMIN-003", "해당 ID에 대응되는 아티스트가 없습니다."),
-    EVENT_NOT_FOUND("ADMIN-004", "해당 ID에 대응되는 이벤트가 없습니다."),;
+    EVENT_NOT_FOUND("ADMIN-004", "해당 ID에 대응되는 이벤트가 없습니다."),
+    ;
 
     private final String errorCode;
     private final String message;

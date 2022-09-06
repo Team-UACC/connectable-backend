@@ -1,15 +1,16 @@
 buildscript {
-    ext {
-        queryDslVersion = "5.0.0"
-        mapStructVersion = "1.4.2.Final"
-    }
+	ext {
+		queryDslVersion = "5.0.0"
+		mapStructVersion = "1.4.2.Final"
+	}
 }
 
 plugins {
-    id 'org.springframework.boot' version '2.7.1'
-    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-    id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
-    id 'java'
+	id 'org.springframework.boot' version '2.7.1'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
+	id "com.diffplug.spotless" version "6.10.0"
+	id 'java'
 }
 
 group = 'com.backend'
@@ -17,126 +18,155 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
 configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
 }
 
 repositories {
-    mavenCentral()
+	mavenCentral()
 }
 
 dependencyManagement {
-    imports {
-        mavenBom "io.awspring.cloud:spring-cloud-aws-dependencies:2.3.3"
-    }
+	imports {
+		mavenBom "io.awspring.cloud:spring-cloud-aws-dependencies:2.3.3"
+	}
 }
 
 allprojects {
-    repositories {
-        maven { url 'https://jitpack.io' }
-    }
+	repositories {
+		maven { url 'https://jitpack.io' }
+	}
+	afterEvaluate {
+		def spotless = tasks.findByName('spotlessApply')
+		if (spotless) {
+			tasks.withType(JavaCompile) {
+				finalizedBy(spotless)
+			}
+		}
+	}
 }
 
 test {
-    useJUnitPlatform()
+	useJUnitPlatform()
 }
 
 tasks.jar {
-    enabled = false
+	enabled = false
 }
 
 dependencies {
-    // Spring
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	// Spring
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
-    // DB
-    runtimeOnly 'mysql:mysql-connector-java'
-    runtimeOnly 'com.h2database:h2:1.4.199'
+	// DB
+	runtimeOnly 'mysql:mysql-connector-java'
+	runtimeOnly 'com.h2database:h2:1.4.199'
 
-    // Cloud
-    implementation group: 'io.awspring.cloud', name: 'spring-cloud-starter-aws-parameter-store-config'
+	// Cloud
+	implementation group: 'io.awspring.cloud', name: 'spring-cloud-starter-aws-parameter-store-config'
 
-    // QueryDsl
-    implementation 'com.querydsl:querydsl-jpa'
-    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
-    implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
+	// QueryDsl
+	implementation 'com.querydsl:querydsl-jpa'
+	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+	implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
 
-    // Security
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'com.auth0:java-jwt:3.19.2'
+	// Security
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'com.auth0:java-jwt:3.19.2'
 
-    // Lombok
-    annotationProcessor 'org.projectlombok:lombok'
-    compileOnly 'org.projectlombok:lombok'
+	// Lombok
+	annotationProcessor 'org.projectlombok:lombok'
+	compileOnly 'org.projectlombok:lombok'
 
-    /**
-     * MapStruct
-     *
-     * annotationProcessor 이슈로 Mapstructure는 Lombok보다 하위에 있어야함.
-     * https://mapstruct.org/faq/#Can-I-use-MapStruct-together-with-Project-Lombok
-     */
-    annotationProcessor "org.mapstruct:mapstruct-processor:${mapStructVersion}"
-    implementation "org.mapstruct:mapstruct:${mapStructVersion}"
+	/**
+	 * MapStruct
+	 *
+	 * annotationProcessor 이슈로 Mapstructure는 Lombok보다 하위에 있어야함.
+	 * https://mapstruct.org/faq/#Can-I-use-MapStruct-together-with-Project-Lombok
+	 */
+	annotationProcessor "org.mapstruct:mapstruct-processor:${mapStructVersion}"
+	implementation "org.mapstruct:mapstruct:${mapStructVersion}"
 
-    // Testing
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.security:spring-security-test'
-    testImplementation 'io.rest-assured:rest-assured:4.4.0'
+	// Testing
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation 'io.rest-assured:rest-assured:4.4.0'
 
-    // Caver-Java & KAS
-    implementation 'com.klaytn.caver:core:1.6.2'
-    implementation 'xyz.groundx.caver:caver-java-ext-kas:1.1.1'
+	// Caver-Java & KAS
+	implementation 'com.klaytn.caver:core:1.6.2'
+	implementation 'xyz.groundx.caver:caver-java-ext-kas:1.1.1'
 
-    // Webflux
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-webflux', version: '2.7.0'
+	// Webflux
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-webflux', version: '2.7.0'
 
-    // String-Utils
-    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
+	// String-Utils
+	implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
 
-    // Swagger
-    implementation "io.springfox:springfox-boot-starter:3.0.0"
-    implementation "io.springfox:springfox-swagger-ui:3.0.0"
+	// Swagger
+	implementation "io.springfox:springfox-boot-starter:3.0.0"
+	implementation "io.springfox:springfox-swagger-ui:3.0.0"
 
-    // Slack
-    implementation 'com.github.maricn:logback-slack-appender:1.6.1'
+	// Slack
+	implementation 'com.github.maricn:logback-slack-appender:1.6.1'
 
-    // Flyway
-    implementation('org.flywaydb:flyway-core:6.4.2')
+	// Flyway
+	implementation('org.flywaydb:flyway-core:6.4.2')
 
-    // Redis
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-    implementation group: 'it.ozimov', name: 'embedded-redis', version: '0.7.2'
+	// Redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation group: 'it.ozimov', name: 'embedded-redis', version: '0.7.2'
 
-    // Sms
-    implementation 'net.nurigo:sdk:4.2.3'
+	// Sms
+	implementation 'net.nurigo:sdk:4.2.3'
 }
 
 tasks.named('test') {
-    useJUnitPlatform()
+	useJUnitPlatform()
 }
 
 def querydslDir = "$buildDir/generated/querydsl"
 
 querydsl {
-    jpa = true
-    querydslSourcesDir = querydslDir
+	jpa = true
+	querydslSourcesDir = querydslDir
 }
 
 sourceSets {
-    main.java.srcDir querydslDir
+	main.java.srcDir querydslDir
 }
 
 compileQuerydsl {
-    options.annotationProcessorPath = configurations.querydsl
+	options.annotationProcessorPath = configurations.querydsl
 }
 
 configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-    querydsl.extendsFrom compileClasspath
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+	querydsl.extendsFrom compileClasspath
+}
+
+spotless {
+	// optional: limit format enforcement to just the files changed by this feature branch
+	ratchetFrom 'origin/main'
+
+	format 'misc', {
+		// define the files to apply `misc` to
+		target '*.gradle', '*.md', '.gitignore'
+
+		// define the steps to apply to those files
+		trimTrailingWhitespace()
+		indentWithTabs() // or spaces. Takes an integer argument if you don't like 4
+		endWithNewline()
+	}
+	java {
+		// don't need to set target, it is inferred from java
+
+		// apply a specific flavor of google-java-format
+		googleJavaFormat('1.15.0').aosp().reflowLongStrings(false)
+	}
 }

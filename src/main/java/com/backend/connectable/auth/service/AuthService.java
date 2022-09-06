@@ -3,6 +3,7 @@ package com.backend.connectable.auth.service;
 import com.backend.connectable.exception.ConnectableException;
 import com.backend.connectable.exception.ErrorType;
 import com.backend.connectable.global.common.util.RedisUtil;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.nurigo.sdk.NurigoApp;
@@ -13,8 +14,6 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -56,17 +55,20 @@ public class AuthService {
     }
 
     private void sendSms(String content, String target) {
-        defaultMessageService = NurigoApp.INSTANCE.initialize(smsApiKey, smsApiSecret, smsApiDomain);
+        defaultMessageService =
+                NurigoApp.INSTANCE.initialize(smsApiKey, smsApiSecret, smsApiDomain);
         Message message = new Message();
         message.setFrom(sourcePhoneNumber);
         message.setTo(target.replace("-", ""));
         message.setText(content);
-        SingleMessageSendingRequest singleMessageSendingRequest = new SingleMessageSendingRequest(message);
+        SingleMessageSendingRequest singleMessageSendingRequest =
+                new SingleMessageSendingRequest(message);
         try {
             defaultMessageService.sendOne(singleMessageSendingRequest);
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw new ConnectableException(HttpStatus.INTERNAL_SERVER_ERROR, ErrorType.NURIGO_EXCEPTION);
+            throw new ConnectableException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, ErrorType.NURIGO_EXCEPTION);
         }
     }
 

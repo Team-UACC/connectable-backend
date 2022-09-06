@@ -2,11 +2,10 @@ package com.backend.connectable.order.domain;
 
 import com.backend.connectable.event.domain.Ticket;
 import com.backend.connectable.global.entity.BaseEntity;
+import javax.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
 
 @Entity
 @Getter
@@ -23,8 +22,7 @@ public class OrderDetail extends BaseEntity {
     @Column(nullable = true)
     private String txHash;
 
-    @OneToOne
-    private Ticket ticket;
+    @OneToOne private Ticket ticket;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)

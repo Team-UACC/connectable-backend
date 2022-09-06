@@ -15,25 +15,30 @@ public class AdminController {
     private final AdminService adminService;
 
     @PatchMapping("/order-details/{order-detail-id}/paid")
-    public ResponseEntity<Void> orderDetailToPaid(@PathVariable("order-detail-id") Long orderDetailId) {
+    public ResponseEntity<Void> orderDetailToPaid(
+            @PathVariable("order-detail-id") Long orderDetailId) {
         adminService.orderDetailToPaid(orderDetailId);
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/order-details/{order-detail-id}/unpaid")
-    public ResponseEntity<Void> orderDetailToUnpaid(@PathVariable("order-detail-id") Long orderDetailId) {
+    public ResponseEntity<Void> orderDetailToUnpaid(
+            @PathVariable("order-detail-id") Long orderDetailId) {
         adminService.orderDetailToUnpaid(orderDetailId);
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/order-details/{order-detail-id}/refund")
-    public ResponseEntity<Void> orderDetailToRefund(@PathVariable("order-detail-id") Long orderDetailId) {
+    public ResponseEntity<Void> orderDetailToRefund(
+            @PathVariable("order-detail-id") Long orderDetailId) {
         adminService.orderDetailToRefund(orderDetailId);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/deploy-event")
-    public ResponseEntity<Void> deployEvent(@RequestBody EventDeploymentRequest eventDeploymentRequest) throws InterruptedException {
+    public ResponseEntity<Void> deployEvent(
+            @RequestBody EventDeploymentRequest eventDeploymentRequest)
+            throws InterruptedException {
         adminService.deployEvent(eventDeploymentRequest);
         return ResponseEntity.ok().build();
     }
