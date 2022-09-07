@@ -6,7 +6,7 @@ import com.backend.connectable.event.domain.*;
 import com.backend.connectable.event.domain.repository.EventRepository;
 import com.backend.connectable.event.domain.repository.TicketRepository;
 import com.backend.connectable.kas.service.KasService;
-import com.backend.connectable.kas.service.dto.ContractItemResponse;
+import com.backend.connectable.kas.service.contract.dto.ContractItemResponse;
 import com.backend.connectable.s3.service.S3Service;
 import com.backend.connectable.user.domain.User;
 import com.backend.connectable.user.domain.repository.UserRepository;
