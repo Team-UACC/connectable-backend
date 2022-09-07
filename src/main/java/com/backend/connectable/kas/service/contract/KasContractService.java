@@ -1,7 +1,7 @@
 package com.backend.connectable.kas.service.contract;
 
 import com.backend.connectable.kas.config.KasWebClient;
-import com.backend.connectable.kas.service.common.util.KasUrlGenerator;
+import com.backend.connectable.kas.service.common.endpoint.EndPointGenerator;
 import com.backend.connectable.kas.service.contract.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +13,7 @@ import reactor.core.publisher.Mono;
 public class KasContractService {
 
     private final KasWebClient kasWebClient;
+    private final EndPointGenerator endPointGenerator;
     private final TransactionOptionManager transactionOptionManager;
 
     @Value("${kas.settings.account-pool-address}")
@@ -29,7 +30,7 @@ public class KasContractService {
                         .options(transactionOptionManager.getTransactionOption())
                         .build();
 
-        String url = KasUrlGenerator.contractBaseUrl();
+        String url = endPointGenerator.contractBaseUrl();
         Mono<ContractDeployResponse> response =
                 kasWebClient.postForObject(
                         url, contractDeployRequest, ContractDeployResponse.class);
@@ -41,21 +42,21 @@ public class KasContractService {
     }
 
     public ContractItemsResponse getMyContracts() {
-        String url = KasUrlGenerator.contractBaseUrl();
+        String url = endPointGenerator.contractBaseUrl();
         Mono<ContractItemsResponse> response =
                 kasWebClient.getForObject(url, ContractItemsResponse.class);
         return response.block();
     }
 
     public ContractItemResponse getMyContract(String contractAddress) {
-        String url = KasUrlGenerator.contractByContractAddressUrl(contractAddress);
+        String url = endPointGenerator.contractByContractAddressUrl(contractAddress);
         Mono<ContractItemResponse> response =
                 kasWebClient.getForObject(url, ContractItemResponse.class);
         return response.block();
     }
 
     public ContractItemResponse getMyContractMyAlias(String alias) {
-        String url = KasUrlGenerator.contractByAliasUrl(alias);
+        String url = endPointGenerator.contractByAliasUrl(alias);
         Mono<ContractItemResponse> response =
                 kasWebClient.getForObject(url, ContractItemResponse.class);
         return response.block();
