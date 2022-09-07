@@ -99,7 +99,7 @@ public class AdminService {
         String address = "updateme";
         while (address.equals("updateme")) {
             ContractItemResponse contractItemResponse =
-                    kasService.getMyContractMyAlias(contractAlias);
+                    kasService.getMyContractByAlias(contractAlias);
             address = contractItemResponse.getAddress();
             Thread.sleep(1000);
         }

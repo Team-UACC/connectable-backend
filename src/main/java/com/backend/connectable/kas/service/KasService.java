@@ -38,8 +38,8 @@ public class KasService {
         return kasContractService.getMyContract(contractAddress);
     }
 
-    public ContractItemResponse getMyContractMyAlias(String alias) {
-        return kasContractService.getMyContractMyAlias(alias);
+    public ContractItemResponse getMyContractByAlias(String alias) {
+        return kasContractService.getMyContractByAlias(alias);
     }
 
     public TransactionResponse mintToken(

@@ -55,7 +55,7 @@ public class KasContractService {
         return response.block();
     }
 
-    public ContractItemResponse getMyContractMyAlias(String alias) {
+    public ContractItemResponse getMyContractByAlias(String alias) {
         String url = endPointGenerator.contractByAliasUrl(alias);
         Mono<ContractItemResponse> response =
                 kasWebClient.getForObject(url, ContractItemResponse.class);

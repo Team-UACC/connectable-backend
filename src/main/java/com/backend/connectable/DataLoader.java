@@ -54,7 +54,7 @@ public class DataLoader implements ApplicationRunner {
         kasService.deployMyContract(name, symbol, alias);
         Thread.sleep(3000);
 
-        ContractItemResponse contractItem = kasService.getMyContractMyAlias(alias);
+        ContractItemResponse contractItem = kasService.getMyContractByAlias(alias);
         String contractAddress = contractItem.getAddress();
         log.info("$$ DEPLOYED CONTRACT ADDRESS : " + contractAddress + " $$");
 
