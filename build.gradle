@@ -122,6 +122,10 @@ dependencies {
 
 	// Sms
 	implementation 'net.nurigo:sdk:4.2.3'
+
+	// MockServer
+	implementation("org.mock-server:mockserver-netty:5.11.2")
+	implementation("org.mock-server:mockserver-client-java:5.11.2")
 }
 
 tasks.named('test') {
