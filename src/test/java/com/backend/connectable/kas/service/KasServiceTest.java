@@ -60,7 +60,7 @@ class KasServiceTest {
         Thread.sleep(5000);
 
         Map<String, TokensResponse> allTokensOfContractAddressesOwnedByUser =
-                kasService.findAllTokensOfContractAddressesOwnedByUser(
+                kasService.findAllTokensOwnedByUser(
                         myContractAddresses, poolAddress);
         for (TokensResponse value : allTokensOfContractAddressesOwnedByUser.values()) {
             System.out.println(value.getTokenUris());

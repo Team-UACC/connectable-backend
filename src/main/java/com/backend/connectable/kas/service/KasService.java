@@ -93,7 +93,7 @@ public class KasService {
         return kasTokenService.getTokenHistory(contractAddress, tokenId);
     }
 
-    public Map<String, TokensResponse> findAllTokensOfContractAddressesOwnedByUser(
+    public Map<String, TokensResponse> findAllTokensOwnedByUser(
             List<String> contractAddresses, String userKlaytnAddress) {
         return kasTokenService.findAllTokensOwnedByUser(contractAddresses, userKlaytnAddress);
     }
