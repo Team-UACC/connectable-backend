@@ -6,9 +6,9 @@ import com.backend.connectable.kas.config.KasWebClient;
 import com.backend.connectable.kas.service.common.dto.TransactionResponse;
 import com.backend.connectable.kas.service.common.endpoint.EndPointGenerator;
 import com.backend.connectable.kas.service.token.dto.*;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -115,7 +115,7 @@ public class KasTokenService {
 
     public Map<String, TokensResponse> findAllTokensOwnedByUser(
             List<String> contractAddresses, String userKlaytnAddress) {
-        Map<String, TokensResponse> tokensResponses = new HashMap<>();
+        Map<String, TokensResponse> tokensResponses = new ConcurrentHashMap<>();
         CountDownLatch countDownLatch = new CountDownLatch(contractAddresses.size());
 
         for (String contractAddress : contractAddresses) {
