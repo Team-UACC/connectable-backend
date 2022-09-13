@@ -1,14 +1,10 @@
 package com.backend.connectable.kas.service.mockserver;
 
-import static com.backend.connectable.kas.service.mockserver.KasServiceTestSetup.MOCK_SERVER_IP;
-import static com.backend.connectable.kas.service.mockserver.KasServiceTestSetup.MOCK_SERVER_PORT;
+import static com.backend.connectable.kas.service.mockserver.KasServiceMockSetup.MOCK_SERVER_IP;
+import static com.backend.connectable.kas.service.mockserver.KasServiceMockSetup.MOCK_SERVER_PORT;
 
 import com.backend.connectable.kas.service.common.endpoint.EndPointGenerator;
-import org.springframework.context.annotation.Primary;
-import org.springframework.stereotype.Component;
 
-@Component
-@Primary
 public class KasMockEndPointGenerator implements EndPointGenerator {
 
     private static final String TEST_CONTRACT_API_URL =

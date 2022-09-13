@@ -1,18 +1,26 @@
 package com.backend.connectable.kas.service.mockserver;
 
+import com.backend.connectable.kas.service.KasService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.integration.ClientAndServer;
 import org.mockserver.model.HttpRequest;
 import org.mockserver.model.HttpResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 
-public class KasServiceTestSetup {
+@SpringBootTest
+@Import({KasMockConfig.class})
+public class KasServiceMockSetup {
 
     public static final int MOCK_SERVER_PORT = 8888;
     public static final String MOCK_SERVER_IP = "localhost";
 
     private ClientAndServer mockServer;
+
+    @Autowired protected KasService kasService;
 
     @BeforeEach
     void setUpMockServer() {

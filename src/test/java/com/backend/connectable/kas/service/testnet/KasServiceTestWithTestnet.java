@@ -1,40 +1,30 @@
 package com.backend.connectable.kas.service.testnet;
 
-import com.backend.connectable.kas.config.KasWebClient;
 import com.backend.connectable.kas.service.KasService;
 import com.backend.connectable.kas.service.common.dto.TransactionResponse;
-import com.backend.connectable.kas.service.common.endpoint.KasEndPointGenerator;
-import com.backend.connectable.kas.service.contract.KasContractService;
-import com.backend.connectable.kas.service.contract.TransactionOptionManager;
 import com.backend.connectable.kas.service.contract.dto.ContractDeployResponse;
 import com.backend.connectable.kas.service.contract.dto.ContractItemResponse;
 import com.backend.connectable.kas.service.contract.dto.ContractItemsResponse;
-import com.backend.connectable.kas.service.token.KasTokenService;
 import com.backend.connectable.kas.service.token.dto.TokenResponse;
 import com.backend.connectable.kas.service.token.dto.TokensResponse;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@Disabled
+// @Disabled
 class KasServiceTestWithTestnet {
 
-    @Autowired KasWebClient kasWebClient;
-
-    @Autowired TransactionOptionManager transactionOptionManager;
-
-    @Autowired KasTokenService kasTokenService;
-
-    @Autowired KasEndPointGenerator kasEndPointGenerator;
-
-    KasService kasService;
+    @Autowired KasService kasService;
 
     private static final String JOEL_KAIKAS = "0xBc29741452272c432e8CD3984b4c7f2362dFf7f0";
     private static final String TOKEN_URI =
@@ -45,15 +35,6 @@ class KasServiceTestWithTestnet {
 
     @Value("${kas.settings.account-pool-address}")
     public String poolAddress;
-
-    @BeforeEach
-    void setUp() {
-        kasService =
-                new KasService(
-                        new KasContractService(
-                                kasWebClient, kasEndPointGenerator, transactionOptionManager),
-                        new KasTokenService(kasWebClient, kasEndPointGenerator));
-    }
 
     @Test
     void getContractInfo() {

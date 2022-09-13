@@ -8,7 +8,7 @@ import com.backend.connectable.kas.service.contract.dto.ContractDeployResponse;
 import com.backend.connectable.kas.service.contract.dto.ContractItemResponse;
 import com.backend.connectable.kas.service.contract.dto.ContractItemsResponse;
 import com.backend.connectable.kas.service.mockserver.KasMockRequest;
-import com.backend.connectable.kas.service.mockserver.KasServiceTestSetup;
+import com.backend.connectable.kas.service.mockserver.KasServiceMockSetup;
 import com.backend.connectable.kas.service.token.dto.TokenHistoriesResponse;
 import com.backend.connectable.kas.service.token.dto.TokenResponse;
 import com.backend.connectable.kas.service.token.dto.TokensResponse;
@@ -17,13 +17,8 @@ import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-public class KasServiceTest extends KasServiceTestSetup {
-
-    @Autowired KasService kasService;
+public class KasServiceTest extends KasServiceMockSetup {
 
     @DisplayName("KAS에서 배포한 컨트랙트를 확인할 수 있다.")
     @Test
