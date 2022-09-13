@@ -91,8 +91,7 @@ public class EventService {
     public List<Ticket> findTicketByUserAddress(String userKlaytnAddress) {
         List<String> contractAddresses = eventRepository.findAllContractAddresses();
         Map<String, TokensResponse> userTokens =
-                kasService.findAllTokensOfContractAddressesOwnedByUser(
-                        contractAddresses, userKlaytnAddress);
+                kasService.findAllTokensOwnedByUser(contractAddresses, userKlaytnAddress);
 
         List<TokenIdentifier> tokenIdentifiers =
                 userTokens.values().stream()

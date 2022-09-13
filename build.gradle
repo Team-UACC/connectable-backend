@@ -2,6 +2,7 @@ buildscript {
 	ext {
 		queryDslVersion = "5.0.0"
 		mapStructVersion = "1.4.2.Final"
+		mockServerVersion = "5.11.2"
 	}
 }
 
@@ -122,6 +123,10 @@ dependencies {
 
 	// Sms
 	implementation 'net.nurigo:sdk:4.2.3'
+
+	// MockServer
+	implementation("org.mock-server:mockserver-netty:${mockServerVersion}")
+	implementation("org.mock-server:mockserver-client-java:${mockServerVersion}")
 }
 
 tasks.named('test') {

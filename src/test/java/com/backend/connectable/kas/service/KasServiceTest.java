@@ -1,187 +1,239 @@
 package com.backend.connectable.kas.service;
 
+import static org.assertj.core.api.AssertionsForClassTypes.*;
+
+import com.backend.connectable.exception.KasException;
 import com.backend.connectable.kas.service.common.dto.TransactionResponse;
 import com.backend.connectable.kas.service.contract.dto.ContractDeployResponse;
 import com.backend.connectable.kas.service.contract.dto.ContractItemResponse;
 import com.backend.connectable.kas.service.contract.dto.ContractItemsResponse;
+import com.backend.connectable.kas.service.mockserver.KasMockRequest;
+import com.backend.connectable.kas.service.mockserver.KasServiceMockSetup;
+import com.backend.connectable.kas.service.token.dto.TokenHistoriesResponse;
 import com.backend.connectable.kas.service.token.dto.TokenResponse;
 import com.backend.connectable.kas.service.token.dto.TokensResponse;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.jupiter.api.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
-@SpringBootTest
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@Disabled
-class KasServiceTest {
+public class KasServiceTest extends KasServiceMockSetup {
 
-    @Autowired KasService kasService;
-
-    private static final String JOEL_KAIKAS = "0xBc29741452272c432e8CD3984b4c7f2362dFf7f0";
-    private static final String TOKEN_URI =
-            "https://connectable-events.s3.ap-northeast-2.amazonaws.com/json/1.json";
-
-    private static String NEW_CONTRACT_ADDRESS = "0xd933e90917791e8441f42478ea1e882f599b1941";
-    private static String NEW_CONTRACT_NAME = "";
-
-    @Value("${kas.settings.account-pool-address}")
-    public String poolAddress;
-
+    @DisplayName("KAS에서 배포한 컨트랙트를 확인할 수 있다.")
     @Test
-    void getContractInfo() {
-        ContractItemResponse myContract = kasService.getMyContract(NEW_CONTRACT_ADDRESS);
-        System.out.println("myContract.getAlias() = " + myContract.getAlias());
-        System.out.println("myContract.getName() = " + myContract.getName());
+    void getMyContracts() {
+        // given & when
+        ContractItemsResponse response = kasService.getMyContracts();
+
+        // then
+        assertThat(response.getCursor()).isNotEmpty();
+        assertThat(response.getItems()).isNotNull();
     }
 
+    @DisplayName("KAS에서 배포한 컨트랙트의 주소를 입력하면, 컨트랙트 정보를 받을 수 있다.")
     @Test
-    void findAllTokensOfContractAddressesOwnedByUser() throws InterruptedException {
-        ContractItemsResponse myContracts = kasService.getMyContracts();
-        List<String> myContractAddresses =
-                myContracts.getItems().stream()
-                        .map(ContractItemResponse::getAddress)
-                        .filter(address -> !address.equalsIgnoreCase("updateme"))
-                        .collect(Collectors.toList());
-        System.out.println("MyContract: " + myContractAddresses);
+    void getMyContract() {
+        // given & when
+        String contractAddress = KasMockRequest.VALID_CONTRACT_ADDRESS;
+        ContractItemResponse response = kasService.getMyContract(contractAddress);
 
-        for (String myContractAddress : myContractAddresses) {
-            int randomId = (int) Math.floor(Math.random() * (1000 - 100 + 1) + 100);
-            kasService.mintMyToken(
-                    myContractAddress,
-                    randomId,
-                    "https://" + myContractAddress + "/" + randomId + ".json");
-        }
-
-        Thread.sleep(5000);
-
-        Map<String, TokensResponse> allTokensOfContractAddressesOwnedByUser =
-                kasService.findAllTokensOfContractAddressesOwnedByUser(
-                        myContractAddresses, poolAddress);
-        for (TokensResponse value : allTokensOfContractAddressesOwnedByUser.values()) {
-            System.out.println(value.getTokenUris());
-        }
+        // then
+        assertThat(response.getAddress()).isNotEmpty();
+        assertThat(response.getAlias()).isNotEmpty();
+        assertThat(response.getName()).isNotEmpty();
+        assertThat(response.getSymbol()).isNotEmpty();
     }
 
+    @DisplayName("KAS에서 배포한 컨트랙트의 alias를 입력하면, 컨트랙트 정보를 받을 수 있다.")
     @Test
-    @Order(1)
-    void deploy() throws InterruptedException {
-        String name = RandomStringUtils.randomAlphabetic(7);
-        String symbol = RandomStringUtils.randomAlphabetic(3).toUpperCase();
-        String alias = symbol.toLowerCase();
-        NEW_CONTRACT_NAME = name;
-        System.out.println(name + "--" + symbol + "--" + alias + "=>" + NEW_CONTRACT_NAME);
+    void getMyContractByAlias() {
+        // given & when
+        String alias = KasMockRequest.VALID_ALIAS;
+        ContractItemResponse response = kasService.getMyContractByAlias(alias);
 
-        ContractDeployResponse contractDeployResponse =
-                kasService.deployMyContract(name, symbol, alias);
-        System.out.println(contractDeployResponse.getOwner());
-        System.out.println(contractDeployResponse.getStatus());
-        System.out.println(contractDeployResponse.getTransactionHash());
-
-        Thread.sleep(5000);
+        // then
+        assertThat(response.getAddress()).isNotEmpty();
+        assertThat(response.getAlias()).isNotEmpty();
+        assertThat(response.getName()).isNotEmpty();
+        assertThat(response.getSymbol()).isNotEmpty();
     }
 
+    @DisplayName("KAS에서 배포한 컨트랙트가 아니라면, KAS Exception이 발생한다.")
     @Test
-    @Order(2)
-    void getMyContracts() throws InterruptedException {
-        ContractItemsResponse myContracts = kasService.getMyContracts();
-        System.out.println(myContracts.getCursor());
-        List<ContractItemResponse> items = myContracts.getItems();
-        for (ContractItemResponse item : items) {
-            if (item.getName().equalsIgnoreCase(NEW_CONTRACT_NAME)) {
-                if (!item.getAddress().equalsIgnoreCase("updateme")) {
-                    NEW_CONTRACT_ADDRESS = item.getAddress();
-                    System.out.println("새로 배포된 컨트랙트 주소: " + NEW_CONTRACT_ADDRESS);
-                }
-            }
-            System.out.print(item.getName() + "++");
-            System.out.print(item.getAddress() + "++");
-            System.out.print(item.getAlias() + "++");
-            System.out.print(item.getSymbol() + "++");
-            System.out.println(item.getChainId() + "++");
-        }
+    void getMyContractException() {
+        // given
+        String contractAddress = KasMockRequest.INVALID_CONTRACT_ADDRESS;
 
-        Thread.sleep(2000);
+        // when & then
+        assertThatThrownBy(() -> kasService.getMyContract(contractAddress))
+                .isInstanceOf(KasException.class);
     }
 
+    @DisplayName("KAS에서 컨트랙트를 배포할 수 있다.")
     @Test
-    @Order(3)
-    void getMyContract() throws InterruptedException {
-        System.out.println("newlyDeployedContractAddress = " + NEW_CONTRACT_ADDRESS);
-        ContractItemResponse item = kasService.getMyContract(NEW_CONTRACT_ADDRESS);
-        System.out.print(item.getAddress() + "++");
-        System.out.print(item.getAlias() + "++");
-        System.out.print(item.getName() + "++");
-        System.out.print(item.getSymbol() + "++");
-        System.out.println(item.getChainId() + "++");
+    void deployContract() {
+        // given & when
+        String owner = KasMockRequest.VALID_OWNER_ADDRESS;
+        ContractDeployResponse response =
+                kasService.deployContract("name", "symbol", "alias", owner);
 
-        Thread.sleep(2000);
+        // then
+        assertThat(response.getOwner()).isNotEmpty();
+        assertThat(response.getStatus()).isNotEmpty();
+        assertThat(response.getTransactionHash()).isNotEmpty();
     }
 
+    @DisplayName("KAS에서 자신의 게정 주소로 컨트랙트를 배포할 수 있다.")
     @Test
-    @Order(4)
-    void mintToken() throws InterruptedException {
-        TransactionResponse transactionResponse =
-                kasService.mintToken(NEW_CONTRACT_ADDRESS, "0x1", TOKEN_URI, JOEL_KAIKAS);
-        System.out.println(transactionResponse.getStatus());
+    void deployMyContract() {
+        // given & when
+        ContractDeployResponse response = kasService.deployMyContract("name", "symbol", "alias");
 
-        Thread.sleep(2000);
+        // then
+        assertThat(response.getOwner()).isNotEmpty();
+        assertThat(response.getStatus()).isNotEmpty();
+        assertThat(response.getTransactionHash()).isNotEmpty();
     }
 
+    @DisplayName("KAS를 통해 배포한 컨트랙트의 토큰을 민팅할 수 있다.")
     @Test
-    @Order(5)
-    void mintMyToken() throws InterruptedException {
-        TransactionResponse transactionResponse =
-                kasService.mintMyToken(NEW_CONTRACT_ADDRESS, "0x2", TOKEN_URI);
-        System.out.println(transactionResponse.getStatus());
+    void mintToken() {
+        // given
+        String contractAddress = KasMockRequest.VALID_CONTRACT_ADDRESS;
+        String tokenId = "0x1";
+        String tokenUri = "https://token.uri";
+        String owner = KasMockRequest.VALID_OWNER_ADDRESS;
 
-        Thread.sleep(2000);
+        // when
+        TransactionResponse response =
+                kasService.mintToken(contractAddress, tokenId, tokenUri, owner);
+
+        // then
+        assertThat(response.getStatus()).isNotEmpty();
+        assertThat(response.getTransactionHash()).isNotEmpty();
     }
 
+    @DisplayName("KAS를 통해 배포한 컨트랙트의 토큰을 본인의 주소로 민팅할 수 있다.")
     @Test
-    @Order(6)
-    void getTokens() throws InterruptedException {
-        TokensResponse tokens = kasService.getTokens(NEW_CONTRACT_ADDRESS);
-        System.out.println("tokens.getCursor() = " + tokens.getCursor());
-        List<TokenResponse> items = tokens.getItems();
-        for (TokenResponse item : items) {
-            System.out.println("item.getOwner() = " + item.getOwner());
-            System.out.println("item.getPreviousOwner() = " + item.getPreviousOwner());
-            System.out.println("item.getTokenId() = " + item.getTokenId());
-            System.out.println("item.getTokenUri() = " + item.getTokenUri());
-            System.out.println("item.getTransactionHash() = " + item.getTransactionHash());
-        }
+    void mintMyToken() {
+        // given
+        String contractAddress = KasMockRequest.VALID_CONTRACT_ADDRESS;
+        String tokenId = "0x1";
+        String tokenUri = "https://token.uri";
 
-        Thread.sleep(2000);
+        // when
+        TransactionResponse response = kasService.mintMyToken(contractAddress, tokenId, tokenUri);
+
+        // then
+        assertThat(response.getStatus()).isNotEmpty();
+        assertThat(response.getTransactionHash()).isNotEmpty();
     }
 
+    @DisplayName("KAS를 통해 민팅된 토큰을 조회할 수 있다.")
     @Test
-    @Order(7)
-    void getToken() throws InterruptedException {
-        TokenResponse token = kasService.getToken(NEW_CONTRACT_ADDRESS, "0x1");
-        System.out.println("token.getOwner() = " + token.getOwner());
-        System.out.println("token.getPreviousOwner() = " + token.getPreviousOwner());
-        System.out.println("token.getTokenId() = " + token.getTokenId());
-        System.out.println("token.getTokenUri() = " + token.getTokenUri());
-        System.out.println("token.getTransactionHash() = " + token.getTransactionHash());
+    void getToken() {
+        // given
+        String contractAddress = KasMockRequest.VALID_CONTRACT_ADDRESS;
+        String tokenId = KasMockRequest.VALID_TOKEN_ID;
 
-        Thread.sleep(2000);
+        // when
+        TokenResponse response = kasService.getToken(contractAddress, tokenId);
+
+        // then
+        assertThat(response.getOwner()).isNotEmpty();
+        assertThat(response.getTokenId()).isNotEmpty();
+        assertThat(response.getTransactionHash()).isNotEmpty();
     }
 
+    @DisplayName("KAS를 통해 민팅되지 않은 토큰은 조회시 KasException이 발생한다.")
     @Test
-    @Order(8)
-    void sendToken() throws InterruptedException {
-        TransactionResponse transactionResponse =
-                kasService.sendMyToken(NEW_CONTRACT_ADDRESS, "0x2", JOEL_KAIKAS);
-        System.out.println("transactionResponse.getStatus() = " + transactionResponse.getStatus());
-        System.out.println(
-                "transactionResponse.getTransactionHash() = "
-                        + transactionResponse.getTransactionHash());
+    void getTokenKasException() {
+        // given
+        String contractAddress = KasMockRequest.VALID_CONTRACT_ADDRESS;
+        String invalidTokenId = KasMockRequest.INVALID_TOKEN_ID;
 
-        Thread.sleep(2000);
+        // when
+        assertThatThrownBy(() -> kasService.getToken(contractAddress, invalidTokenId))
+                .isInstanceOf(KasException.class);
+    }
+
+    @DisplayName("KAS를 통해 민팅된 토큰을 전송할 수 있다.")
+    @Test
+    void sendMyToken() {
+        // given
+        String contractAddress = KasMockRequest.VALID_CONTRACT_ADDRESS;
+        String tokenId = KasMockRequest.VALID_TOKEN_ID;
+        String owner = KasMockRequest.VALID_OWNER_ADDRESS;
+
+        // when
+        TransactionResponse response = kasService.sendMyToken(contractAddress, tokenId, owner);
+
+        // then
+        assertThat(response.getTransactionHash()).isNotEmpty();
+        assertThat(response.getStatus()).isNotEmpty();
+    }
+
+    @DisplayName("민팅되지 않은 토큰을 전송시, KasException이 발생한다.")
+    @Test
+    void sendMyTokenException() {
+        // given
+        String contractAddress = KasMockRequest.VALID_CONTRACT_ADDRESS;
+        String invalidTokenId = KasMockRequest.INVALID_TOKEN_ID;
+        String owner = KasMockRequest.VALID_OWNER_ADDRESS;
+
+        // when & then
+        assertThatThrownBy(() -> kasService.sendMyToken(contractAddress, invalidTokenId, owner))
+                .isInstanceOf(KasException.class);
+    }
+
+    @DisplayName("발행한 토큰을 소각할 수 있다")
+    @Test
+    void burnMyToken() {
+        // given
+        String contractAddress = KasMockRequest.VALID_CONTRACT_ADDRESS;
+        String tokenId = KasMockRequest.VALID_TOKEN_ID;
+
+        // when
+        TransactionResponse response = kasService.burnMyToken(contractAddress, tokenId);
+
+        // then
+        assertThat(response.getStatus()).isNotEmpty();
+        assertThat(response.getTransactionHash()).isNotEmpty();
+    }
+
+    @DisplayName("토큰의 소유자 변경 이력을 조회할 수 있다.")
+    @Test
+    void getTokenHistory() {
+        // given
+        String contractAddress = KasMockRequest.VALID_CONTRACT_ADDRESS;
+        String tokenId = KasMockRequest.VALID_TOKEN_ID;
+
+        // when
+        TokenHistoriesResponse response = kasService.getTokenHistory(contractAddress, tokenId);
+
+        // then
+        assertThat(response.getCursor()).isNotEmpty();
+        assertThat(response.getItems()).isNotNull();
+    }
+
+    @DisplayName("사용자가 소유한 모든 토큰을 조회할 수 있다.")
+    @Test
+    void findAllTokensOwnedByUser() {
+        // given
+        String contractAddress1 = KasMockRequest.VALID_CONTRACT_ADDRESS;
+        String contractAddress2 = KasMockRequest.VALID_CONTRACT_ADDRESS2;
+        List<String> contractAddresses = Arrays.asList(contractAddress1, contractAddress2);
+        String owner = KasMockRequest.VALID_OWNER_ADDRESS;
+
+        // when
+        Map<String, TokensResponse> response =
+                kasService.findAllTokensOwnedByUser(contractAddresses, owner);
+
+        // then
+        assertThat(response.containsKey(contractAddress1)).isTrue();
+        assertThat(response.containsKey(contractAddress2)).isTrue();
+        assertThat(response.get(contractAddress1)).isNotNull();
+        assertThat(response.get(contractAddress2)).isNotNull();
     }
 }

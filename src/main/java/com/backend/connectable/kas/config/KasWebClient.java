@@ -1,7 +1,6 @@
 package com.backend.connectable.kas.config;
 
 import com.backend.connectable.exception.KasException;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -23,8 +22,7 @@ public class KasWebClient {
                 .onStatus(
                         HttpStatus::isError,
                         response -> {
-                            throw Objects.requireNonNull(
-                                    response.bodyToMono(KasException.class).block());
+                            throw new KasException(url, responseType.getName());
                         })
                 .bodyToMono(responseType);
     }
@@ -38,8 +36,7 @@ public class KasWebClient {
                 .onStatus(
                         HttpStatus::isError,
                         response -> {
-                            throw Objects.requireNonNull(
-                                    response.bodyToMono(KasException.class).block());
+                            throw new KasException(url, responseType.getName());
                         })
                 .bodyToMono(responseType);
     }
@@ -53,8 +50,7 @@ public class KasWebClient {
                 .onStatus(
                         HttpStatus::isError,
                         response -> {
-                            throw Objects.requireNonNull(
-                                    response.bodyToMono(KasException.class).block());
+                            throw new KasException(url, responseType.getName());
                         })
                 .bodyToMono(responseType);
     }

@@ -38,8 +38,8 @@ public class KasService {
         return kasContractService.getMyContract(contractAddress);
     }
 
-    public ContractItemResponse getMyContractMyAlias(String alias) {
-        return kasContractService.getMyContractMyAlias(alias);
+    public ContractItemResponse getMyContractByAlias(String alias) {
+        return kasContractService.getMyContractByAlias(alias);
     }
 
     public TransactionResponse mintToken(
@@ -93,7 +93,7 @@ public class KasService {
         return kasTokenService.getTokenHistory(contractAddress, tokenId);
     }
 
-    public Map<String, TokensResponse> findAllTokensOfContractAddressesOwnedByUser(
+    public Map<String, TokensResponse> findAllTokensOwnedByUser(
             List<String> contractAddresses, String userKlaytnAddress) {
         return kasTokenService.findAllTokensOwnedByUser(contractAddresses, userKlaytnAddress);
     }
