@@ -13,9 +13,12 @@ import com.backend.connectable.exception.KasException;
 import com.backend.connectable.kas.service.KasService;
 import com.backend.connectable.kas.service.common.dto.TransactionResponse;
 import com.backend.connectable.kas.service.contract.dto.ContractItemResponse;
+import com.backend.connectable.order.domain.Order;
 import com.backend.connectable.order.domain.OrderDetail;
 import com.backend.connectable.order.domain.repository.OrderDetailRepository;
+import com.backend.connectable.order.domain.repository.OrderRepository;
 import com.backend.connectable.s3.service.S3Service;
+import com.backend.connectable.sms.service.SmsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -29,17 +32,23 @@ import org.springframework.transaction.annotation.Transactional;
 public class AdminService {
 
     private final OrderDetailRepository orderDetailRepository;
+    private final OrderRepository orderRepository;
     private final EventRepository eventRepository;
     private final TicketRepository ticketRepository;
     private final ArtistRepository artistRepository;
     private final KasService kasService;
     private final S3Service s3Service;
+    private final SmsService smsService;
+
+    private static final String paidNotificationMessage = "티켓이 발송완료되었습니다. 마이페이지 > 마이티켓에서 확인부탁드립니다.";
 
     @Transactional
     public void orderDetailToPaid(Long orderDetailId) {
         OrderDetail orderDetail = findOrderDetail(orderDetailId);
+        Order order = findOrderByOrderDetail(orderDetail);
         orderDetail.paid();
         sendTicket(orderDetail);
+        smsService.sendSms(paidNotificationMessage, order.getOrdererPhoneNumber());
     }
 
     private OrderDetail findOrderDetail(Long orderDetailId) {
@@ -49,6 +58,12 @@ public class AdminService {
                         () ->
                                 new ConnectableException(
                                         HttpStatus.BAD_REQUEST, ErrorType.ORDER_DETAIL_NOT_EXISTS));
+    }
+
+    private Order findOrderByOrderDetail(OrderDetail orderDetail) {
+        Long orderId = orderDetail.getOrder().getId();
+        Order order = orderRepository.getReferenceById(orderId);
+        return order;
     }
 
     private void sendTicket(OrderDetail orderDetail) {
