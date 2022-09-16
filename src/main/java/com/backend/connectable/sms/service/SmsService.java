@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 public class SmsService {
 
     private DefaultMessageService defaultMessageService;
-
     private static final String smsApiDomain = "https://api.coolsms.co.kr";
 
     @Value("${sms.source-phone-number}")
@@ -30,7 +29,15 @@ public class SmsService {
     @Value("${sms.api-secret}")
     private String smsApiSecret;
 
-    public void sendSms(String content, String target) {
+    public void sendPaidNotification(String phoneNumber) {
+        sendSms(MessageContent.TICKET_ORDER_SUCCREE.getMessage(), phoneNumber);
+    }
+
+    public void sendSignUpAuthKey(String generatedKey, String phoneNumber) {
+        sendSms(MessageContent.SIGNUP_AUTH_REQUEST.getAuthSmsMessage(generatedKey), phoneNumber);
+    }
+
+    private void sendSms(String content, String target) {
         defaultMessageService =
                 NurigoApp.INSTANCE.initialize(smsApiKey, smsApiSecret, smsApiDomain);
         Message message = new Message();

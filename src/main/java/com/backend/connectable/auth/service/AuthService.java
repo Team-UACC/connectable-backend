@@ -19,8 +19,7 @@ public class AuthService {
 
     public String getAuthKey(String phoneNumber, Long duration) {
         String generatedKey = generateCertificationKey();
-        String message = "Connectable 인증번호는 " + generatedKey + "입니다.";
-        smsService.sendSms(message, phoneNumber);
+        smsService.sendSignUpAuthKey(generatedKey, phoneNumber);
         redisUtil.setDataExpire(phoneNumber, generatedKey, 60 * duration);
         return generatedKey;
     }
