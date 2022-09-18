@@ -2,6 +2,7 @@ package com.backend.connectable.sms.service;
 
 import com.backend.connectable.exception.ConnectableException;
 import com.backend.connectable.exception.ErrorType;
+import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.nurigo.sdk.NurigoApp;
@@ -29,17 +30,21 @@ public class SmsService {
     @Value("${sms.api-secret}")
     private String smsApiSecret;
 
+    @PostConstruct
+    private void initialize() {
+        this.defaultMessageService =
+                NurigoApp.INSTANCE.initialize(smsApiKey, smsApiSecret, smsApiDomain);
+    }
+
     public void sendPaidNotification(String phoneNumber) {
-        sendSms(MessageContent.TICKET_ORDER_SUCCREE.getMessage(), phoneNumber);
+        sendSms(MessageContent.getTicketOrderSuccess(), phoneNumber);
     }
 
     public void sendSignUpAuthKey(String generatedKey, String phoneNumber) {
-        sendSms(MessageContent.SIGNUP_AUTH_REQUEST.getAuthSmsMessage(generatedKey), phoneNumber);
+        sendSms(MessageContent.getSignUpAuthRequestMessage(generatedKey), phoneNumber);
     }
 
     private void sendSms(String content, String target) {
-        defaultMessageService =
-                NurigoApp.INSTANCE.initialize(smsApiKey, smsApiSecret, smsApiDomain);
         Message message = new Message();
         message.setFrom(sourcePhoneNumber);
         message.setTo(target.replace("-", ""));
