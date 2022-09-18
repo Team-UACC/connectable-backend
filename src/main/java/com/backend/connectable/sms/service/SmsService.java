@@ -2,10 +2,8 @@ package com.backend.connectable.sms.service;
 
 import com.backend.connectable.exception.ConnectableException;
 import com.backend.connectable.exception.ErrorType;
-import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.model.Message;
 import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
 import net.nurigo.sdk.message.service.DefaultMessageService;
@@ -18,23 +16,10 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class SmsService {
 
-    private DefaultMessageService defaultMessageService;
-    private static final String smsApiDomain = "https://api.coolsms.co.kr";
+    private final DefaultMessageService defaultMessageService;
 
     @Value("${sms.source-phone-number}")
     private String sourcePhoneNumber;
-
-    @Value("${sms.api-key}")
-    private String smsApiKey;
-
-    @Value("${sms.api-secret}")
-    private String smsApiSecret;
-
-    @PostConstruct
-    private void initialize() {
-        this.defaultMessageService =
-                NurigoApp.INSTANCE.initialize(smsApiKey, smsApiSecret, smsApiDomain);
-    }
 
     public void sendPaidNotification(String phoneNumber) {
         sendSms(MessageContent.getTicketOrderSuccess(), phoneNumber);
