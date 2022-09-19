@@ -51,7 +51,7 @@ class KasServiceTestWithTestnet {
         System.out.println("MyContract: " + myContractAddresses);
 
         for (String myContractAddress : myContractAddresses) {
-            int randomId = (int) Math.floor(Math.random() * (1000 - 100 + 1) + 100);
+            int randomId = (int) Math.floor(Math.random() * (10000 - 100 + 1) + 100);
             kasService.mintMyToken(
                     myContractAddress,
                     randomId,
