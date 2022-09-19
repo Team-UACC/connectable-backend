@@ -1,4 +1,4 @@
-package com.backend.connectable.kas.service.dto;
+package com.backend.connectable.kas.service.contract.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +10,8 @@ import lombok.Setter;
 public class TransactionOptionFeePayerRequest extends TransactionOptionRequest {
     private UserFeePayerOptionRequest userFeePayer;
 
-    public TransactionOptionFeePayerRequest(boolean enableGlobalFeePayer, UserFeePayerOptionRequest userFeePayer) {
+    public TransactionOptionFeePayerRequest(
+            boolean enableGlobalFeePayer, UserFeePayerOptionRequest userFeePayer) {
         super(enableGlobalFeePayer);
         this.userFeePayer = userFeePayer;
     }

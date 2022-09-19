@@ -10,6 +10,7 @@ spring:
   config:
     activate:
       on-profile: local
+    import: 'aws-parameterstore:'
   jpa:
     hibernate:
       ddl-auto: create
@@ -28,6 +29,12 @@ spring:
   redis:
     host: 127.0.0.1
     port: 6379
+aws:
+  paramstore:
+    enabled: true
+    prefix: /config
+    profile-separator: _
+    name: connectable
 jwt:
   secret: uacc-to-the-moon
   expire-time: 14400000
@@ -43,21 +50,21 @@ logging:
 kas:
   settings:
     enable-global-fee-payer: false
-    account-pool-krn: krn:1001:wallet:664d1c4f-76cc-4664-84cd-f93bd28e3256:account-pool:default
-    account-pool-address: "0xEa06ee0577795e39A0465b46d509168ff6302973"
-    user-fee-payer-krn: krn:1001:wallet:664d1c4f-76cc-4664-84cd-f93bd28e3256:feepayer-pool:default
-    user-fee-payer-address: "0xDFAD470f307CC3C524A96Ea86442F012f1DEF4d6"
-    access-key-id: KASKOOU7SCEQTOSZ2FV0E9UQ
-    secret-access-key: t-gAxJ_10sf7iqvo7qKxRIY6qUsyXMksMS6y0iY7
     chain-id: 1001
+    account-pool-krn: ${kas.account_pool_krn}
+    account-pool-address: ${kas.account_pool_address}
+    user-fee-payer-krn: ${kas.user_fee_payer_krn}
+    user-fee-payer-address: ${kas.user_fee_payer_address}
+    access-key-id: ${kas.access_key_id}
+    secret-access-key: ${kas.secret_access_key}
 dataloader:
   enable: true
 swagger:
   url: http://localhost:8080
 sms:
-  api-key: NCSDOXRJCN3PNEUL
-  api-secret: 6AY7BFTPYTHTYN8QN4E98YSDNPINO9XN
-  source-phone-number: 01085161399
+  api-key: ${sms.api-key}
+  api-secret: ${sms.api-secret}
+  source-phone-number: ${sms.source-phone-number}
 entrance:
   device-secret: device-secret
 ---

@@ -1,4 +1,4 @@
-package com.backend.connectable.kas.service.dto;
+package com.backend.connectable.kas.service.token.dto;
 
 import java.util.List;
 import java.util.stream.Collectors;

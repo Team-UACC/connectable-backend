@@ -10,7 +10,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class KasExceptionResponse {
-    private String code;
-    private String message;
-    private String requestId;
+    private String url;
+    private String expectedResponseType;
 }

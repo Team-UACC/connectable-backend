@@ -10,7 +10,7 @@ import com.backend.connectable.event.domain.*;
 import com.backend.connectable.event.domain.repository.EventRepository;
 import com.backend.connectable.event.domain.repository.TicketRepository;
 import com.backend.connectable.kas.service.KasService;
-import com.backend.connectable.kas.service.dto.TransactionResponse;
+import com.backend.connectable.kas.service.common.dto.TransactionResponse;
 import com.backend.connectable.order.domain.Order;
 import com.backend.connectable.order.domain.OrderDetail;
 import com.backend.connectable.order.domain.OrderStatus;
@@ -62,7 +62,7 @@ class AdminServiceTest {
             User.builder()
                     .klaytnAddress("0x1234")
                     .nickname("조엘")
-                    .phoneNumber("010-1234-5678")
+                    .phoneNumber("010-8516-1399")
                     .privacyAgreement(true)
                     .isActive(true)
                     .build();
@@ -74,7 +74,7 @@ class AdminServiceTest {
                     .artistName("빅나티")
                     .email("bignaughty@gmail.com")
                     .password("temptemp1234")
-                    .phoneNumber("01012345678")
+                    .phoneNumber("01085161399")
                     .artistImage("ARTIST_IMAGE")
                     .build();
 
@@ -154,7 +154,7 @@ class AdminServiceTest {
             Order.builder()
                     .user(joel)
                     .ordererName("조영상")
-                    .ordererPhoneNumber("010-1234-5678")
+                    .ordererPhoneNumber("010-8516-1399")
                     .build();
 
     OrderDetail orderDetail1;

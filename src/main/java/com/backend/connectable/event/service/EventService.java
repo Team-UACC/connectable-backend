@@ -13,16 +13,15 @@ import com.backend.connectable.event.ui.dto.TicketResponse;
 import com.backend.connectable.exception.ConnectableException;
 import com.backend.connectable.exception.ErrorType;
 import com.backend.connectable.kas.service.KasService;
-import com.backend.connectable.kas.service.dto.TokenIdentifier;
-import com.backend.connectable.kas.service.dto.TokenResponse;
-import com.backend.connectable.kas.service.dto.TokensResponse;
+import com.backend.connectable.kas.service.token.dto.TokenIdentifier;
+import com.backend.connectable.kas.service.token.dto.TokenResponse;
+import com.backend.connectable.kas.service.token.dto.TokensResponse;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,7 +36,7 @@ public class EventService {
     private final TicketRepository ticketRepository;
 
     public List<EventResponse> getList() {
-        List<Event> events = eventRepository.findAll(Sort.by(Sort.Direction.ASC, "salesTo"));
+        List<Event> events = eventRepository.findAllEventWithOrder();
         return events.stream()
                 .map(EventMapper.INSTANCE::eventToResponse)
                 .collect(Collectors.toList());
@@ -92,8 +91,7 @@ public class EventService {
     public List<Ticket> findTicketByUserAddress(String userKlaytnAddress) {
         List<String> contractAddresses = eventRepository.findAllContractAddresses();
         Map<String, TokensResponse> userTokens =
-                kasService.findAllTokensOfContractAddressesOwnedByUser(
-                        contractAddresses, userKlaytnAddress);
+                kasService.findAllTokensOwnedByUser(contractAddresses, userKlaytnAddress);
 
         List<TokenIdentifier> tokenIdentifiers =
                 userTokens.values().stream()

@@ -1,4 +1,4 @@
-package com.backend.connectable.kas.service.dto;
+package com.backend.connectable.kas.service.contract.dto;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +16,12 @@ public class ContractDeployRequest {
     private TransactionOptionRequest options;
 
     @Builder
-    public ContractDeployRequest(String alias, String symbol, String name, String owner, TransactionOptionRequest options) {
+    public ContractDeployRequest(
+            String alias,
+            String symbol,
+            String name,
+            String owner,
+            TransactionOptionRequest options) {
         this.alias = alias;
         this.symbol = symbol;
         this.name = name;

@@ -55,7 +55,8 @@ public class UserController {
     }
 
     @GetMapping("/validation")
-    public ResponseEntity<UserValidationResponse> validateNickname(@RequestParam String nickname) {
+    public ResponseEntity<UserValidationResponse> validateNickname(
+            @RequestParam(name = "nickname") String nickname) {
         UserValidationResponse userValidationResponse = userService.validateNickname(nickname);
         return ResponseEntity.ok(userValidationResponse);
     }
