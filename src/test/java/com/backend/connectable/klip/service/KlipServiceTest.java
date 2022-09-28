@@ -32,10 +32,6 @@ class KlipServiceTest {
                     "1664330178",
                     new KlipAuthHandleKlaytnAddressResponse(klaytnAddress));
 
-    private static final KlipAuthHandleResponse failedAuthHandleResponse =
-            new KlipAuthHandleResponse(
-                    "a39s9csb-1695-097f-98ef-129jxh66aadc", "failed", "1664330074", null);
-
     @Autowired KlipService klipService;
 
     @MockBean KlipRestTemplate klipRestTemplate;
