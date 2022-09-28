@@ -120,14 +120,34 @@ public class KasServiceTest extends KasServiceMockSetup {
         // given
         String contractAddress = KasMockRequest.VALID_CONTRACT_ADDRESS;
         String tokenId = "0x1";
+        int tokenIdByInt = 1;
         String tokenUri = "https://token.uri";
 
         // when
-        TransactionResponse response = kasService.mintMyToken(contractAddress, tokenId, tokenUri);
+        TransactionResponse response1 = kasService.mintMyToken(contractAddress, tokenId, tokenUri);
+        TransactionResponse response2 =
+                kasService.mintMyToken(contractAddress, tokenIdByInt, tokenUri);
 
         // then
-        assertThat(response.getStatus()).isNotEmpty();
-        assertThat(response.getTransactionHash()).isNotEmpty();
+        assertThat(response1.getStatus()).isNotEmpty();
+        assertThat(response1.getTransactionHash()).isNotEmpty();
+
+        assertThat(response2.getStatus()).isNotEmpty();
+        assertThat(response2.getTransactionHash()).isNotEmpty();
+    }
+
+    @DisplayName("KAS를 통해 해당 컨트랙트에 민팅된 토큰을 전체 조회할 수 있다.")
+    @Test
+    void getTokens() {
+        // given
+        String contractAddress = KasMockRequest.VALID_CONTRACT_ADDRESS;
+
+        // when
+        TokensResponse response = kasService.getTokens(contractAddress);
+
+        // then
+        assertThat(response.getItems()).isNotNull();
+        assertThat(response.getTokenUris()).isNotNull();
     }
 
     @DisplayName("KAS를 통해 민팅된 토큰을 조회할 수 있다.")
@@ -136,14 +156,20 @@ public class KasServiceTest extends KasServiceMockSetup {
         // given
         String contractAddress = KasMockRequest.VALID_CONTRACT_ADDRESS;
         String tokenId = KasMockRequest.VALID_TOKEN_ID;
+        int tokenIdByInt = KasMockRequest.VALID_TOKEN_ID_BY_INT;
 
         // when
-        TokenResponse response = kasService.getToken(contractAddress, tokenId);
+        TokenResponse response1 = kasService.getToken(contractAddress, tokenId);
+        TokenResponse response2 = kasService.getToken(contractAddress, tokenIdByInt);
 
         // then
-        assertThat(response.getOwner()).isNotEmpty();
-        assertThat(response.getTokenId()).isNotEmpty();
-        assertThat(response.getTransactionHash()).isNotEmpty();
+        assertThat(response1.getOwner()).isNotEmpty();
+        assertThat(response1.getTokenId()).isNotEmpty();
+        assertThat(response1.getTransactionHash()).isNotEmpty();
+
+        assertThat(response2.getOwner()).isNotEmpty();
+        assertThat(response2.getTokenId()).isNotEmpty();
+        assertThat(response2.getTransactionHash()).isNotEmpty();
     }
 
     @DisplayName("KAS를 통해 민팅되지 않은 토큰은 조회시 KasException이 발생한다.")
@@ -164,14 +190,20 @@ public class KasServiceTest extends KasServiceMockSetup {
         // given
         String contractAddress = KasMockRequest.VALID_CONTRACT_ADDRESS;
         String tokenId = KasMockRequest.VALID_TOKEN_ID;
+        int tokenIdByInt = KasMockRequest.VALID_TOKEN_ID_BY_INT;
         String owner = KasMockRequest.VALID_OWNER_ADDRESS;
 
         // when
-        TransactionResponse response = kasService.sendMyToken(contractAddress, tokenId, owner);
+        TransactionResponse response1 = kasService.sendMyToken(contractAddress, tokenId, owner);
+        TransactionResponse response2 =
+                kasService.sendMyToken(contractAddress, tokenIdByInt, owner);
 
         // then
-        assertThat(response.getTransactionHash()).isNotEmpty();
-        assertThat(response.getStatus()).isNotEmpty();
+        assertThat(response1.getTransactionHash()).isNotEmpty();
+        assertThat(response1.getStatus()).isNotEmpty();
+
+        assertThat(response2.getTransactionHash()).isNotEmpty();
+        assertThat(response2.getStatus()).isNotEmpty();
     }
 
     @DisplayName("민팅되지 않은 토큰을 전송시, KasException이 발생한다.")
@@ -193,13 +225,18 @@ public class KasServiceTest extends KasServiceMockSetup {
         // given
         String contractAddress = KasMockRequest.VALID_CONTRACT_ADDRESS;
         String tokenId = KasMockRequest.VALID_TOKEN_ID;
+        int tokenIdByInt = KasMockRequest.VALID_TOKEN_ID_BY_INT;
 
         // when
-        TransactionResponse response = kasService.burnMyToken(contractAddress, tokenId);
+        TransactionResponse response1 = kasService.burnMyToken(contractAddress, tokenId);
+        TransactionResponse response2 = kasService.burnMyToken(contractAddress, tokenIdByInt);
 
         // then
-        assertThat(response.getStatus()).isNotEmpty();
-        assertThat(response.getTransactionHash()).isNotEmpty();
+        assertThat(response1.getStatus()).isNotEmpty();
+        assertThat(response1.getTransactionHash()).isNotEmpty();
+
+        assertThat(response2.getStatus()).isNotEmpty();
+        assertThat(response2.getTransactionHash()).isNotEmpty();
     }
 
     @DisplayName("토큰의 소유자 변경 이력을 조회할 수 있다.")
@@ -208,13 +245,19 @@ public class KasServiceTest extends KasServiceMockSetup {
         // given
         String contractAddress = KasMockRequest.VALID_CONTRACT_ADDRESS;
         String tokenId = KasMockRequest.VALID_TOKEN_ID;
+        int tokenIdByInt = KasMockRequest.VALID_TOKEN_ID_BY_INT;
 
         // when
-        TokenHistoriesResponse response = kasService.getTokenHistory(contractAddress, tokenId);
+        TokenHistoriesResponse response1 = kasService.getTokenHistory(contractAddress, tokenId);
+        TokenHistoriesResponse response2 =
+                kasService.getTokenHistory(contractAddress, tokenIdByInt);
 
         // then
-        assertThat(response.getCursor()).isNotEmpty();
-        assertThat(response.getItems()).isNotNull();
+        assertThat(response1.getCursor()).isNotEmpty();
+        assertThat(response1.getItems()).isNotNull();
+
+        assertThat(response2.getCursor()).isNotEmpty();
+        assertThat(response2.getItems()).isNotNull();
     }
 
     @DisplayName("사용자가 소유한 모든 토큰을 조회할 수 있다.")

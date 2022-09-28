@@ -16,6 +16,7 @@ public class KasMockRequest {
     public static String INVALID_CONTRACT_ADDRESS = "0x5678";
 
     public static String VALID_TOKEN_ID = "0x1";
+    public static int VALID_TOKEN_ID_BY_INT = 1;
 
     public static String INVALID_TOKEN_ID = "1";
 
