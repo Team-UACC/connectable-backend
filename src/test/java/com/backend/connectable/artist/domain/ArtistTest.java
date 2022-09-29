@@ -54,10 +54,9 @@ class ArtistTest {
         Long id = 1L;
 
         // when
-        Artist artist1 = Artist.builder().id(1L).artistName("artist1").build();
-        Artist artist2 = Artist.builder().id(1L).artistName("artist2").build();
-        Set<Artist> artistSet = new HashSet<>();
-        artistSet.addAll(Arrays.asList(artist1, artist2));
+        Artist artist1 = Artist.builder().id(id).artistName("artist1").build();
+        Artist artist2 = Artist.builder().id(id).artistName("artist2").build();
+        Set<Artist> artistSet = new HashSet<>(Arrays.asList(artist1, artist2));
 
         // then
         assertThat(artist1).isEqualTo(artist2);
