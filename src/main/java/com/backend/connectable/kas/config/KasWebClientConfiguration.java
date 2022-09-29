@@ -4,7 +4,9 @@ import okhttp3.Credentials;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.netty.http.client.HttpClient;
 
 @Configuration
 public class KasWebClientConfiguration {
@@ -23,7 +25,11 @@ public class KasWebClientConfiguration {
 
     @Bean
     public WebClient webClientForKas() {
+        HttpClient httpClient = HttpClient.newConnection().keepAlive(false);
+        ReactorClientHttpConnector httpConnector = new ReactorClientHttpConnector(httpClient);
+
         return WebClient.builder()
+                .clientConnector(httpConnector)
                 .defaultHeaders(
                         headers -> {
                             headers.add("x-chain-id", chainId);
