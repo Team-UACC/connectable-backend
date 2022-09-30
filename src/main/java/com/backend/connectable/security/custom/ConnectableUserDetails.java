@@ -1,4 +1,4 @@
-package com.backend.connectable.security;
+package com.backend.connectable.security.custom;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

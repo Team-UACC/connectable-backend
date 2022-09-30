@@ -14,7 +14,7 @@ import com.backend.connectable.event.service.EventService;
 import com.backend.connectable.exception.ConnectableException;
 import com.backend.connectable.klip.service.KlipService;
 import com.backend.connectable.klip.service.dto.KlipAuthLoginResponse;
-import com.backend.connectable.security.ConnectableUserDetails;
+import com.backend.connectable.security.custom.ConnectableUserDetails;
 import com.backend.connectable.user.domain.User;
 import com.backend.connectable.user.domain.repository.UserRepository;
 import com.backend.connectable.user.redis.UserTicketEntrance;

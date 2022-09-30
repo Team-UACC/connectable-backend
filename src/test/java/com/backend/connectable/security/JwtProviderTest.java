@@ -1,5 +1,8 @@
 package com.backend.connectable.security;
 
+import static org.assertj.core.api.AssertionsForClassTypes.*;
+
+import com.backend.connectable.security.custom.JwtProvider;
 import com.backend.connectable.security.exception.ConnectableSecurityException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -7,13 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.assertj.core.api.AssertionsForClassTypes.*;
-
 @SpringBootTest
 class JwtProviderTest {
 
-    @Autowired
-    JwtProvider jwtProvider;
+    @Autowired JwtProvider jwtProvider;
 
     @Value("${jwt.admin-payload}")
     private String adminPayload;
@@ -40,8 +40,7 @@ class JwtProviderTest {
         String token = jwtProvider.generateToken(claim);
 
         // when & then
-        assertThatCode(() -> jwtProvider.verify(token))
-                .doesNotThrowAnyException();
+        assertThatCode(() -> jwtProvider.verify(token)).doesNotThrowAnyException();
     }
 
     @Test
@@ -77,7 +76,7 @@ class JwtProviderTest {
 
         // when & then
         assertThatThrownBy(() -> jwtProvider.exportClaim(invalidToken))
-            .isInstanceOf(ConnectableSecurityException.class);
+                .isInstanceOf(ConnectableSecurityException.class);
     }
 
     @DisplayName("어드민 JWT 토큰에 대해 verify 할 수 있다.")
@@ -87,8 +86,7 @@ class JwtProviderTest {
         String adminToken = jwtProvider.generateToken(adminPayload);
 
         // when & then
-        assertThatCode(() -> jwtProvider.verifyAdmin(adminToken))
-            .doesNotThrowAnyException();
+        assertThatCode(() -> jwtProvider.verifyAdmin(adminToken)).doesNotThrowAnyException();
     }
 
     @DisplayName("어드민 JWT 토큰이 아닌 대해 verify시 에러가 발생한다.")
@@ -99,6 +97,6 @@ class JwtProviderTest {
 
         // when & then
         assertThatThrownBy(() -> jwtProvider.verifyAdmin(adminToken))
-            .isInstanceOf(ConnectableSecurityException.class);
+                .isInstanceOf(ConnectableSecurityException.class);
     }
 }

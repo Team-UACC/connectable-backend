@@ -13,7 +13,7 @@ import com.backend.connectable.order.mapper.OrderMapper;
 import com.backend.connectable.order.ui.dto.OrderDetailResponse;
 import com.backend.connectable.order.ui.dto.OrderRequest;
 import com.backend.connectable.order.ui.dto.OrderResponse;
-import com.backend.connectable.security.ConnectableUserDetails;
+import com.backend.connectable.security.custom.ConnectableUserDetails;
 import com.backend.connectable.user.domain.User;
 import com.backend.connectable.user.domain.repository.UserRepository;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.backend.connectable.security;
+package com.backend.connectable.security.custom;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -41,16 +41,14 @@ public class JwtProvider {
 
     public String generateToken(String claim) {
         return JWT.create()
-            .withSubject(claim)
-            .withClaim("expire", Instant.now().getEpochSecond() + duration)
-            .sign(algorithm);
+                .withSubject(claim)
+                .withClaim("expire", Instant.now().getEpochSecond() + duration)
+                .sign(algorithm);
     }
 
     public void verify(String token) throws ConnectableSecurityException {
         try {
-            JWT.require(algorithm)
-                .build()
-                .verify(token);
+            JWT.require(algorithm).build().verify(token);
         } catch (JWTVerificationException e) {
             throw new ConnectableSecurityException(ErrorType.INVALID_TOKEN);
         }
@@ -58,8 +56,7 @@ public class JwtProvider {
 
     public String exportClaim(String token) throws ConnectableSecurityException {
         try {
-            return JWT.decode(token)
-                .getSubject();
+            return JWT.decode(token).getSubject();
         } catch (JWTDecodeException e) {
             throw new ConnectableSecurityException(ErrorType.TOKEN_PAYLOAD_EXTRACTION_FAILURE);
         }
@@ -68,7 +65,8 @@ public class JwtProvider {
     public Authentication getAuthentication(String token) throws ConnectableSecurityException {
         String klaytnAddress = exportClaim(token);
         UserDetails userDetails = userDetailsService.loadUserByUsername(klaytnAddress);
-        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(
+                userDetails, "", userDetails.getAuthorities());
     }
 
     public void verifyAdmin(String token) throws ConnectableSecurityException {

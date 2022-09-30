@@ -1,5 +1,6 @@
-package com.backend.connectable.security;
+package com.backend.connectable.security.config;
 
+import com.backend.connectable.security.custom.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
