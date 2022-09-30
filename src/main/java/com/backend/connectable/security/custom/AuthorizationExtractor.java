@@ -1,7 +1,7 @@
 package com.backend.connectable.security.custom;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
+import javax.servlet.http.HttpServletRequest;
 
 public class AuthorizationExtractor {
 
