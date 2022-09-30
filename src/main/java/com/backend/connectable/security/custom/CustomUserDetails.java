@@ -1,17 +1,10 @@
-package com.backend.connectable.security;
+package com.backend.connectable.security.custom;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-
-@RequiredArgsConstructor
-@Getter
-public class ConnectableUserDetails implements UserDetails {
-
-    private final String klaytnAddress;
+public abstract class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

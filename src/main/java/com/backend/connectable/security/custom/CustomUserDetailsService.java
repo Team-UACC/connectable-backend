@@ -1,9 +1,10 @@
-package com.backend.connectable.security;
+package com.backend.connectable.security.custom;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
+
 @Component
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {

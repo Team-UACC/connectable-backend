@@ -1,7 +1,7 @@
 package com.backend.connectable.user.ui;
 
 import com.backend.connectable.exception.sequence.ValidationSequence;
-import com.backend.connectable.security.ConnectableUserDetails;
+import com.backend.connectable.security.custom.ConnectableUserDetails;
 import com.backend.connectable.user.service.UserService;
 import com.backend.connectable.user.ui.dto.*;
 import lombok.RequiredArgsConstructor;

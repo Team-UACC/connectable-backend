@@ -7,8 +7,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.backend.connectable.auth.service.AuthService;
-import com.backend.connectable.security.JwtAuthenticationFilter;
-import com.backend.connectable.security.SecurityConfiguration;
+import com.backend.connectable.security.config.SecurityConfiguration;
+import com.backend.connectable.security.custom.JwtAuthenticationFilter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
