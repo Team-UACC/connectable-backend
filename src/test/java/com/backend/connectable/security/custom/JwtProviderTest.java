@@ -1,8 +1,7 @@
-package com.backend.connectable.security;
+package com.backend.connectable.security.custom;
 
 import static org.assertj.core.api.AssertionsForClassTypes.*;
 
-import com.backend.connectable.security.custom.JwtProvider;
 import com.backend.connectable.security.exception.ConnectableSecurityException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
