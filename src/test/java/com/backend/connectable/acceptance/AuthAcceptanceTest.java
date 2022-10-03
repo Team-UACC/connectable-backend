@@ -1,6 +1,6 @@
 package com.backend.connectable.acceptance;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
