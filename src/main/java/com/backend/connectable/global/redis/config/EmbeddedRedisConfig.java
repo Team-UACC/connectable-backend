@@ -29,7 +29,7 @@ public class EmbeddedRedisConfig {
         int port = isRedisRunning() ? findAvailablePort() : redisPort;
 
         if (isArmMac()) {
-            redisServer = new RedisServer(getRedisFileForArcMac(), port);
+            redisServer = new RedisServer(getRedisFileForArmMac(), port);
         } else {
             redisServer = new RedisServer(port);
         }
@@ -37,7 +37,7 @@ public class EmbeddedRedisConfig {
         redisServer.start();
     }
 
-    private File getRedisFileForArcMac() throws URISyntaxException {
+    private File getRedisFileForArmMac() throws URISyntaxException {
         URL resource =
                 getClass()
                         .getClassLoader()

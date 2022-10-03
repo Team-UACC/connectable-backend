@@ -2,7 +2,7 @@ package com.backend.connectable.auth.service;
 
 import com.backend.connectable.exception.ConnectableException;
 import com.backend.connectable.exception.ErrorType;
-import com.backend.connectable.global.common.util.RedisUtil;
+import com.backend.connectable.global.redis.RedisRepository;
 import com.backend.connectable.sms.service.SmsService;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -14,18 +14,18 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final RedisUtil redisUtil;
+    private final RedisRepository redisRepository;
     private final SmsService smsService;
 
     public String getAuthKey(String phoneNumber, Long duration) {
         String generatedKey = generateCertificationKey();
         smsService.sendSignUpAuthKey(generatedKey, phoneNumber);
-        redisUtil.setDataExpire(phoneNumber, generatedKey, 60 * duration);
+        redisRepository.setDataExpire(phoneNumber, generatedKey, 60 * duration);
         return generatedKey;
     }
 
     public boolean certifyKey(String phoneNumber, String authKey) {
-        String generatedKey = redisUtil.getData(phoneNumber);
+        String generatedKey = redisRepository.getData(phoneNumber);
         return validateAuthKey(generatedKey, authKey);
     }
 
