@@ -1,6 +1,6 @@
 package com.backend.connectable.auth.service;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import com.backend.connectable.exception.ConnectableException;
