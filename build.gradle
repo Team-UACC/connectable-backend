@@ -127,6 +127,9 @@ dependencies {
 	// MockServer
 	implementation("org.mock-server:mockserver-netty:${mockServerVersion}")
 	implementation("org.mock-server:mockserver-client-java:${mockServerVersion}")
+
+	// Awaitility
+	testImplementation 'org.awaitility:awaitility:4.2.0'
 }
 
 tasks.named('test') {

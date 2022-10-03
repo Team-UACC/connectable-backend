@@ -1,8 +1,9 @@
 package com.backend.connectable.global.redis;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.awaitility.Awaitility.await;
 
+import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,19 +31,20 @@ class RedisRepositoryTest {
 
     @DisplayName("레디스에 데이터를 만료 시간을 정하여 조회할 수 있다.")
     @Test
-    void setDataExpire() throws InterruptedException {
+    void setDataExpire() {
         // given
         String key = "key";
         String value = "value";
         redisRepository.setDataExpire(key, value, 1);
 
-        // when
+        // when & then
         String dataRightAfter = redisRepository.getData(key);
-        Thread.sleep(1000);
-        String dataAfter1Sec = redisRepository.getData(key);
-
-        // then
         assertThat(dataRightAfter).isEqualTo(value);
-        assertThat(dataAfter1Sec).isNull();
+
+        await().atMost(1500, TimeUnit.MILLISECONDS)
+                .until(
+                        () -> {
+                            return (redisRepository.getData(key) == null);
+                        });
     }
 }
