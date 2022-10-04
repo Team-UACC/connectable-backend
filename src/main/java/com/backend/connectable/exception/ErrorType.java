@@ -50,6 +50,7 @@ public enum ErrorType {
     ADMIN_TOKEN_VERIFY_FAILURE("ADMIN-002", "어드민 토큰이 아닙니다."),
     ARTIST_NOT_FOUND("ADMIN-003", "해당 ID에 대응되는 아티스트가 없습니다."),
     EVENT_NOT_FOUND("ADMIN-004", "해당 ID에 대응되는 이벤트가 없습니다."),
+    THREAD_INTERRUPTED("ADMIN-005", "쓰레드에 문제가 발생했습니다."),
     ;
 
     private final String errorCode;

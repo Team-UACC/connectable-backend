@@ -36,11 +36,11 @@ public class AdminOrderService {
 
     private OrderDetail findOrderDetail(Long orderDetailId) {
         return orderDetailRepository
-            .findById(orderDetailId)
-            .orElseThrow(
-                () ->
-                    new ConnectableException(
-                        HttpStatus.BAD_REQUEST, ErrorType.ORDER_DETAIL_NOT_EXISTS));
+                .findById(orderDetailId)
+                .orElseThrow(
+                        () ->
+                                new ConnectableException(
+                                        HttpStatus.BAD_REQUEST, ErrorType.ORDER_DETAIL_NOT_EXISTS));
     }
 
     private Order findOrderByOrderDetail(OrderDetail orderDetail) {
@@ -54,7 +54,7 @@ public class AdminOrderService {
         String receiverAddress = orderDetail.getKlaytnAddress();
         try {
             TransactionResponse transactionResponse =
-                kasService.sendMyToken(contractAddress, tokenId, receiverAddress);
+                    kasService.sendMyToken(contractAddress, tokenId, receiverAddress);
             orderDetail.transferSuccess(transactionResponse.getTransactionHash());
         } catch (KasException kasException) {
             orderDetail.transferFail();

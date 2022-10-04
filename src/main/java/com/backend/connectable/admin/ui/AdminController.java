@@ -36,9 +36,7 @@ public class AdminController {
     }
 
     @PostMapping("/deploy-event")
-    public ResponseEntity<Void> deployEvent(
-            @RequestBody EventIssueRequest eventIssueRequest)
-            throws InterruptedException {
+    public ResponseEntity<Void> deployEvent(@RequestBody EventIssueRequest eventIssueRequest) {
         adminService.issueEvent(eventIssueRequest);
         return ResponseEntity.ok().build();
     }

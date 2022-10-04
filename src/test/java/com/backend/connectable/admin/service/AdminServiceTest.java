@@ -9,14 +9,18 @@ import static com.backend.connectable.fixture.UserFixture.createUserMrLee;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 
 import com.backend.connectable.admin.ui.dto.EventIssueRequest;
+import com.backend.connectable.admin.ui.dto.TokenIssueRequest;
 import com.backend.connectable.artist.domain.Artist;
 import com.backend.connectable.artist.domain.repository.ArtistRepository;
 import com.backend.connectable.event.domain.*;
 import com.backend.connectable.event.domain.repository.EventRepository;
 import com.backend.connectable.event.domain.repository.TicketRepository;
+import com.backend.connectable.event.ui.dto.TicketMetadataAttributeResponse;
+import com.backend.connectable.event.ui.dto.TicketMetadataResponse;
 import com.backend.connectable.exception.ConnectableException;
 import com.backend.connectable.kas.service.KasService;
 import com.backend.connectable.kas.service.common.dto.TransactionResponse;
@@ -27,9 +31,9 @@ import com.backend.connectable.order.domain.OrderDetail;
 import com.backend.connectable.order.domain.OrderStatus;
 import com.backend.connectable.order.domain.repository.OrderDetailRepository;
 import com.backend.connectable.order.domain.repository.OrderRepository;
+import com.backend.connectable.s3.service.S3Service;
 import com.backend.connectable.user.domain.User;
 import com.backend.connectable.user.domain.repository.UserRepository;
-
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
@@ -59,6 +63,8 @@ class AdminServiceTest {
 
     @MockBean private KasService kasService;
 
+    @MockBean private S3Service s3Service;
+
     User mrLee = createUserMrLee();
     User joel = createUserJoel();
 
@@ -82,11 +88,12 @@ class AdminServiceTest {
     }
 
     private void makeJoelOrder() {
-        joelOrder = Order.builder()
-            .user(joel)
-            .ordererName("조영상")
-            .ordererPhoneNumber("010-1234-1234")
-            .build();
+        joelOrder =
+                Order.builder()
+                        .user(joel)
+                        .ordererName("조영상")
+                        .ordererPhoneNumber("010-1234-1234")
+                        .build();
         joelOrderDetail1 = new OrderDetail(OrderStatus.REQUESTED, null, bigNaughtyEventTicket1);
         joelOrderDetail2 = new OrderDetail(OrderStatus.REQUESTED, null, bigNaughtyEventTicket2);
         joelOrder.addOrderDetails(List.of(joelOrderDetail1, joelOrderDetail2));
@@ -101,7 +108,7 @@ class AdminServiceTest {
         String txStatus = "Submitted";
         String txHash = "0x1234abcd";
         given(kasService.sendMyToken(any(String.class), any(Integer.class), any(String.class)))
-            .willReturn(new TransactionResponse(txStatus, txHash));
+                .willReturn(new TransactionResponse(txStatus, txHash));
         Long orderDetailId = joelOrderDetail1.getId();
 
         // when
@@ -160,9 +167,9 @@ class AdminServiceTest {
         String deployedAddress = "0x9876abcd";
 
         given(kasService.deployMyContract(name, symbol, alias))
-            .willReturn(new ContractDeployResponse("0x1234", "success", "0xabcd"));
+                .willReturn(new ContractDeployResponse("0x1234", "success", "0xabcd"));
         given(kasService.getMyContractByAlias(eventIssueRequest.getContractAlias()))
-            .willReturn(new ContractItemResponse(deployedAddress, alias, "8217", name, symbol));
+                .willReturn(new ContractItemResponse(deployedAddress, alias, "8217", name, symbol));
 
         // when
         adminService.issueEvent(eventIssueRequest);
@@ -190,13 +197,73 @@ class AdminServiceTest {
         String deployedAddress = "0x9876abcd";
 
         given(kasService.deployMyContract(name, symbol, alias))
-            .willReturn(new ContractDeployResponse("0x1234", "success", "0xabcd"));
+                .willReturn(new ContractDeployResponse("0x1234", "success", "0xabcd"));
         given(kasService.getMyContractByAlias(eventIssueRequest.getContractAlias()))
-            .willReturn(new ContractItemResponse(deployedAddress, alias, "8217", name, symbol));
+                .willReturn(new ContractItemResponse(deployedAddress, alias, "8217", name, symbol));
 
         // when & then
         assertThatCode(() -> adminService.issueEvent(eventIssueRequest))
-            .isInstanceOf(ConnectableException.class);
+                .isInstanceOf(ConnectableException.class);
+    }
+
+    @DisplayName("존재하는 이벤트에 대해 티켓을 토큰으로 발행할 수 있다.")
+    @Test
+    void issueTokens() {
+        // given
+        String contractAddress = bigNaughtyEvent.getContractAddress();
+        int startTokenId = 1;
+        int endTokenId = 100;
+        String tokenUri = "https://token.uri";
+        int price = 10000;
+        TokenIssueRequest tokenIssueRequest =
+                new TokenIssueRequest(contractAddress, startTokenId, endTokenId, tokenUri, price);
+
+        given(kasService.mintMyToken(eq(contractAddress), any(Integer.class), eq(tokenUri)))
+                .willReturn(new TransactionResponse());
+
+        TicketMetadataResponse mockTicketMetadata =
+                new TicketMetadataResponse(
+                        "name",
+                        "description",
+                        "image",
+                        List.of(new TicketMetadataAttributeResponse("trait_type", "value")));
+        given(s3Service.fetchMetadata(tokenUri)).willReturn(mockTicketMetadata);
+
+        // when
+        adminService.issueTokens(tokenIssueRequest);
+
+        // then
+        List<Ticket> ticketsOfTokenUris = ticketRepository.findAllByTokenUri(List.of(tokenUri));
+        assertThat(ticketsOfTokenUris.size()).isEqualTo(100);
+    }
+
+    @DisplayName("존재하지 않는 이벤트에 대해서는 티켓을 발행할 수 없다.")
+    @Test
+    void cannotIssueTokenWithInvalidEvent() {
+        // given
+        String invalidContractAddress = "0x1234567890098765432qwertyuioplkjhgfdsazxcvbnm";
+        int startTokenId = 1;
+        int endTokenId = 100;
+        String tokenUri = "https://token.uri";
+        int price = 10000;
+        TokenIssueRequest tokenIssueRequest =
+                new TokenIssueRequest(
+                        invalidContractAddress, startTokenId, endTokenId, tokenUri, price);
+
+        given(kasService.mintMyToken(eq(invalidContractAddress), any(Integer.class), eq(tokenUri)))
+                .willReturn(new TransactionResponse());
+
+        TicketMetadataResponse mockTicketMetadata =
+                new TicketMetadataResponse(
+                        "name",
+                        "description",
+                        "image",
+                        List.of(new TicketMetadataAttributeResponse("trait_type", "value")));
+        given(s3Service.fetchMetadata(tokenUri)).willReturn(mockTicketMetadata);
+
+        // when
+        assertThatCode(() -> adminService.issueTokens(tokenIssueRequest))
+                .isInstanceOf(ConnectableException.class);
     }
 
     @AfterEach
