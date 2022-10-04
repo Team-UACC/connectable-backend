@@ -2,7 +2,8 @@ package com.backend.connectable.security.custom;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 
 import com.backend.connectable.security.exception.ConnectableSecurityException;
 import java.io.IOException;

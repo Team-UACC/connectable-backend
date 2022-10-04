@@ -1,6 +1,7 @@
 package com.backend.connectable.kas.service;
 
-import static org.assertj.core.api.AssertionsForClassTypes.*;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import com.backend.connectable.exception.KasException;
 import com.backend.connectable.kas.service.common.dto.TransactionResponse;
