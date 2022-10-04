@@ -31,61 +31,27 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class AdminService {
 
-    private final OrderDetailRepository orderDetailRepository;
-    private final OrderRepository orderRepository;
+    private final AdminOrderService adminOrderService;
+
     private final EventRepository eventRepository;
     private final TicketRepository ticketRepository;
     private final ArtistRepository artistRepository;
     private final KasService kasService;
     private final S3Service s3Service;
-    private final SmsService smsService;
 
     @Transactional
     public void orderDetailToPaid(Long orderDetailId) {
-        OrderDetail orderDetail = findOrderDetail(orderDetailId);
-        Order order = findOrderByOrderDetail(orderDetail);
-        orderDetail.paid();
-        sendTicket(orderDetail);
-        smsService.sendPaidNotification(order.getOrdererPhoneNumber());
-    }
-
-    private OrderDetail findOrderDetail(Long orderDetailId) {
-        return orderDetailRepository
-                .findById(orderDetailId)
-                .orElseThrow(
-                        () ->
-                                new ConnectableException(
-                                        HttpStatus.BAD_REQUEST, ErrorType.ORDER_DETAIL_NOT_EXISTS));
-    }
-
-    private Order findOrderByOrderDetail(OrderDetail orderDetail) {
-        Long orderId = orderDetail.getOrder().getId();
-        return orderRepository.getReferenceById(orderId);
-    }
-
-    private void sendTicket(OrderDetail orderDetail) {
-        String contractAddress = orderDetail.getContractAddress();
-        int tokenId = orderDetail.getTokenId();
-        String receiverAddress = orderDetail.getKlaytnAddress();
-        try {
-            TransactionResponse transactionResponse =
-                    kasService.sendMyToken(contractAddress, tokenId, receiverAddress);
-            orderDetail.transferSuccess(transactionResponse.getTransactionHash());
-        } catch (KasException kasException) {
-            orderDetail.transferFail();
-        }
+        adminOrderService.orderDetailToPaid(orderDetailId);
     }
 
     @Transactional
     public void orderDetailToUnpaid(Long orderDetailId) {
-        OrderDetail orderDetail = findOrderDetail(orderDetailId);
-        orderDetail.unpaid();
+        adminOrderService.orderDetailToUnpaid(orderDetailId);
     }
 
     @Transactional
     public void orderDetailToRefund(Long orderDetailId) {
-        OrderDetail orderDetail = findOrderDetail(orderDetailId);
-        orderDetail.refund();
+        adminOrderService.orderDetailToRefund(orderDetailId);
     }
 
     @Transactional
