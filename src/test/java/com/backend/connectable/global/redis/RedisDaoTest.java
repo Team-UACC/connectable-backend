@@ -10,9 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class RedisRepositoryTest {
+class RedisDaoTest {
 
-    @Autowired RedisRepository redisRepository;
+    @Autowired
+    RedisDao redisDao;
 
     @DisplayName("레디스에 데이터를 저장하여 조회할 수 있다.")
     @Test
@@ -20,10 +21,10 @@ class RedisRepositoryTest {
         // given
         String key = "key";
         String value = "value";
-        redisRepository.setData(key, value);
+        redisDao.setData(key, value);
 
         // when
-        String data = redisRepository.getData(key);
+        String data = redisDao.getData(key);
 
         // then
         assertThat(data).isEqualTo(value);
@@ -35,16 +36,16 @@ class RedisRepositoryTest {
         // given
         String key = "key";
         String value = "value";
-        redisRepository.setDataExpire(key, value, 1);
+        redisDao.setDataExpire(key, value, 1);
 
         // when & then
-        String dataRightAfter = redisRepository.getData(key);
+        String dataRightAfter = redisDao.getData(key);
         assertThat(dataRightAfter).isEqualTo(value);
 
         await().atMost(1500, TimeUnit.MILLISECONDS)
                 .until(
                         () -> {
-                            return (redisRepository.getData(key) == null);
+                            return (redisDao.getData(key) == null);
                         });
     }
 }
