@@ -5,8 +5,11 @@ import java.time.ZoneId;
 
 public class DateTimeUtil {
 
+    private DateTimeUtil() {}
+
     /**
      * LocalDateTime 을 Epoch Micro Milliseconds로 변환
+     *
      * @param dateTime
      * @return long
      */

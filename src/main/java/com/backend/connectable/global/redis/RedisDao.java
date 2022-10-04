@@ -1,14 +1,14 @@
-package com.backend.connectable.global.common.util;
+package com.backend.connectable.global.redis;
 
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 @RequiredArgsConstructor
-@Service
-public class RedisUtil {
+@Repository
+public class RedisDao {
     private final StringRedisTemplate stringRedisTemplate;
 
     public String getData(String key) {
