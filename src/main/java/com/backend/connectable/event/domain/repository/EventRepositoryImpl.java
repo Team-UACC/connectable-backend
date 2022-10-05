@@ -34,7 +34,6 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
 
     @Override
     public Optional<EventDetail> findEventDetailByEventId(Long eventId) {
-        // ToDo Event에 매핑된 Ticket이 없는 경우는 EVENT-001 Exception 발생
         EventDetail result =
                 queryFactory
                         .select(
