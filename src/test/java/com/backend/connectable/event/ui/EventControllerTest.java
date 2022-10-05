@@ -42,7 +42,6 @@ class EventControllerTest {
 
     private static final Long EVENT_ID_1 = 1L;
     private static final Long EVENT_ID_2 = 2L;
-    private static final Long ARTIST_ID_1 = 1L;
     private static final Long TICKET_ID_1 = 1L;
     private static final Long TICKET_ID_2 = 2L;
 
