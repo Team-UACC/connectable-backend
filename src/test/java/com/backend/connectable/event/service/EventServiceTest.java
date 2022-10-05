@@ -33,6 +33,7 @@ class EventServiceTest {
     private Artist artist1;
     private Event event1;
     private Event event2;
+    private Event event3;
     private Ticket ticket1;
     private Ticket ticket2;
     private Ticket ticket3;
@@ -99,6 +100,20 @@ class EventServiceTest {
                         .artist(artist1)
                         .build();
 
+        event2 =
+                Event.builder()
+                        .eventName("test3")
+                        .eventImage("/connectable-events/image_0xtest.jpeg")
+                        .startTime(LocalDateTime.now())
+                        .description("description3")
+                        .contractAddress(CONTRACT_ADDRESS)
+                        .contractName("event3")
+                        .salesFrom(LocalDateTime.now())
+                        .salesTo(LocalDateTime.now())
+                        .endTime(LocalDateTime.now())
+                        .artist(artist1)
+                        .build();
+
         ticket1Metadata =
                 s3Service
                         .fetchMetadata(
@@ -158,7 +173,7 @@ class EventServiceTest {
                         .build();
 
         artistRepository.save(artist1);
-        eventRepository.saveAll(Arrays.asList(event1, event2));
+        eventRepository.saveAll(Arrays.asList(event1, event2, event3));
         ticketRepository.saveAll(Arrays.asList(ticket1, ticket2, ticket3, ticket4));
     }
 
@@ -187,6 +202,17 @@ class EventServiceTest {
         assertThat(eventDetailResponse.getName()).isEqualTo(event1.getEventName());
         assertThat(eventDetailResponse.getContractAddress()).isEqualTo(event1.getContractAddress());
         assertThat(eventDetailResponse.getImage()).isEqualTo(event1.getEventImage());
+    }
+
+    @DisplayName("종속된 티켓이 없는 이벤트의 상세 조회에 성공한다.")
+    @Test
+    void getEventDetailWithoutTickets() {
+        // when
+        EventDetailResponse eventDetailResponse = eventService.getEventDetail(event3.getId());
+
+        // then
+        assertThat(eventDetailResponse.getId()).isEqualTo(event3.getId());
+        assertThat(eventDetailResponse.getName()).isEqualTo(event3.getEventName());
     }
 
     @DisplayName("없는 이벤트 상세를 조회시 예외가 발생한다.")
