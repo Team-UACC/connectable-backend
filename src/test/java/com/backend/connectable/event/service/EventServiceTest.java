@@ -3,6 +3,7 @@ package com.backend.connectable.event.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.BDDMockito.*;
 
 import com.backend.connectable.artist.domain.Artist;
 import com.backend.connectable.artist.domain.repository.ArtistRepository;
@@ -17,15 +18,21 @@ import com.backend.connectable.event.ui.dto.EventResponse;
 import com.backend.connectable.event.ui.dto.TicketResponse;
 import com.backend.connectable.exception.ConnectableException;
 import com.backend.connectable.exception.ErrorType;
+import com.backend.connectable.kas.service.KasService;
+import com.backend.connectable.kas.service.token.dto.TokenResponse;
+import com.backend.connectable.kas.service.token.dto.TokensResponse;
 import com.backend.connectable.s3.service.S3Service;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SpringBootTest
 class EventServiceTest {
@@ -43,6 +50,7 @@ class EventServiceTest {
     private TicketMetadata ticket3Metadata;
     private TicketMetadata ticket4Metadata;
 
+    private static final String TOKEN_URI = "tokenUri";
     private static final String CONTRACT_ADDRESS = "0xe99540401ef24aba1b7076ea92c94ec38536c6fb";
 
     @Autowired TicketRepository ticketRepository;
@@ -54,6 +62,8 @@ class EventServiceTest {
     @Autowired EventService eventService;
 
     @Autowired S3Service s3Service;
+
+    @MockBean KasService kasService;
 
     @BeforeEach
     void setUp() {
@@ -175,6 +185,16 @@ class EventServiceTest {
         artistRepository.save(artist1);
         eventRepository.saveAll(Arrays.asList(event1, event2, event3));
         ticketRepository.saveAll(Arrays.asList(ticket1, ticket2, ticket3, ticket4));
+
+        TokenResponse tokenResponse =
+                new TokenResponse("0x1234", "0x5678", "0x1", TOKEN_URI, "0xwelcome");
+        TokensResponse tokensResponse = new TokensResponse("eyJjm...ZSJ9", List.of(tokenResponse));
+        Map<String, TokensResponse> tokenResponseMap = new HashMap<>();
+        tokenResponseMap.put(CONTRACT_ADDRESS, tokensResponse);
+
+        given(kasService.getToken(any(String.class), any(Integer.class))).willReturn(tokenResponse);
+        given(kasService.findAllTokensOwnedByUser(anyList(), any(String.class)))
+                .willReturn(tokenResponseMap);
     }
 
     @DisplayName("이벤트 목록을 여러개 조회한다.")
@@ -254,5 +274,30 @@ class EventServiceTest {
         assertThat(ticket).isNotNull();
         assertThat(ticket.getId()).isEqualTo(ticket1.getId());
         assertThat(ticket.getPrice()).isEqualTo(ticket1.getPrice());
+    }
+
+    @DisplayName("티켓의 정보를 받아올 수 있다.")
+    @Test
+    void getTicketInfo() {
+        // when
+        TicketResponse ticketResponse =
+                eventService.getTicketInfo(ticket1.getEventId(), ticket1.getId());
+
+        // then
+        assertThat(ticketResponse).isNotNull();
+        assertThat(ticketResponse.getArtistName()).isEqualTo(ticket1.getArtistName());
+        assertThat(ticketResponse.getTokenId()).isEqualTo(ticket1.getTokenId());
+        assertThat(ticketResponse.getEventName()).isEqualTo(ticket1.getEvent().getEventName());
+    }
+
+    @DisplayName("개인의 지갑주소로 소유 티켓목록을 조회할 수 있다.")
+    @Test
+    void findTicketByUserAddress() {
+        // given & when
+        String userKlaytnAddress = "0x1234";
+        List<Ticket> tickets = eventService.findTicketByUserAddress(userKlaytnAddress);
+
+        assertThat(tickets.get(0).getTokenUri()).isEqualTo(TOKEN_URI);
+        assertThat(tickets.get(0).getPrice()).isEqualTo(10000);
     }
 }
