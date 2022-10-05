@@ -72,11 +72,11 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
                                         event.location,
                                         event.salesOption))
                         .from(event)
-                        .innerJoin(ticket)
+                        .leftJoin(ticket)
                         .on(ticket.event.id.eq(event.id))
                         .innerJoin(artist)
                         .on(event.artist.id.eq(artist.id))
-                        .where(ticket.event.id.eq(eventId))
+                        .where(event.id.eq(eventId))
                         .groupBy(event.id)
                         .limit(1)
                         .fetchOne();

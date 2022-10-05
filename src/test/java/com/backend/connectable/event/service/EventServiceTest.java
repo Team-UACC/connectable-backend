@@ -100,7 +100,7 @@ class EventServiceTest {
                         .artist(artist1)
                         .build();
 
-        event2 =
+        event3 =
                 Event.builder()
                         .eventName("test3")
                         .eventImage("/connectable-events/image_0xtest.jpeg")
@@ -184,7 +184,7 @@ class EventServiceTest {
         List<EventResponse> events = eventService.getList();
 
         // then
-        assertEquals(2L, events.size());
+        assertEquals(3L, events.size());
         assertThat(events.get(0).getId()).isEqualTo(event1.getId());
         assertThat(events.get(1).getId()).isEqualTo(event2.getId());
         assertThat(events.get(0).getDescription()).isEqualTo(event1.getDescription());
