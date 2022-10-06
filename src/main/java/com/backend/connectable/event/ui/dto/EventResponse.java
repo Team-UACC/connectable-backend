@@ -1,9 +1,8 @@
 package com.backend.connectable.event.ui.dto;
 
-import com.backend.connectable.global.common.util.DateTimeUtil;
-import lombok.*;
-
+import com.backend.connectable.global.util.DateTimeUtil;
 import java.time.LocalDateTime;
+import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,7 +19,14 @@ public class EventResponse {
     private Long salesTo;
 
     @Builder
-    public EventResponse(Long id, String name, String image, LocalDateTime date, String description, LocalDateTime salesFrom, LocalDateTime salesTo) {
+    public EventResponse(
+            Long id,
+            String name,
+            String image,
+            LocalDateTime date,
+            String description,
+            LocalDateTime salesFrom,
+            LocalDateTime salesTo) {
         this.id = id;
         this.name = name;
         this.image = image;

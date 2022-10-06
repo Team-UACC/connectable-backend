@@ -1,8 +1,8 @@
 package com.backend.connectable.event.ui.dto;
 
 import com.backend.connectable.event.domain.SalesOption;
-import com.backend.connectable.global.common.util.DateTimeUtil;
-import com.backend.connectable.global.common.util.OpenseaCollectionNamingUtil;
+import com.backend.connectable.global.util.DateTimeUtil;
+import com.backend.connectable.global.util.OpenseaCollectionNamingUtil;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;

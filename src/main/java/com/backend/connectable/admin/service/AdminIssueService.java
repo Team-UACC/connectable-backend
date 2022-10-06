@@ -9,7 +9,7 @@ import com.backend.connectable.event.domain.repository.EventRepository;
 import com.backend.connectable.event.domain.repository.TicketRepository;
 import com.backend.connectable.exception.ConnectableException;
 import com.backend.connectable.exception.ErrorType;
-import com.backend.connectable.global.common.util.WaitUtil;
+import com.backend.connectable.global.util.WaitUtil;
 import com.backend.connectable.kas.service.KasService;
 import com.backend.connectable.kas.service.contract.dto.ContractItemResponse;
 import com.backend.connectable.s3.service.S3Service;

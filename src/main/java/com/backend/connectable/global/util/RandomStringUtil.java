@@ -1,4 +1,4 @@
-package com.backend.connectable.global.common.util;
+package com.backend.connectable.global.util;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
