@@ -12,6 +12,7 @@ plugins {
 	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 	id "com.diffplug.spotless" version "6.10.0"
 	id 'java'
+	id 'jacoco'
 }
 
 group = 'com.backend'
@@ -50,6 +51,39 @@ allprojects {
 
 test {
 	useJUnitPlatform()
+	finalizedBy 'jacocoTestReport'
+}
+
+
+jacoco {
+	toolVersion = '0.8.8'
+}
+
+jacocoTestReport {
+	reports {
+		html.enabled true
+	}
+	finalizedBy 'jacocoTestCoverageVerification'
+}
+
+jacocoTestCoverageVerification {
+	def Qdomains = []
+	for (qPattern in '*.QA'..'*.QZ') {
+		Qdomains.add(qPattern + '*')
+	}
+
+	violationRules {
+		rule {
+			limit {
+				counter = 'LINE'
+				value = 'COVEREDRATIO'
+				minimum = 0.8
+			}
+
+			excludes = [
+			] + Qdomains
+		}
+	}
 }
 
 tasks.jar {
