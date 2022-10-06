@@ -4,7 +4,7 @@ import com.backend.connectable.event.domain.Ticket;
 import com.backend.connectable.event.service.EventService;
 import com.backend.connectable.exception.ConnectableException;
 import com.backend.connectable.exception.ErrorType;
-import com.backend.connectable.global.common.util.RandomStringUtil;
+import com.backend.connectable.global.util.RandomStringUtil;
 import com.backend.connectable.security.custom.ConnectableUserDetails;
 import com.backend.connectable.user.domain.User;
 import com.backend.connectable.user.domain.repository.UserRepository;

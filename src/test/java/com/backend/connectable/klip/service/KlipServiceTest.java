@@ -5,7 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 
-import com.backend.connectable.klip.config.KlipRestTemplate;
+import com.backend.connectable.global.network.RestTemplateClient;
 import com.backend.connectable.klip.service.dto.KlipAuthHandleKlaytnAddressResponse;
 import com.backend.connectable.klip.service.dto.KlipAuthHandleResponse;
 import com.backend.connectable.klip.service.dto.KlipAuthLoginResponse;
@@ -34,13 +34,13 @@ class KlipServiceTest {
 
     @Autowired KlipService klipService;
 
-    @MockBean KlipRestTemplate klipRestTemplate;
+    @MockBean RestTemplateClient restTemplateClient;
 
     @DisplayName("해당 requestKey를 통해 요청시 준비중이라면, status Prepared를 응답한다.")
     @Test
     void authLoginPrepared() {
         // given
-        given(klipRestTemplate.getForEntity(any(), eq(KlipAuthHandleResponse.class)))
+        given(restTemplateClient.getForObject(any(), eq(KlipAuthHandleResponse.class)))
                 .willReturn(preparedAuthHandleResponse);
 
         // when
@@ -55,7 +55,7 @@ class KlipServiceTest {
     @Test
     void authLoginCompleted() {
         // given
-        given(klipRestTemplate.getForEntity(any(), eq(KlipAuthHandleResponse.class)))
+        given(restTemplateClient.getForObject(any(), eq(KlipAuthHandleResponse.class)))
                 .willReturn(completedAuthHandleResponse);
 
         // when
@@ -70,7 +70,7 @@ class KlipServiceTest {
     @Test
     void authLoginFailed() {
         // given
-        given(klipRestTemplate.getForEntity(any(), eq(KlipAuthHandleResponse.class)))
+        given(restTemplateClient.getForObject(any(), eq(KlipAuthHandleResponse.class)))
                 .willThrow(new RestClientException("failed!"));
 
         // when

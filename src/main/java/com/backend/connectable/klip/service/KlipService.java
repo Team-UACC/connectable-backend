@@ -1,6 +1,6 @@
 package com.backend.connectable.klip.service;
 
-import com.backend.connectable.klip.config.KlipRestTemplate;
+import com.backend.connectable.global.network.RestTemplateClient;
 import com.backend.connectable.klip.service.dto.KlipAuthHandleResponse;
 import com.backend.connectable.klip.service.dto.KlipAuthLoginResponse;
 import lombok.RequiredArgsConstructor;
@@ -14,13 +14,13 @@ public class KlipService {
     private static final String KLIP_AUTH_LOGIN_URL =
             "https://a2a-api.klipwallet.com/v2/a2a/result?request_key=";
 
-    private final KlipRestTemplate klipRestTemplate;
+    private final RestTemplateClient restTemplateClient;
 
     public KlipAuthLoginResponse authLogin(String requestKey) {
         String requestUrl = KLIP_AUTH_LOGIN_URL + requestKey;
         try {
             KlipAuthHandleResponse klipAuthHandleResponse =
-                    klipRestTemplate.getForEntity(requestUrl, KlipAuthHandleResponse.class);
+                    restTemplateClient.getForObject(requestUrl, KlipAuthHandleResponse.class);
             if (klipAuthHandleResponse.isPrepared()) {
                 return KlipAuthLoginResponse.ofPrepared();
             }

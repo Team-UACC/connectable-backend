@@ -1,8 +1,9 @@
 package com.backend.connectable.admin.ui;
 
 import com.backend.connectable.admin.service.AdminService;
-import com.backend.connectable.admin.ui.dto.EventDeploymentRequest;
-import com.backend.connectable.admin.ui.dto.TokenMintingRequest;
+import com.backend.connectable.admin.ui.dto.EventIssueRequest;
+import com.backend.connectable.admin.ui.dto.TokenIssueRequest;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,15 +38,15 @@ public class AdminController {
 
     @PostMapping("/deploy-event")
     public ResponseEntity<Void> deployEvent(
-            @RequestBody EventDeploymentRequest eventDeploymentRequest)
-            throws InterruptedException {
-        adminService.deployEvent(eventDeploymentRequest);
+            @Valid @RequestBody EventIssueRequest eventIssueRequest) {
+        adminService.issueEvent(eventIssueRequest);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/mint-tokens")
-    public ResponseEntity<Void> mintTokens(@RequestBody TokenMintingRequest tokenMintingRequest) {
-        adminService.mintTokens(tokenMintingRequest);
+    public ResponseEntity<Void> mintTokens(
+            @Valid @RequestBody TokenIssueRequest tokenIssueRequest) {
+        adminService.issueTokens(tokenIssueRequest);
         return ResponseEntity.ok().build();
     }
 }

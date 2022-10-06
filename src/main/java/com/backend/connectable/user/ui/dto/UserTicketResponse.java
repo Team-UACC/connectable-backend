@@ -3,12 +3,11 @@ package com.backend.connectable.user.ui.dto;
 import com.backend.connectable.event.domain.Ticket;
 import com.backend.connectable.event.domain.TicketMetadata;
 import com.backend.connectable.event.domain.TicketSalesStatus;
-import com.backend.connectable.global.common.util.DateTimeUtil;
-import lombok.*;
-
+import com.backend.connectable.global.util.DateTimeUtil;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -29,7 +28,18 @@ public class UserTicketResponse {
     private String artistName;
 
     @Builder
-    public UserTicketResponse(Long id, int price, LocalDateTime eventDate, String eventName, TicketSalesStatus ticketSalesStatus, int tokenId, String tokenUri, TicketMetadata metadata, String contractAddress, Long eventId, String artistName) {
+    public UserTicketResponse(
+            Long id,
+            int price,
+            LocalDateTime eventDate,
+            String eventName,
+            TicketSalesStatus ticketSalesStatus,
+            int tokenId,
+            String tokenUri,
+            TicketMetadata metadata,
+            String contractAddress,
+            Long eventId,
+            String artistName) {
         this.id = id;
         this.price = price;
         this.eventDate = DateTimeUtil.toEpochMilliSeconds(eventDate);
@@ -44,23 +54,21 @@ public class UserTicketResponse {
     }
 
     public static List<UserTicketResponse> toList(List<Ticket> tickets) {
-        return tickets.stream()
-            .map(UserTicketResponse::of)
-            .collect(Collectors.toList());
+        return tickets.stream().map(UserTicketResponse::of).collect(Collectors.toList());
     }
 
     public static UserTicketResponse of(Ticket ticket) {
         return UserTicketResponse.builder()
-            .id(ticket.getId())
-            .price(ticket.getPrice())
-            .eventDate(ticket.getStartTime())
-            .ticketSalesStatus(ticket.getTicketSalesStatus())
-            .tokenId(ticket.getTokenId())
-            .tokenUri(ticket.getTokenUri())
-            .metadata(ticket.getTicketMetadata())
-            .contractAddress(ticket.getContractAddress())
-            .eventId(ticket.getEventId())
-            .artistName(ticket.getArtistName())
-            .build();
+                .id(ticket.getId())
+                .price(ticket.getPrice())
+                .eventDate(ticket.getStartTime())
+                .ticketSalesStatus(ticket.getTicketSalesStatus())
+                .tokenId(ticket.getTokenId())
+                .tokenUri(ticket.getTokenUri())
+                .metadata(ticket.getTicketMetadata())
+                .contractAddress(ticket.getContractAddress())
+                .eventId(ticket.getEventId())
+                .artistName(ticket.getArtistName())
+                .build();
     }
 }

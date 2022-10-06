@@ -12,8 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class RedisDaoTest {
 
-    @Autowired
-    RedisDao redisDao;
+    @Autowired RedisDao redisDao;
 
     @DisplayName("레디스에 데이터를 저장하여 조회할 수 있다.")
     @Test

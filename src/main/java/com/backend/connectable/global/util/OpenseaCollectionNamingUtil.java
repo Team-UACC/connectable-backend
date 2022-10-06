@@ -1,11 +1,10 @@
-package com.backend.connectable.global.common.util;
+package com.backend.connectable.global.util;
 
 public class OpenseaCollectionNamingUtil {
 
     private static final String OPENSEA_COLLECTION_URL = "https://opensea.io/collection/";
 
-    private OpenseaCollectionNamingUtil() {
-    }
+    private OpenseaCollectionNamingUtil() {}
 
     public static String toOpenseaCollectionUrl(String contractName) {
         contractName = convertToOpenseaCollectionFormat(contractName);
