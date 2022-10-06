@@ -22,6 +22,7 @@ import com.backend.connectable.event.domain.repository.TicketRepository;
 import com.backend.connectable.event.ui.dto.TicketMetadataAttributeResponse;
 import com.backend.connectable.event.ui.dto.TicketMetadataResponse;
 import com.backend.connectable.exception.ConnectableException;
+import com.backend.connectable.exception.KasException;
 import com.backend.connectable.kas.service.KasService;
 import com.backend.connectable.kas.service.common.dto.TransactionResponse;
 import com.backend.connectable.kas.service.contract.dto.ContractDeployResponse;
@@ -120,6 +121,39 @@ class AdminServiceTest {
         assertThat(resultOrderDetail.getTxHash()).isEqualTo(txHash);
         assertThat(resultOrderDetail.getTicket().getTicketSalesStatus())
                 .isEqualTo(TicketSalesStatus.SOLD_OUT);
+    }
+
+    @DisplayName("OrderDetail의 ID를 조회할 수 없으면 에러가 발생한다.")
+    @Test
+    void orderDetailWithInvalidID() {
+        // given
+        makeJoelOrder();
+        String txStatus = "Submitted";
+        String txHash = "0x1234abcd";
+        given(kasService.sendMyToken(any(String.class), any(Integer.class), any(String.class)))
+                .willReturn(new TransactionResponse(txStatus, txHash));
+        Long orderDetailId = 20000L;
+
+        // when & then
+        assertThatCode(() -> adminService.orderDetailToPaid(orderDetailId))
+                .isInstanceOf(ConnectableException.class);
+    }
+
+    @DisplayName("OrderDetail에 대해 KAS transfer 진행시 오류가 발생하면, TransferFail로 변환된다.")
+    @Test
+    void orderDetailToFail() {
+        // given
+        makeJoelOrder();
+        given(kasService.sendMyToken(any(String.class), any(Integer.class), any(String.class)))
+                .willThrow(new KasException("url", "expectedResponseType"));
+        Long orderDetailId = joelOrderDetail1.getId();
+
+        // when
+        adminService.orderDetailToPaid(orderDetailId);
+
+        // then
+        OrderDetail resultOrderDetail = orderDetailRepository.findById(orderDetailId).get();
+        assertThat(resultOrderDetail.getOrderStatus()).isEqualTo(OrderStatus.TRANSFER_FAIL);
     }
 
     @DisplayName("OrderDetail의 ID에 대해 Unpaid로 상태를 변경할 수 있다.")
