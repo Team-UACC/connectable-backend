@@ -12,6 +12,7 @@ class RandomStringUtilTest {
     @Test
     void generateRandomString() {
         String randomString = RandomStringUtil.generate();
+        System.out.println("randomString = " + randomString);
         assertThat(randomString).hasSize(20);
     }
 }
