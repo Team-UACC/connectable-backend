@@ -4,6 +4,7 @@ import com.backend.connectable.event.domain.Event;
 import com.backend.connectable.event.domain.Ticket;
 import com.backend.connectable.event.domain.TicketMetadata;
 import com.backend.connectable.event.domain.TicketSalesStatus;
+
 import java.util.HashMap;
 
 public class TicketFixture {

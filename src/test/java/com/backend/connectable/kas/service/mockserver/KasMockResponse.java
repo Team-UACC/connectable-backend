@@ -1,11 +1,11 @@
 package com.backend.connectable.kas.service.mockserver;
 
+import org.mockserver.model.HttpResponse;
+import org.mockserver.model.MediaType;
+
 import static io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST;
 import static io.netty.handler.codec.http.HttpResponseStatus.UNAUTHORIZED;
 import static org.mockserver.model.HttpResponse.response;
-
-import org.mockserver.model.HttpResponse;
-import org.mockserver.model.MediaType;
 
 /*
  * Mocking Based On https://refs.klaytnapi.com/ko/kip17/latest#tag/kip17-token

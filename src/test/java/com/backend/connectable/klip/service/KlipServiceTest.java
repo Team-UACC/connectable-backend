@@ -1,10 +1,5 @@
 package com.backend.connectable.klip.service;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.BDDMockito.given;
-
 import com.backend.connectable.global.network.RestTemplateClient;
 import com.backend.connectable.klip.service.dto.KlipAuthHandleKlaytnAddressResponse;
 import com.backend.connectable.klip.service.dto.KlipAuthHandleResponse;
@@ -15,6 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.web.client.RestClientException;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.BDDMockito.given;
 
 @SpringBootTest
 class KlipServiceTest {

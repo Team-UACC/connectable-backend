@@ -2,10 +2,11 @@ package com.backend.connectable.order.domain;
 
 import com.backend.connectable.event.domain.Ticket;
 import com.backend.connectable.global.entity.BaseEntity;
-import javax.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 
 @Entity
 @Getter

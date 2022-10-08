@@ -3,6 +3,7 @@ package com.backend.connectable.fixture;
 import com.backend.connectable.artist.domain.Artist;
 import com.backend.connectable.event.domain.Event;
 import com.backend.connectable.event.domain.SalesOption;
+
 import java.time.LocalDateTime;
 
 public class EventFixture {

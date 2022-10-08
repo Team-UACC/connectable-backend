@@ -1,22 +1,12 @@
 package com.backend.connectable.admin.service;
 
-import static com.backend.connectable.admin.service.AdminIssueDtoFixture.eventIssueRequest;
-import static com.backend.connectable.fixture.ArtistFixture.createArtistBigNaughty;
-import static com.backend.connectable.fixture.EventFixture.createEvent;
-import static com.backend.connectable.fixture.TicketFixture.createTicket;
-import static com.backend.connectable.fixture.UserFixture.createUserJoel;
-import static com.backend.connectable.fixture.UserFixture.createUserMrLee;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.BDDMockito.given;
-
 import com.backend.connectable.admin.ui.dto.EventIssueRequest;
 import com.backend.connectable.admin.ui.dto.TokenIssueRequest;
 import com.backend.connectable.artist.domain.Artist;
 import com.backend.connectable.artist.domain.repository.ArtistRepository;
-import com.backend.connectable.event.domain.*;
+import com.backend.connectable.event.domain.Event;
+import com.backend.connectable.event.domain.Ticket;
+import com.backend.connectable.event.domain.TicketSalesStatus;
 import com.backend.connectable.event.domain.repository.EventRepository;
 import com.backend.connectable.event.domain.repository.TicketRepository;
 import com.backend.connectable.event.ui.dto.TicketMetadataAttributeResponse;
@@ -35,8 +25,6 @@ import com.backend.connectable.order.domain.repository.OrderRepository;
 import com.backend.connectable.s3.service.S3Service;
 import com.backend.connectable.user.domain.User;
 import com.backend.connectable.user.domain.repository.UserRepository;
-import java.util.Arrays;
-import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -44,6 +32,21 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+
+import java.util.Arrays;
+import java.util.List;
+
+import static com.backend.connectable.admin.service.AdminIssueDtoFixture.eventIssueRequest;
+import static com.backend.connectable.fixture.ArtistFixture.createArtistBigNaughty;
+import static com.backend.connectable.fixture.EventFixture.createEvent;
+import static com.backend.connectable.fixture.TicketFixture.createTicket;
+import static com.backend.connectable.fixture.UserFixture.createUserJoel;
+import static com.backend.connectable.fixture.UserFixture.createUserMrLee;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.BDDMockito.given;
 
 @SpringBootTest
 class AdminServiceTest {

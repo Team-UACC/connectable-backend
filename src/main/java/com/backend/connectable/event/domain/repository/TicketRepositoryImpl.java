@@ -1,15 +1,16 @@
 package com.backend.connectable.event.domain.repository;
 
-import static com.backend.connectable.event.domain.QEvent.event;
-import static com.backend.connectable.event.domain.QTicket.ticket;
-
 import com.backend.connectable.event.domain.Ticket;
 import com.backend.connectable.event.domain.TicketSalesStatus;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import java.time.LocalDateTime;
-import javax.persistence.EntityManager;
 import org.springframework.stereotype.Repository;
+
+import javax.persistence.EntityManager;
+import java.time.LocalDateTime;
+
+import static com.backend.connectable.event.domain.QEvent.event;
+import static com.backend.connectable.event.domain.QTicket.ticket;
 
 @Repository
 public class TicketRepositoryImpl implements TicketRepositoryCustom {

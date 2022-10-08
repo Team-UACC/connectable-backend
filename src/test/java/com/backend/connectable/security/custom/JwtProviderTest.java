@@ -1,13 +1,13 @@
 package com.backend.connectable.security.custom;
 
-import static org.assertj.core.api.AssertionsForClassTypes.*;
-
 import com.backend.connectable.security.exception.ConnectableSecurityException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import static org.assertj.core.api.AssertionsForClassTypes.*;
 
 @SpringBootTest
 class JwtProviderTest {
