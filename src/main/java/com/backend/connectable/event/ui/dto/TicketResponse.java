@@ -3,9 +3,8 @@ package com.backend.connectable.event.ui.dto;
 import com.backend.connectable.event.domain.TicketMetadata;
 import com.backend.connectable.event.domain.TicketSalesStatus;
 import com.backend.connectable.global.util.DateTimeUtil;
-import lombok.*;
-
 import java.time.LocalDateTime;
+import lombok.*;
 
 @Getter
 @Setter

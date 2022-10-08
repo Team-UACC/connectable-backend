@@ -1,8 +1,8 @@
 package com.backend.connectable.kas.service.mockserver;
 
-import org.mockserver.model.HttpRequest;
-
 import static org.mockserver.model.HttpRequest.request;
+
+import org.mockserver.model.HttpRequest;
 
 /*
  * Mocking Based On https://refs.klaytnapi.com/ko/kip17/latest#tag/kip17-token

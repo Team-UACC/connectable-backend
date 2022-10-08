@@ -3,11 +3,10 @@ package com.backend.connectable.admin.ui;
 import com.backend.connectable.admin.service.AdminService;
 import com.backend.connectable.admin.ui.dto.EventIssueRequest;
 import com.backend.connectable.admin.ui.dto.TokenIssueRequest;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor

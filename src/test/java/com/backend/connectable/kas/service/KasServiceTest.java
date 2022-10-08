@@ -1,5 +1,8 @@
 package com.backend.connectable.kas.service;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+
 import com.backend.connectable.exception.KasException;
 import com.backend.connectable.kas.service.common.dto.TransactionResponse;
 import com.backend.connectable.kas.service.contract.dto.ContractDeployResponse;
@@ -10,15 +13,11 @@ import com.backend.connectable.kas.service.mockserver.KasServiceMockSetup;
 import com.backend.connectable.kas.service.token.dto.TokenHistoriesResponse;
 import com.backend.connectable.kas.service.token.dto.TokenResponse;
 import com.backend.connectable.kas.service.token.dto.TokensResponse;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 public class KasServiceTest extends KasServiceMockSetup {
 

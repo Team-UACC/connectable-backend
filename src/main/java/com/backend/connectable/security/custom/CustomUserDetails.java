@@ -1,9 +1,8 @@
 package com.backend.connectable.security.custom;
 
+import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import java.util.Collection;
 
 public abstract class CustomUserDetails implements UserDetails {
 

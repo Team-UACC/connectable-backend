@@ -2,7 +2,6 @@ package com.backend.connectable.admin.service;
 
 import com.backend.connectable.admin.ui.dto.EventIssueRequest;
 import com.backend.connectable.artist.domain.Artist;
-
 import java.time.LocalDateTime;
 
 public class AdminIssueDtoFixture {

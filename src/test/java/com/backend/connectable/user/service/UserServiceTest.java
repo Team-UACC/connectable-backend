@@ -1,5 +1,10 @@
 package com.backend.connectable.user.service;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.BDDMockito.given;
+
 import com.backend.connectable.artist.domain.Artist;
 import com.backend.connectable.artist.domain.repository.ArtistRepository;
 import com.backend.connectable.event.domain.*;
@@ -15,6 +20,10 @@ import com.backend.connectable.user.domain.repository.UserRepository;
 import com.backend.connectable.user.redis.UserTicketEntrance;
 import com.backend.connectable.user.redis.UserTicketEntranceRedisRepository;
 import com.backend.connectable.user.ui.dto.*;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.HashMap;
+import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,16 +32,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityManager;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.HashMap;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.BDDMockito.given;
 
 @SpringBootTest
 class UserServiceTest {

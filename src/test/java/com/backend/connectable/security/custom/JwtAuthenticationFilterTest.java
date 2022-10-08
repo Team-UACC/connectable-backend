@@ -1,6 +1,13 @@
 package com.backend.connectable.security.custom;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+
 import com.backend.connectable.security.exception.ConnectableSecurityException;
+import java.io.IOException;
+import javax.servlet.ServletException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,14 +16,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockFilterChain;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-
-import javax.servlet.ServletException;
-import java.io.IOException;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
 
 @SpringBootTest
 class JwtAuthenticationFilterTest {

@@ -1,12 +1,11 @@
 package com.backend.connectable.global.common.util;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
 import com.backend.connectable.global.util.DateTimeUtil;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import java.time.LocalDateTime;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class DateTimeUtilTest {
 

@@ -4,12 +4,11 @@ import com.backend.connectable.exception.ConnectableException;
 import com.backend.connectable.exception.ErrorType;
 import com.backend.connectable.global.redis.RedisDao;
 import com.backend.connectable.sms.service.SmsService;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor

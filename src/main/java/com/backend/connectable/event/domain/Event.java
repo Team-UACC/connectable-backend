@@ -1,13 +1,12 @@
 package com.backend.connectable.event.domain;
 
 import com.backend.connectable.artist.domain.Artist;
+import java.time.LocalDateTime;
+import java.util.Objects;
+import javax.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Entity
 @Getter

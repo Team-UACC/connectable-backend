@@ -1,9 +1,8 @@
 package com.backend.connectable.event.ui.dto;
 
 import com.backend.connectable.global.util.DateTimeUtil;
-import lombok.*;
-
 import java.time.LocalDateTime;
+import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor

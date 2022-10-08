@@ -3,7 +3,6 @@ package com.backend.connectable.event.domain.repository;
 import com.backend.connectable.event.domain.Event;
 import com.backend.connectable.event.domain.dto.EventDetail;
 import com.backend.connectable.event.domain.dto.EventTicket;
-
 import java.util.List;
 import java.util.Optional;
 

@@ -1,10 +1,10 @@
 package com.backend.connectable.global.common.util;
 
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+
 import com.backend.connectable.global.util.OpenseaCollectionNamingUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 class OpenseaCollectionNamingUtilTest {
 
