@@ -38,13 +38,6 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(userResponse);
     }
 
-    @DeleteMapping
-    public ResponseEntity<UserModifyResponse> deleteUser(
-            @AuthenticationPrincipal ConnectableUserDetails userDetails) {
-        UserModifyResponse userModifyResponse = userService.deleteUserByUserDetails(userDetails);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(userModifyResponse);
-    }
-
     @PutMapping
     public ResponseEntity<UserModifyResponse> modifyUser(
             @AuthenticationPrincipal ConnectableUserDetails userDetails,
