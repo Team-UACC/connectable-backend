@@ -5,6 +5,7 @@ import com.backend.connectable.admin.ui.dto.EventIssueRequest;
 import com.backend.connectable.admin.ui.dto.TokenIssueRequest;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,13 +41,13 @@ public class AdminController {
     public ResponseEntity<Void> deployEvent(
             @Valid @RequestBody EventIssueRequest eventIssueRequest) {
         adminService.issueEvent(eventIssueRequest);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PostMapping("/mint-tokens")
     public ResponseEntity<Void> mintTokens(
             @Valid @RequestBody TokenIssueRequest tokenIssueRequest) {
         adminService.issueTokens(tokenIssueRequest);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }
