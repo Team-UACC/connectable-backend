@@ -2,14 +2,13 @@ package com.backend.connectable.order.ui.dto;
 
 import com.backend.connectable.event.domain.TicketMetadata;
 import com.backend.connectable.event.domain.TicketSalesStatus;
-import com.backend.connectable.global.common.util.DateTimeUtil;
+import com.backend.connectable.global.util.DateTimeUtil;
 import com.backend.connectable.order.domain.OrderStatus;
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @Getter
@@ -28,7 +27,17 @@ public class OrderDetailResponse {
     private String txHash;
 
     @Builder
-    public OrderDetailResponse(Long ticketId, TicketSalesStatus ticketSalesStatus, TicketMetadata ticketMetadata, int price, Long eventId, Long orderId, Long orderDetailId, OrderStatus orderStatus, LocalDateTime modifiedDate, String txHash) {
+    public OrderDetailResponse(
+            Long ticketId,
+            TicketSalesStatus ticketSalesStatus,
+            TicketMetadata ticketMetadata,
+            int price,
+            Long eventId,
+            Long orderId,
+            Long orderDetailId,
+            OrderStatus orderStatus,
+            LocalDateTime modifiedDate,
+            String txHash) {
         this.ticketId = ticketId;
         this.ticketSalesStatus = ticketSalesStatus;
         this.ticketMetadata = ticketMetadata;

@@ -1,34 +1,31 @@
-package com.backend.connectable.security;
+package com.backend.connectable.security.custom;
 
 import com.backend.connectable.security.exception.ConnectableSecurityException;
+import java.io.IOException;
+import java.util.Objects;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Objects;
-
 @RequiredArgsConstructor
 @Component
-@Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtProvider jwtProvider;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(
+            HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
         String token = AuthorizationExtractor.extract(request);
         String path = request.getRequestURI();
-        log.info("[[Token]] : " + token);
-        log.info("[[Path]] : " + path);
         try {
             if (!Objects.isNull(token)) {
                 verifyTokenAccordingToPath(token, path);
@@ -42,7 +39,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
     }
 
-    private void verifyTokenAccordingToPath(String token, String path) throws ConnectableSecurityException {
+    private void verifyTokenAccordingToPath(String token, String path)
+            throws ConnectableSecurityException {
         if (path.startsWith("/admin")) {
             jwtProvider.verifyAdmin(token);
             return;

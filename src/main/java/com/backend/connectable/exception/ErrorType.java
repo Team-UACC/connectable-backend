@@ -17,6 +17,7 @@ public enum ErrorType {
     DUPLICATED_REQUEST_ERROR("COMMON-003", "중복된 요청입니다."),
     INVALID_REQUEST_ERROR("COMMON-004", "올바르지 않은 데이터 요청입니다."),
     ASYNC_HANDLING_ERROR("COMMON-005", "비동기 처리에서 문제가 발생했습니다."),
+    NETWORK_ERROR("COMMON-006", "네트워크 처리에서 문제가 발생했습니다."),
 
     NICKNAME_FORMAT_ERROR("USER-001", "올바르지 않은 닉네임 입력 양식입니다."),
     EMAIL_FORMAT_ERROR("USER-002", "올바르지 않은 이메일 입력 양식입니다."),
@@ -50,6 +51,7 @@ public enum ErrorType {
     ADMIN_TOKEN_VERIFY_FAILURE("ADMIN-002", "어드민 토큰이 아닙니다."),
     ARTIST_NOT_FOUND("ADMIN-003", "해당 ID에 대응되는 아티스트가 없습니다."),
     EVENT_NOT_FOUND("ADMIN-004", "해당 ID에 대응되는 이벤트가 없습니다."),
+    THREAD_INTERRUPTED("ADMIN-005", "쓰레드에 문제가 발생했습니다."),
     ;
 
     private final String errorCode;

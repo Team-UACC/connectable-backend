@@ -2,6 +2,7 @@ package com.backend.connectable.global.common.util;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
+import com.backend.connectable.global.util.RandomStringUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -11,6 +12,7 @@ class RandomStringUtilTest {
     @Test
     void generateRandomString() {
         String randomString = RandomStringUtil.generate();
+        System.out.println("randomString = " + randomString);
         assertThat(randomString).hasSize(20);
     }
 }

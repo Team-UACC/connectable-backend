@@ -1,7 +1,7 @@
 package com.backend.connectable.user.ui;
 
 import com.backend.connectable.exception.sequence.ValidationSequence;
-import com.backend.connectable.security.ConnectableUserDetails;
+import com.backend.connectable.security.custom.ConnectableUserDetails;
 import com.backend.connectable.user.service.UserService;
 import com.backend.connectable.user.ui.dto.*;
 import lombok.RequiredArgsConstructor;
@@ -36,13 +36,6 @@ public class UserController {
             return ResponseEntity.ok(userResponse);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(userResponse);
-    }
-
-    @DeleteMapping
-    public ResponseEntity<UserModifyResponse> deleteUser(
-            @AuthenticationPrincipal ConnectableUserDetails userDetails) {
-        UserModifyResponse userModifyResponse = userService.deleteUserByUserDetails(userDetails);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(userModifyResponse);
     }
 
     @PutMapping

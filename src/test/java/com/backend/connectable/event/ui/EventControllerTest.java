@@ -14,8 +14,8 @@ import com.backend.connectable.event.service.EventService;
 import com.backend.connectable.event.ui.dto.EventDetailResponse;
 import com.backend.connectable.event.ui.dto.EventResponse;
 import com.backend.connectable.event.ui.dto.TicketResponse;
-import com.backend.connectable.security.JwtAuthenticationFilter;
-import com.backend.connectable.security.SecurityConfiguration;
+import com.backend.connectable.security.config.SecurityConfiguration;
+import com.backend.connectable.security.custom.JwtAuthenticationFilter;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -42,7 +42,6 @@ class EventControllerTest {
 
     private static final Long EVENT_ID_1 = 1L;
     private static final Long EVENT_ID_2 = 2L;
-    private static final Long ARTIST_ID_1 = 1L;
     private static final Long TICKET_ID_1 = 1L;
     private static final Long TICKET_ID_2 = 2L;
 

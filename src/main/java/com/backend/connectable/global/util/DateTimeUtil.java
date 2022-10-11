@@ -1,12 +1,15 @@
-package com.backend.connectable.global.common.util;
+package com.backend.connectable.global.util;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 public class DateTimeUtil {
 
+    private DateTimeUtil() {}
+
     /**
      * LocalDateTime 을 Epoch Micro Milliseconds로 변환
+     *
      * @param dateTime
      * @return long
      */
