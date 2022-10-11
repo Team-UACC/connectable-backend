@@ -9,9 +9,8 @@
 [DrawSQL](https://drawsql.app/teams/uacc/diagrams/connectable)
 ---
 
-### AWS Architecture
-![](https://user-images.githubusercontent.com/54073761/195064855-50925c9a-c51d-4e71-b3e5-470ed0fe7171.png)
-Painted by [diagrams](https://github.com/mingrammer/diagrams)
+### API Document
+> https://api.connectable.fans/dist/redoc/index.html
 ---
 
 ### Tech Spec
