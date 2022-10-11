@@ -2,8 +2,8 @@
 > NFT 티켓팅 플랫폼을 통해 더 나은 문화생활에 기여하고 있습니다.
 ---
 ### ERD
-![](https://user-images.githubusercontent.com/54073761/195064396-621b59b9-bc92-44f7-beb3-c569dfa097b1.png)
-[DrawSQL](https://drawsql.app/teams/uacc/diagrams/connectable)
+![](https://user-images.githubusercontent.com/54073761/195118670-8fd4d64a-070f-4c63-95bb-5e58c83b2120.png)
+
 ---
 
 ### API Document
