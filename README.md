@@ -15,8 +15,8 @@
 * Spring Boot 2.7.1
 * MySQL 8.0.28
 * Redis
-* AWS EC2 (Ubuntu 18.04) 
+* AWS EC2 (Ubuntu 18.04)
 * AWS RDS MySQL
-* AWS S3 
+* AWS S3
 * AWS SSM
 * Jenkins FreeStyle

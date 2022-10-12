@@ -1,7 +1,7 @@
 package com.backend.connectable.user.ui;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.*;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.backend.connectable.event.domain.TicketSalesStatus;
+import com.backend.connectable.fixture.KlipFixture;
 import com.backend.connectable.security.custom.ConnectableUserDetails;
 import com.backend.connectable.user.domain.User;
 import com.backend.connectable.user.domain.repository.UserRepository;
@@ -76,8 +77,8 @@ class UserControllerTest {
     @Test
     void loginUserSuccess() throws Exception {
         // given & when
-        UserLoginRequest userLoginRequest =
-                new UserLoginRequest("95323c1e-c6a5-4a91-8f99-8593f7d70a4f");
+        String requestKey = KlipFixture.getRequestKey();
+        UserLoginRequest userLoginRequest = new UserLoginRequest(requestKey);
         String json = objectMapper.writeValueAsString(userLoginRequest);
 
         mockMvc.perform(post("/users/login").contentType(APPLICATION_JSON).content(json))
