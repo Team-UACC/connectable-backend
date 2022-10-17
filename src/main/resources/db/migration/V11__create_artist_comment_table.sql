@@ -8,12 +8,12 @@ CREATE TABLE IF NOT EXISTS `comment` (
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-alter table comment
-    add constraint fk_comment_to_artist
-        foreign key (artist_id)
-            references artist(id);
+ALTER TABLE comment
+    ADD CONSTRAINT fk_comment_to_artist
+        FOREIGN KEY (artist_id)
+            REFERENCES artist(id);
 
-alter table comment
-    add constraint fk_comment_to_user
-        foreign key (user_id)
-            references user(id);
+ALTER TABLE comment
+    ADD CONSTRAINT fk_comment_to_user
+        FOREIGN KEY (user_id)
+            REFERENCES user(id);
