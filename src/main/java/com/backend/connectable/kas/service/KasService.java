@@ -1,5 +1,6 @@
 package com.backend.connectable.kas.service;
 
+import com.backend.connectable.global.aop.TimeCheck;
 import com.backend.connectable.kas.service.common.dto.TransactionResponse;
 import com.backend.connectable.kas.service.contract.KasContractService;
 import com.backend.connectable.kas.service.contract.dto.ContractDeployResponse;
@@ -93,6 +94,7 @@ public class KasService {
         return kasTokenService.getTokenHistory(contractAddress, tokenId);
     }
 
+    @TimeCheck
     public Map<String, TokensResponse> findAllTokensOwnedByUser(
             List<String> contractAddresses, String userKlaytnAddress) {
         return kasTokenService.findAllTokensOwnedByUser(contractAddresses, userKlaytnAddress);
