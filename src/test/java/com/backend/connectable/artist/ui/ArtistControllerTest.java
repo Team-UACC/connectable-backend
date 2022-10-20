@@ -74,7 +74,7 @@ class ArtistControllerTest {
     }
 
     @DisplayName("특정 아티스트의 방명록에 코멘트를 작성한다")
-    @WithUserDetails("0x1234")
+    @WithUserDetails("0x1111")
     @Test
     void createArtistComment() throws Exception {
         ArtistCommentRequest artistCommentRequest =

@@ -1,5 +1,7 @@
 package com.backend.connectable.artist.service;
 
+import static com.backend.connectable.fixture.ArtistFixture.*;
+import static com.backend.connectable.fixture.UserFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -38,7 +40,7 @@ class ArtistServiceTest {
     private Artist artist1;
     private Artist artist2;
 
-    private final String userKlaytnAddress = "0x12345678";
+    private final String userKlaytnAddress = "0x1111";
     private final String userNickname = "leejp";
     private final String userPhoneNumber = "010-3333-7777";
     private final boolean userPrivacyAgreement = true;
@@ -50,36 +52,9 @@ class ArtistServiceTest {
         artistRepository.deleteAll();
         userRepository.deleteAll();
 
-        user =
-                User.builder()
-                        .klaytnAddress(userKlaytnAddress)
-                        .nickname(userNickname)
-                        .phoneNumber(userPhoneNumber)
-                        .privacyAgreement(userPrivacyAgreement)
-                        .isActive(userIsActive)
-                        .build();
-
-        artist1 =
-                Artist.builder()
-                        .bankCompany("NH")
-                        .bankAccount("9000000000099")
-                        .artistName("빅나티")
-                        .email("bignaughty@gmail.com")
-                        .password("temptemp1234")
-                        .phoneNumber("01012345678")
-                        .artistImage("https://image.url")
-                        .build();
-
-        artist2 =
-                Artist.builder()
-                        .bankCompany("TOSS")
-                        .bankAccount("7000000000077")
-                        .artistName("최유리")
-                        .email("choi777@naver.com")
-                        .password("temptemp1234")
-                        .phoneNumber("01033339999")
-                        .artistImage("https://image2.url")
-                        .build();
+        user = createUserMrLee();
+        artist1 = createArtistBigNaughty();
+        artist2 = createArtistChoi();
 
         artistRepository.saveAll(List.of(artist1, artist2));
         userRepository.save(user);
@@ -151,7 +126,6 @@ class ArtistServiceTest {
         assertThat(artistComments.get(1).getWrittenAt()).isEqualTo(comment2.getCreatedDate());
     }
 
-    // ToDo 찾을 수 없는 유저 및 아티스트에 대해 예외처리 테스트 필요
     @DisplayName("찾을 수 없는 유저일 경우에는 코멘트 등록에 실패한다.")
     @Test
     void getExceptionWhenNotExistedUserCreateComment() {
