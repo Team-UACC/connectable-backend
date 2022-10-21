@@ -17,4 +17,16 @@ public class ArtistFixture {
                 .artistImage("ARTIST_IMAGE")
                 .build();
     }
+
+    public static Artist createArtistChoi() {
+        return Artist.builder()
+                .bankCompany("TOSS")
+                .bankAccount("7000000000077")
+                .artistName("최유리")
+                .email("choi777@naver.com")
+                .password("temptemp1234")
+                .phoneNumber("01033339999")
+                .artistImage("https://image2.url")
+                .build();
+    }
 }
