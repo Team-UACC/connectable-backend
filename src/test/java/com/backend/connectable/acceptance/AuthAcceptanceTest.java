@@ -6,13 +6,12 @@ import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles("local")
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AuthAcceptanceTest {
 
@@ -21,9 +20,12 @@ public class AuthAcceptanceTest {
 
     @LocalServerPort public int port;
 
+    @Autowired private DatabaseCleanUp databaseCleanUp;
+
     @BeforeEach
     public void setUp() {
         RestAssured.port = port;
+        databaseCleanUp.execute();
     }
 
     @DisplayName("요청하여 응답받은 인증키를 이용하여 인증시 성공한다")
