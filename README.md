@@ -11,12 +11,30 @@
 ---
 
 ### Tech Spec
-* Java 11
-* Spring Boot 2.7.1
-* MySQL 8.0.28
-* Redis
-* AWS EC2 (Ubuntu 18.04)
-* AWS RDS MySQL
-* AWS S3
-* AWS SSM
-* Jenkins FreeStyle
+**[Backend]**
+- Java 11
+- Spring Boot 2.7.1
+- Spring Security
+- Spring Data JPA
+- Querydsl
+- Swagger/ReDoc
+
+**[Database]**
+- MySQL 8.0.28
+- Flyway
+- Redis
+
+**[Testing]**
+- RestAssured
+- MockServer
+
+**[DevOps]**
+- Jenkins Freestyle
+- Spotless
+- SonarCloud
+- Grafana
+- Prometheus
+- AWS EC2 (Ubuntu 18.04)
+- AWS RDS MySQL
+- AWS S3
+- AWS SSM
