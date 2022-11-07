@@ -4,6 +4,7 @@ import com.backend.connectable.artist.service.ArtistService;
 import com.backend.connectable.artist.ui.dto.ArtistCommentRequest;
 import com.backend.connectable.artist.ui.dto.ArtistCommentResponse;
 import com.backend.connectable.artist.ui.dto.ArtistDetailResponse;
+import com.backend.connectable.event.ui.dto.EventResponse;
 import com.backend.connectable.security.custom.ConnectableUserDetails;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,13 @@ public class ArtistController {
             @PathVariable("artist-id") Long artistId) {
         ArtistDetailResponse artistDetail = artistService.getArtistDetail(artistId);
         return ResponseEntity.ok(artistDetail);
+    }
+
+    @GetMapping("/{artist-id}/events")
+    public ResponseEntity<List<EventResponse>> getArtistEvent(
+            @PathVariable("artist-id") Long artistId) {
+        List<EventResponse> artistEventResponse = artistService.getArtistEvent(artistId);
+        return ResponseEntity.ok(artistEventResponse);
     }
 
     @GetMapping("/{artist-id}/comments")

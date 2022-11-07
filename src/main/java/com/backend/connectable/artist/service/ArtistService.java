@@ -8,12 +8,17 @@ import com.backend.connectable.artist.domain.repository.CommentRepository;
 import com.backend.connectable.artist.ui.dto.ArtistCommentRequest;
 import com.backend.connectable.artist.ui.dto.ArtistCommentResponse;
 import com.backend.connectable.artist.ui.dto.ArtistDetailResponse;
+import com.backend.connectable.event.domain.Event;
+import com.backend.connectable.event.domain.repository.EventRepository;
+import com.backend.connectable.event.mapper.EventMapper;
+import com.backend.connectable.event.ui.dto.EventResponse;
 import com.backend.connectable.exception.ConnectableException;
 import com.backend.connectable.exception.ErrorType;
 import com.backend.connectable.security.custom.ConnectableUserDetails;
 import com.backend.connectable.user.domain.User;
 import com.backend.connectable.user.domain.repository.UserRepository;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -27,6 +32,7 @@ public class ArtistService {
     private final ArtistRepository artistRepository;
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
+    private final EventRepository eventRepository;
 
     public List<ArtistDetailResponse> getAllArtists() {
         List<Artist> artists = artistRepository.findAll();
@@ -36,6 +42,13 @@ public class ArtistService {
     public ArtistDetailResponse getArtistDetail(Long artistId) {
         Artist artist = getArtist(artistId);
         return ArtistDetailResponse.from(artist);
+    }
+
+    public List<EventResponse> getArtistEvent(Long artistId) {
+        List<Event> artistEvents = eventRepository.findAllEventsByArtistId(artistId);
+        return artistEvents.stream()
+                .map(EventMapper.INSTANCE::eventToResponse)
+                .collect(Collectors.toList());
     }
 
     public void createComment(

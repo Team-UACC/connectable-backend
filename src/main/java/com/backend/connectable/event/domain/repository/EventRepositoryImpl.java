@@ -152,6 +152,11 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
         return result;
     }
 
+    @Override
+    public List<Event> findAllEventsByArtistId(Long artistId) {
+        return queryFactory.selectFrom(event).innerJoin(artist).on(artist.id.eq(artistId)).fetch();
+    }
+
     private OrderSpecifier<Integer> eventSortSpecifier() {
         NumberExpression<Integer> cases =
                 new CaseBuilder()

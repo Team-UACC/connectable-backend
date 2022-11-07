@@ -1,6 +1,7 @@
 package com.backend.connectable.artist.service;
 
 import static com.backend.connectable.fixture.ArtistFixture.*;
+import static com.backend.connectable.fixture.EventFixture.createEventWithName;
 import static com.backend.connectable.fixture.UserFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -12,6 +13,9 @@ import com.backend.connectable.artist.domain.repository.CommentRepository;
 import com.backend.connectable.artist.ui.dto.ArtistCommentRequest;
 import com.backend.connectable.artist.ui.dto.ArtistCommentResponse;
 import com.backend.connectable.artist.ui.dto.ArtistDetailResponse;
+import com.backend.connectable.event.domain.Event;
+import com.backend.connectable.event.domain.repository.EventRepository;
+import com.backend.connectable.event.ui.dto.EventResponse;
 import com.backend.connectable.exception.ConnectableException;
 import com.backend.connectable.exception.ErrorType;
 import com.backend.connectable.security.custom.ConnectableUserDetails;
@@ -34,11 +38,18 @@ class ArtistServiceTest {
     @Autowired UserRepository userRepository;
     @Autowired CommentRepository commentRepository;
 
+    @Autowired EventRepository eventRepository;
+
     @Autowired ArtistService artistService;
 
     private User user;
     private Artist artist1;
     private Artist artist2;
+
+    private Event event1;
+    private Event event2;
+    private Event event3;
+    private Event event4;
 
     private final String userKlaytnAddress = "0x1111";
     private final String userNickname = "leejp";
@@ -48,6 +59,7 @@ class ArtistServiceTest {
 
     @BeforeEach
     void setUp() {
+        eventRepository.deleteAll();
         commentRepository.deleteAll();
         artistRepository.deleteAll();
         userRepository.deleteAll();
@@ -56,8 +68,14 @@ class ArtistServiceTest {
         artist1 = createArtistBigNaughty();
         artist2 = createArtistChoi();
 
+        event1 = createEventWithName(artist1, "event1");
+        event2 = createEventWithName(artist1, "event2");
+        event3 = createEventWithName(artist1, "event3");
+        event4 = createEventWithName(artist1, "event4");
+
         artistRepository.saveAll(List.of(artist1, artist2));
         userRepository.save(user);
+        eventRepository.saveAll(List.of(event1, event2, event3, event4));
     }
 
     @DisplayName("아티스트를 전부 조회한다.")
@@ -152,5 +170,21 @@ class ArtistServiceTest {
                         })
                 .isInstanceOf(ConnectableException.class)
                 .withFailMessage(ErrorType.ARTIST_NOT_EXISTS.getMessage());
+    }
+
+    @DisplayName("아티스트의 이벤트를 조회할 수 있다")
+    @Test
+    void getArtistEvent() {
+        // given & when
+        List<EventResponse> artist1Events = artistService.getArtistEvent(artist1.getId());
+
+        // then
+        assertThat(artist1Events)
+                .extracting("name")
+                .containsExactly(
+                        event1.getEventName(),
+                        event2.getEventName(),
+                        event3.getEventName(),
+                        event4.getEventName());
     }
 }

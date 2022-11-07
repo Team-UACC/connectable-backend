@@ -23,12 +23,11 @@ public class ArtistDetailResponse {
     }
 
     public static ArtistDetailResponse from(Artist artist) {
-        return new ArtistDetailResponse(artist.getId(), artist.getArtistName(), artist.getArtistImage());
+        return new ArtistDetailResponse(
+                artist.getId(), artist.getArtistName(), artist.getArtistImage());
     }
 
     public static List<ArtistDetailResponse> toList(List<Artist> artists) {
-        return artists.stream()
-            .map(ArtistDetailResponse::from)
-            .collect(Collectors.toList());
+        return artists.stream().map(ArtistDetailResponse::from).collect(Collectors.toList());
     }
 }

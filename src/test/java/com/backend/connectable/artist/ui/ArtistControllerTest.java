@@ -63,6 +63,16 @@ class ArtistControllerTest {
                 .andDo(print());
     }
 
+    @DisplayName("아티스트의 이벤트를 조회한다")
+    @Test
+    void getArtistEvent() throws Exception {
+        mockMvc.perform(
+                        get("/artists/{artist-id}/events", ARTIST1_ID)
+                                .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
     @DisplayName("특정 아티스트의 방명록에 작성된 코멘트들을 조회한다")
     @Test
     void getArtistComments() throws Exception {

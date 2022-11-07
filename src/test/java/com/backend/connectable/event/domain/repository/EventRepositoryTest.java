@@ -214,4 +214,14 @@ class EventRepositoryTest {
         // then
         assertThat(event).isEqualTo(joelEvent);
     }
+
+    @DisplayName("아티스트 ID를 통해 아티스트의 이벤트를 조회할 수 있다.")
+    @Test
+    void findAllEventsByArtistId() {
+        // given && when
+        List<Event> artistEvents = eventRepository.findAllEventsByArtistId(bigNaughty.getId());
+
+        // then
+        assertThat(artistEvents).containsExactly(joelEvent, ryanEvent);
+    }
 }
