@@ -32,7 +32,7 @@
 - Jenkins Freestyle
 - Spotless
 - SonarCloud
-- Graphana
+- Grafana
 - Prometheus
 - AWS EC2 (Ubuntu 18.04)
 - AWS RDS MySQL
