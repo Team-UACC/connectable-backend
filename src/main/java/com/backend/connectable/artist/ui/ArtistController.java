@@ -41,7 +41,8 @@ public class ArtistController {
     }
 
     @GetMapping("/{artist-id}/comments")
-    public ResponseEntity<List<ArtistCommentResponse>> getArtistComments(Long artistId) {
+    public ResponseEntity<List<ArtistCommentResponse>> getArtistComments(
+            @PathVariable("artist-id") Long artistId) {
         List<ArtistCommentResponse> artistCommentResponses =
                 artistService.getArtistComments(artistId);
         return ResponseEntity.ok(artistCommentResponses);
