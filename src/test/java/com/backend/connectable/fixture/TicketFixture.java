@@ -27,15 +27,16 @@ public class TicketFixture {
                 .build();
     }
 
-    public static Ticket createTicketWithSalesStatus(Event event, int tokenId, TicketSalesStatus ticketSalesStatus) {
+    public static Ticket createTicketWithSalesStatus(
+            Event event, int tokenId, TicketSalesStatus ticketSalesStatus) {
         return Ticket.builder()
-            .event(event)
-            .tokenUri(String.format(TOKEN_URI_FORMAT, tokenId))
-            .tokenId(tokenId)
-            .price(TICKET_PRICE)
-            .ticketSalesStatus(ticketSalesStatus)
-            .ticketMetadata(generateTicketMetadata(event, tokenId))
-            .build();
+                .event(event)
+                .tokenUri(String.format(TOKEN_URI_FORMAT, tokenId))
+                .tokenId(tokenId)
+                .price(TICKET_PRICE)
+                .ticketSalesStatus(ticketSalesStatus)
+                .ticketMetadata(generateTicketMetadata(event, tokenId))
+                .build();
     }
 
     private static TicketMetadata generateTicketMetadata(Event event, int tokenId) {

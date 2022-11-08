@@ -1,6 +1,7 @@
 package com.backend.connectable.event.domain.repository;
 
 import static com.backend.connectable.fixture.ArtistFixture.createArtistBigNaughty;
+import static com.backend.connectable.fixture.EventFixture.createEventSalesTo2023WithEventName;
 import static com.backend.connectable.fixture.EventFixture.createEventWithNameAndContractAddress;
 import static com.backend.connectable.fixture.TicketFixture.createTicketWithSalesStatus;
 import static com.backend.connectable.fixture.UserFixture.createUserJoel;
@@ -14,12 +15,10 @@ import com.backend.connectable.event.domain.TicketSalesStatus;
 import com.backend.connectable.event.domain.dto.EventTicket;
 import com.backend.connectable.user.domain.User;
 import com.backend.connectable.user.domain.repository.UserRepository;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -42,10 +41,14 @@ class EventRepositoryTest {
     User user = createUserJoel();
 
     String bigNaughtyEvent1ContractAddress = "0x1234";
-    Event bigNaughtyEvent1 = createEventWithNameAndContractAddress(bigNaughty, "bigNaughty1", bigNaughtyEvent1ContractAddress);
+    Event bigNaughtyEvent1 =
+            createEventWithNameAndContractAddress(
+                    bigNaughty, "bigNaughty1", bigNaughtyEvent1ContractAddress);
 
     String bigNaughtyEvent2ContractAddress = "0x5678";
-    Event bigNaughtyEvent2 = createEventWithNameAndContractAddress(bigNaughty, "bigNaughty2", bigNaughtyEvent2ContractAddress);
+    Event bigNaughtyEvent2 =
+            createEventWithNameAndContractAddress(
+                    bigNaughty, "bigNaughty2", bigNaughtyEvent2ContractAddress);
 
     @BeforeEach
     void setUp() {
@@ -73,11 +76,13 @@ class EventRepositoryTest {
                 Stream.of(bigNaughtyEvent2, bigNaughtyEvent1)
                         .allMatch(
                                 item ->
-                                    events.stream()
-                                            .map(Event::getEventName)
-                                            .anyMatch(
-                                                    eventName ->
-                                                        Objects.equals(eventName, item.getEventName())));
+                                        events.stream()
+                                                .map(Event::getEventName)
+                                                .anyMatch(
+                                                        eventName ->
+                                                                Objects.equals(
+                                                                        eventName,
+                                                                        item.getEventName())));
         assertThat(result).isTrue();
     }
 
@@ -85,12 +90,18 @@ class EventRepositoryTest {
     @Test
     void findAllTickets() {
         // given
-        Ticket ticket1SoldOut = createTicketWithSalesStatus(bigNaughtyEvent1, 1, TicketSalesStatus.SOLD_OUT);
-        Ticket ticket2SoldOut = createTicketWithSalesStatus(bigNaughtyEvent1, 2, TicketSalesStatus.SOLD_OUT);
-        Ticket ticket3Pending = createTicketWithSalesStatus(bigNaughtyEvent1, 3, TicketSalesStatus.PENDING);
-        Ticket ticket4Pending = createTicketWithSalesStatus(bigNaughtyEvent1, 4, TicketSalesStatus.PENDING);
-        Ticket ticket5OnSale = createTicketWithSalesStatus(bigNaughtyEvent1, 5, TicketSalesStatus.ON_SALE);
-        Ticket ticket6OnSale = createTicketWithSalesStatus(bigNaughtyEvent1, 6, TicketSalesStatus.ON_SALE);
+        Ticket ticket1SoldOut =
+                createTicketWithSalesStatus(bigNaughtyEvent1, 1, TicketSalesStatus.SOLD_OUT);
+        Ticket ticket2SoldOut =
+                createTicketWithSalesStatus(bigNaughtyEvent1, 2, TicketSalesStatus.SOLD_OUT);
+        Ticket ticket3Pending =
+                createTicketWithSalesStatus(bigNaughtyEvent1, 3, TicketSalesStatus.PENDING);
+        Ticket ticket4Pending =
+                createTicketWithSalesStatus(bigNaughtyEvent1, 4, TicketSalesStatus.PENDING);
+        Ticket ticket5OnSale =
+                createTicketWithSalesStatus(bigNaughtyEvent1, 5, TicketSalesStatus.ON_SALE);
+        Ticket ticket6OnSale =
+                createTicketWithSalesStatus(bigNaughtyEvent1, 6, TicketSalesStatus.ON_SALE);
 
         ticketRepository.saveAll(
                 Arrays.asList(
@@ -127,10 +138,16 @@ class EventRepositoryTest {
     @DisplayName("현재 시각보다 판매 종료 시점이 늦은 이벤트를 조회할 수 있다")
     @Test
     void findAllNowAvailable() {
+        // given
+        Event maxEvent1 = createEventSalesTo2023WithEventName(bigNaughty, "maxEvent1");
+        Event maxEvent2 = createEventSalesTo2023WithEventName(bigNaughty, "maxEvent2");
+        eventRepository.saveAll(List.of(maxEvent1, maxEvent2));
+
         // when
         List<Event> nowAvailable = eventRepository.findAllNowAvailable();
 
         // then
+        assertThat(nowAvailable).containsExactly(maxEvent1, maxEvent2);
     }
 
     @DisplayName("아티스트 ID를 통해 아티스트의 이벤트를 조회할 수 있다.")

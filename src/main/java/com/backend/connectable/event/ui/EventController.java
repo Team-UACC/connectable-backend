@@ -4,14 +4,13 @@ import com.backend.connectable.event.service.EventService;
 import com.backend.connectable.event.ui.dto.EventDetailResponse;
 import com.backend.connectable.event.ui.dto.EventResponse;
 import com.backend.connectable.event.ui.dto.TicketResponse;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -45,7 +44,8 @@ public class EventController {
     }
 
     @GetMapping("/{event-id}/tickets/{ticket-id}")
-    public ResponseEntity<TicketResponse> getTicketInfo(@PathVariable("event-id") Long eventId, @PathVariable("ticket-id") Long ticketId) {
+    public ResponseEntity<TicketResponse> getTicketInfo(
+            @PathVariable("event-id") Long eventId, @PathVariable("ticket-id") Long ticketId) {
         TicketResponse ticketResponse = eventService.getTicketInfo(eventId, ticketId);
         return ResponseEntity.ok(ticketResponse);
     }

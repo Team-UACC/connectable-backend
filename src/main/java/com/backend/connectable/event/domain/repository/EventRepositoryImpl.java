@@ -154,9 +154,10 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
 
     @Override
     public List<Event> findAllNowAvailable() {
-        return queryFactory.selectFrom(event)
-            .where(event.salesTo.after(LocalDateTime.now()))
-            .fetch();
+        return queryFactory
+                .selectFrom(event)
+                .where(event.salesTo.after(LocalDateTime.now()))
+                .fetch();
     }
 
     @Override
