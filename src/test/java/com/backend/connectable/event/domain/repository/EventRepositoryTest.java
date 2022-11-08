@@ -14,6 +14,9 @@ import com.backend.connectable.user.domain.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -112,16 +115,14 @@ class EventRepositoryTest {
     void findAllEventWithOrder() {
         List<Event> events = eventRepository.findAllEventWithOrder();
         boolean result =
-                List.of(ryanEvent, joelEvent).stream()
+                Stream.of(ryanEvent, joelEvent)
                         .allMatch(
                                 item ->
-                                        events.stream()
-                                                .map(Event::getEventName)
-                                                .filter(
-                                                        eventName ->
-                                                                eventName == item.getEventName())
-                                                .findAny()
-                                                .isPresent());
+                                    events.stream()
+                                            .map(Event::getEventName)
+                                            .anyMatch(
+                                                    eventName ->
+                                                        Objects.equals(eventName, item.getEventName())));
         assertThat(result).isTrue();
     }
 
@@ -213,6 +214,12 @@ class EventRepositoryTest {
 
         // then
         assertThat(event).isEqualTo(joelEvent);
+    }
+
+    @DisplayName("현재 시각보다 판매 종료 시점이 늦은 이벤트를 조회할 수 있다")
+    @Test
+    void findAllNowAvailable() {
+
     }
 
     @DisplayName("아티스트 ID를 통해 아티스트의 이벤트를 조회할 수 있다.")

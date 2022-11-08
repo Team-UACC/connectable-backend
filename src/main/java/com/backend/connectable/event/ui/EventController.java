@@ -26,6 +26,12 @@ public class EventController {
         return ResponseEntity.ok(eventResponses);
     }
 
+    @GetMapping("/today")
+    public ResponseEntity<List<EventResponse>> getNowAvailable() {
+        List<EventResponse> eventResponses = eventService.getListNowAvailable();
+        return ResponseEntity.ok(eventResponses);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<EventDetailResponse> getEventDetail(@PathVariable("id") Long eventId) {
         EventDetailResponse eventDetailResponse = eventService.getEventDetail(eventId);

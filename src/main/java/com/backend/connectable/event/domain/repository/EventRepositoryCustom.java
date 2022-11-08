@@ -17,4 +17,6 @@ public interface EventRepositoryCustom {
     List<Event> findAllEventWithOrder();
 
     List<Event> findAllEventsByArtistId(Long artistId);
+
+    List<Event> findAllNowAvailable();
 }
