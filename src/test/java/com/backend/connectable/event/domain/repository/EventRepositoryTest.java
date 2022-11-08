@@ -1,17 +1,20 @@
 package com.backend.connectable.event.domain.repository;
 
+import static com.backend.connectable.fixture.ArtistFixture.createArtistBigNaughty;
+import static com.backend.connectable.fixture.EventFixture.createEventWithNameAndContractAddress;
+import static com.backend.connectable.fixture.TicketFixture.createTicketWithSalesStatus;
+import static com.backend.connectable.fixture.UserFixture.createUserJoel;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 import com.backend.connectable.artist.domain.Artist;
 import com.backend.connectable.artist.domain.repository.ArtistRepository;
 import com.backend.connectable.event.domain.Event;
-import com.backend.connectable.event.domain.SalesOption;
 import com.backend.connectable.event.domain.Ticket;
 import com.backend.connectable.event.domain.TicketSalesStatus;
 import com.backend.connectable.event.domain.dto.EventTicket;
 import com.backend.connectable.user.domain.User;
 import com.backend.connectable.user.domain.repository.UserRepository;
-import java.time.LocalDateTime;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -34,63 +37,15 @@ class EventRepositoryTest {
 
     @Autowired ArtistRepository artistRepository;
 
-    Artist bigNaughty =
-            Artist.builder()
-                    .bankCompany("NH")
-                    .bankAccount("9000000000099")
-                    .artistName("빅나티")
-                    .email("bignaughty@gmail.com")
-                    .password("temptemp1234")
-                    .phoneNumber("01012345678")
-                    .artistImage("ARTIST_IMAGE")
-                    .build();
+    Artist bigNaughty = createArtistBigNaughty();
 
-    User user =
-            User.builder()
-                    .phoneNumber("010-0000-0000")
-                    .klaytnAddress("0x1234")
-                    .nickname("user")
-                    .privacyAgreement(true)
-                    .isActive(true)
-                    .build();
+    User user = createUserJoel();
 
-    String joelEventContractAddress = "0x1234";
-    Event joelEvent =
-            Event.builder()
-                    .description("조엘의 콘서트 at Connectable")
-                    .salesFrom(LocalDateTime.of(2022, 7, 12, 0, 0))
-                    .salesTo(LocalDateTime.of(2022, 7, 30, 0, 0))
-                    .contractAddress(joelEventContractAddress)
-                    .eventName("조엘의 콘서트")
-                    .eventImage("JOEL_EVENT_IMG_URL")
-                    .twitterUrl("https://github.com/joelonsw")
-                    .instagramUrl("https://www.instagram.com/jyoung_with/")
-                    .webpageUrl("https://papimon.tistory.com/")
-                    .startTime(LocalDateTime.of(2022, 8, 1, 18, 0))
-                    .endTime(LocalDateTime.of(2022, 8, 1, 19, 0))
-                    .salesOption(SalesOption.FLAT_PRICE)
-                    .location("서울특별시 강남구 테헤란로 311 아남타워빌딩 7층")
-                    .artist(bigNaughty)
-                    .build();
+    String bigNaughtyEvent1ContractAddress = "0x1234";
+    Event bigNaughtyEvent1 = createEventWithNameAndContractAddress(bigNaughty, "bigNaughty1", bigNaughtyEvent1ContractAddress);
 
-    String ryanEventContractAddress = "0x5678";
-    Event ryanEvent =
-            Event.builder()
-                    .description("라이언 콘서트 at Connectable")
-                    .salesFrom(LocalDateTime.of(2022, 6, 11, 0, 0))
-                    .salesTo(LocalDateTime.of(2022, 6, 17, 0, 0))
-                    .contractAddress(ryanEventContractAddress)
-                    .eventName("라이언 콘서트")
-                    .eventImage("RYAN_EVENT_IMG_URL")
-                    .twitterUrl("https://twitter.com/elonmusk")
-                    .instagramUrl("https://www.instagram.com/eunbining0904/")
-                    .webpageUrl("https://nextjs.org/")
-                    .startTime(LocalDateTime.of(2022, 6, 22, 19, 30))
-                    .endTime(LocalDateTime.of(2022, 6, 22, 21, 30))
-                    .salesOption(SalesOption.FLAT_PRICE)
-                    .location("예술의 전당")
-                    .artist(bigNaughty)
-                    .build();
+    String bigNaughtyEvent2ContractAddress = "0x5678";
+    Event bigNaughtyEvent2 = createEventWithNameAndContractAddress(bigNaughty, "bigNaughty2", bigNaughtyEvent2ContractAddress);
 
     @BeforeEach
     void setUp() {
@@ -98,7 +53,7 @@ class EventRepositoryTest {
         artistRepository.deleteAll();
 
         artistRepository.save(bigNaughty);
-        eventRepository.saveAll(Arrays.asList(joelEvent, ryanEvent));
+        eventRepository.saveAll(Arrays.asList(bigNaughtyEvent1, bigNaughtyEvent2));
         userRepository.save(user);
     }
 
@@ -107,7 +62,7 @@ class EventRepositoryTest {
     void findAllContractAddresses() {
         List<String> allContractAddresses = eventRepository.findAllContractAddresses();
         assertThat(allContractAddresses)
-                .contains(joelEventContractAddress, ryanEventContractAddress);
+                .contains(bigNaughtyEvent1ContractAddress, bigNaughtyEvent2ContractAddress);
     }
 
     @DisplayName("이벤트 목록을 받아올 수 있다.")
@@ -115,7 +70,7 @@ class EventRepositoryTest {
     void findAllEventWithOrder() {
         List<Event> events = eventRepository.findAllEventWithOrder();
         boolean result =
-                Stream.of(ryanEvent, joelEvent)
+                Stream.of(bigNaughtyEvent2, bigNaughtyEvent1)
                         .allMatch(
                                 item ->
                                     events.stream()
@@ -130,59 +85,12 @@ class EventRepositoryTest {
     @Test
     void findAllTickets() {
         // given
-        Ticket ticket1SoldOut =
-                Ticket.builder()
-                        .event(joelEvent)
-                        .tokenId(1)
-                        .tokenUri("https://token1.uri")
-                        .price(100000)
-                        .ticketSalesStatus(TicketSalesStatus.SOLD_OUT)
-                        .build();
-
-        Ticket ticket2SoldOut =
-                Ticket.builder()
-                        .event(joelEvent)
-                        .tokenId(2)
-                        .tokenUri("https://token1.uri")
-                        .price(100000)
-                        .ticketSalesStatus(TicketSalesStatus.SOLD_OUT)
-                        .build();
-
-        Ticket ticket3Pending =
-                Ticket.builder()
-                        .event(joelEvent)
-                        .tokenId(3)
-                        .tokenUri("https://token1.uri")
-                        .price(100000)
-                        .ticketSalesStatus(TicketSalesStatus.PENDING)
-                        .build();
-
-        Ticket ticket4Pending =
-                Ticket.builder()
-                        .event(joelEvent)
-                        .tokenId(4)
-                        .tokenUri("https://token1.uri")
-                        .price(100000)
-                        .ticketSalesStatus(TicketSalesStatus.PENDING)
-                        .build();
-
-        Ticket ticket5OnSale =
-                Ticket.builder()
-                        .event(joelEvent)
-                        .tokenId(5)
-                        .tokenUri("https://token1.uri")
-                        .price(100000)
-                        .ticketSalesStatus(TicketSalesStatus.ON_SALE)
-                        .build();
-
-        Ticket ticket6OnSale =
-                Ticket.builder()
-                        .event(joelEvent)
-                        .tokenId(6)
-                        .tokenUri("https://token1.uri")
-                        .price(100000)
-                        .ticketSalesStatus(TicketSalesStatus.ON_SALE)
-                        .build();
+        Ticket ticket1SoldOut = createTicketWithSalesStatus(bigNaughtyEvent1, 1, TicketSalesStatus.SOLD_OUT);
+        Ticket ticket2SoldOut = createTicketWithSalesStatus(bigNaughtyEvent1, 2, TicketSalesStatus.SOLD_OUT);
+        Ticket ticket3Pending = createTicketWithSalesStatus(bigNaughtyEvent1, 3, TicketSalesStatus.PENDING);
+        Ticket ticket4Pending = createTicketWithSalesStatus(bigNaughtyEvent1, 4, TicketSalesStatus.PENDING);
+        Ticket ticket5OnSale = createTicketWithSalesStatus(bigNaughtyEvent1, 5, TicketSalesStatus.ON_SALE);
+        Ticket ticket6OnSale = createTicketWithSalesStatus(bigNaughtyEvent1, 6, TicketSalesStatus.ON_SALE);
 
         ticketRepository.saveAll(
                 Arrays.asList(
@@ -194,7 +102,7 @@ class EventRepositoryTest {
                         ticket6OnSale));
 
         // when
-        Long eventId = joelEvent.getId();
+        Long eventId = bigNaughtyEvent1.getId();
         List<EventTicket> allTickets = eventRepository.findAllTickets(eventId);
 
         // then
@@ -210,16 +118,19 @@ class EventRepositoryTest {
     @Test
     void getEventByContractAddress() {
         // given && when
-        Event event = eventRepository.findByContractAddress(joelEventContractAddress).get();
+        Event event = eventRepository.findByContractAddress(bigNaughtyEvent1ContractAddress).get();
 
         // then
-        assertThat(event).isEqualTo(joelEvent);
+        assertThat(event).isEqualTo(bigNaughtyEvent1);
     }
 
     @DisplayName("현재 시각보다 판매 종료 시점이 늦은 이벤트를 조회할 수 있다")
     @Test
     void findAllNowAvailable() {
+        // when
+        List<Event> nowAvailable = eventRepository.findAllNowAvailable();
 
+        // then
     }
 
     @DisplayName("아티스트 ID를 통해 아티스트의 이벤트를 조회할 수 있다.")
@@ -229,6 +140,6 @@ class EventRepositoryTest {
         List<Event> artistEvents = eventRepository.findAllEventsByArtistId(bigNaughty.getId());
 
         // then
-        assertThat(artistEvents).containsExactly(joelEvent, ryanEvent);
+        assertThat(artistEvents).containsExactly(bigNaughtyEvent1, bigNaughtyEvent2);
     }
 }
