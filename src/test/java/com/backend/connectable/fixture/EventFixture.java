@@ -48,19 +48,19 @@ public class EventFixture {
                 .build();
     }
 
-    public static Event createEventSalesTo2023WithEventName(Artist artist, String eventName) {
+    public static Event createFutureEventWithEventName(Artist artist, String eventName) {
         return Event.builder()
                 .description("콘서트 at Connectable")
-                .salesFrom(LocalDateTime.of(2022, 7, 12, 0, 0))
-                .salesTo(LocalDateTime.of(2023, 12, 30, 0, 0))
+                .salesFrom(LocalDateTime.now().plusYears(1L))
+                .salesTo(LocalDateTime.now().plusYears(2L))
                 .contractAddress("0x5555aaaa")
                 .eventName(eventName)
                 .eventImage("EVENT_IMG_URL")
                 .twitterUrl("https://github.com/joelonsw")
                 .instagramUrl("https://www.instagram.com/jyoung_with/")
                 .webpageUrl("https://papimon.tistory.com/")
-                .startTime(LocalDateTime.of(2023, 12, 31, 18, 0))
-                .endTime(LocalDateTime.of(2023, 12, 31, 19, 0))
+                .startTime(LocalDateTime.now().plusYears(2L))
+                .endTime(LocalDateTime.now().plusYears(2L))
                 .salesOption(SalesOption.FLAT_PRICE)
                 .location("서울특별시 강남구 테헤란로 311 아남타워빌딩 7층")
                 .artist(artist)

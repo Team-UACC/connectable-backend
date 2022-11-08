@@ -1,8 +1,8 @@
 package com.backend.connectable.event.domain.repository;
 
 import static com.backend.connectable.fixture.ArtistFixture.createArtistBigNaughty;
-import static com.backend.connectable.fixture.EventFixture.createEventSalesTo2023WithEventName;
 import static com.backend.connectable.fixture.EventFixture.createEventWithNameAndContractAddress;
+import static com.backend.connectable.fixture.EventFixture.createFutureEventWithEventName;
 import static com.backend.connectable.fixture.TicketFixture.createTicketWithSalesStatus;
 import static com.backend.connectable.fixture.UserFixture.createUserJoel;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
@@ -139,8 +139,8 @@ class EventRepositoryTest {
     @Test
     void findAllNowAvailable() {
         // given
-        Event maxEvent1 = createEventSalesTo2023WithEventName(bigNaughty, "maxEvent1");
-        Event maxEvent2 = createEventSalesTo2023WithEventName(bigNaughty, "maxEvent2");
+        Event maxEvent1 = createFutureEventWithEventName(bigNaughty, "maxEvent1");
+        Event maxEvent2 = createFutureEventWithEventName(bigNaughty, "maxEvent2");
         eventRepository.saveAll(List.of(maxEvent1, maxEvent2));
 
         // when
