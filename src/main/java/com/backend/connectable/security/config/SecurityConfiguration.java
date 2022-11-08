@@ -36,6 +36,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authenticated()
                 .antMatchers(POST, "/artists/{artist-id}/comments")
                 .authenticated()
+                .antMatchers(PUT, "/artists/{artist-id}/comments")
+                .authenticated()
                 .anyRequest()
                 .permitAll()
                 .and()

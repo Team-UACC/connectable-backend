@@ -22,6 +22,7 @@ import com.backend.connectable.security.custom.ConnectableUserDetails;
 import com.backend.connectable.user.domain.User;
 import com.backend.connectable.user.domain.repository.UserRepository;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -52,10 +53,7 @@ class ArtistServiceTest {
     private Event event4;
 
     private final String userKlaytnAddress = "0x1111";
-    private final String userNickname = "leejp";
-    private final String userPhoneNumber = "010-3333-7777";
-    private final boolean userPrivacyAgreement = true;
-    private final boolean userIsActive = true;
+    private final String anotherPersonKlaytnAddress = "0x2222";
 
     @BeforeEach
     void setUp() {
@@ -186,5 +184,42 @@ class ArtistServiceTest {
                         event2.getEventName(),
                         event3.getEventName(),
                         event4.getEventName());
+    }
+
+    @DisplayName("등록된 코멘트를 삭제처리 진행할 경우 is_deleted=true가 된다.")
+    @Test
+    void deleteArtistComment() {
+        // given
+        ConnectableUserDetails connectableUserDetails =
+                new ConnectableUserDetails(userKlaytnAddress);
+        Comment comment =
+                Comment.builder().user(user).artist(artist2).contents("contents1 입니당").build();
+        commentRepository.save(comment);
+
+        // when
+        artistService.deleteComment(connectableUserDetails, artist2.getId(), comment.getId());
+        Optional<Comment> deletedComment = commentRepository.findById(comment.getId());
+
+        // then
+        assertThat(deletedComment.get().isDeleted()).isTrue();
+    }
+
+    @DisplayName("작성자가 아닌 타인이 열람된 코멘트를 삭제할 수 없다.")
+    @Test
+    void deleteArtistCommentByAnotherPerson() {
+        // given
+        ConnectableUserDetails anotherPersonUserDetails =
+                new ConnectableUserDetails(anotherPersonKlaytnAddress);
+        Comment comment =
+                Comment.builder().user(user).artist(artist2).contents("contents1 입니당").build();
+        commentRepository.save(comment);
+
+        // when & then
+        assertThatThrownBy(
+                        () ->
+                                artistService.deleteComment(
+                                        anotherPersonUserDetails, artist2.getId(), comment.getId()))
+                .isInstanceOf(ConnectableException.class)
+                .withFailMessage(ErrorType.NOT_A_COMMENT_AUTHOR.getMessage());
     }
 }

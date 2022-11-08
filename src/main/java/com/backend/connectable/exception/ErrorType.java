@@ -54,7 +54,9 @@ public enum ErrorType {
     THREAD_INTERRUPTED("ADMIN-005", "쓰레드에 문제가 발생했습니다."),
 
     ARTIST_NOT_EXISTS("ARTIST-001", "존재하지 않는 아티스트입니다."),
-    ;
+
+    COMMENT_NOT_EXIST("COMMENT-001", "존재하지 않는 댓글입니다."),
+    NOT_A_COMMENT_AUTHOR("COMMENT-002", "댓글 작성자가 아닙니다.");
 
     private final String errorCode;
     private final String message;

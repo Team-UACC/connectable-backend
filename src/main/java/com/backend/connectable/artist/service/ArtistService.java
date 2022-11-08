@@ -68,6 +68,18 @@ public class ArtistService {
         commentRepository.save(comment);
     }
 
+    public List<ArtistCommentResponse> getArtistComments(Long artistId) {
+        List<ArtistComment> artistComments = commentRepository.getCommentsByArtistId(artistId);
+        return ArtistCommentResponse.toList(artistComments);
+    }
+
+    @Transactional
+    public void deleteComment(ConnectableUserDetails userDetails, Long artistId, Long commentId) {
+        Comment comment = getComment(commentId);
+        comment.isCommentAuthor(getUser(userDetails));
+        commentRepository.deleteComment(artistId, comment.getId());
+    }
+
     private User getUser(ConnectableUserDetails userDetails) {
         return userRepository
                 .findByKlaytnAddress(userDetails.getKlaytnAddress())
@@ -86,8 +98,12 @@ public class ArtistService {
                                         HttpStatus.BAD_REQUEST, ErrorType.ARTIST_NOT_EXISTS));
     }
 
-    public List<ArtistCommentResponse> getArtistComments(Long artistId) {
-        List<ArtistComment> artistComments = commentRepository.getCommentsByArtistId(artistId);
-        return ArtistCommentResponse.toList(artistComments);
+    private Comment getComment(Long commentId) {
+        return commentRepository
+                .findById(commentId)
+                .orElseThrow(
+                        () ->
+                                new ConnectableException(
+                                        HttpStatus.BAD_REQUEST, ErrorType.COMMENT_NOT_EXIST));
     }
 }

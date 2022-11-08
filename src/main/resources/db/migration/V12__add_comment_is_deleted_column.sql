@@ -1,0 +1,1 @@
+ALTER TABLE comment ADD COLUMN is_deleted bit(1) DEFAULT false NOT NULL;

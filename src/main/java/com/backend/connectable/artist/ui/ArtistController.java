@@ -56,4 +56,13 @@ public class ArtistController {
         artistService.createComment(userDetails, artistId, artistCommentRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
+    @DeleteMapping("/{artist-id}/comments")
+    public ResponseEntity<Void> deleteArtistComment(
+            @AuthenticationPrincipal ConnectableUserDetails userDetails,
+            @PathVariable("artist-id") Long artistId,
+            @RequestParam(name = "commentId") Long commentId) {
+        artistService.deleteComment(userDetails, artistId, commentId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }
