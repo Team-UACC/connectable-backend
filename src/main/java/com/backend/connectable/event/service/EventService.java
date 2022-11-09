@@ -42,6 +42,13 @@ public class EventService {
                 .collect(Collectors.toList());
     }
 
+    public List<EventResponse> getListNowAvailable() {
+        List<Event> events = eventRepository.findAllNowAvailable();
+        return events.stream()
+                .map(EventMapper.INSTANCE::eventToResponse)
+                .collect(Collectors.toList());
+    }
+
     public EventDetailResponse getEventDetail(Long eventId) {
         EventDetail eventDetail =
                 eventRepository

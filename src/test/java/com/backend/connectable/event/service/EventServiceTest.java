@@ -1,5 +1,6 @@
 package com.backend.connectable.event.service;
 
+import static com.backend.connectable.fixture.EventFixture.createFutureEventWithEventName;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -86,12 +87,12 @@ class EventServiceTest {
                 Event.builder()
                         .eventName("test1")
                         .eventImage("/connectable-events/image_0xtest.jpeg")
-                        .startTime(LocalDateTime.now())
                         .description("description1")
                         .contractAddress(CONTRACT_ADDRESS)
                         .contractName("event1")
                         .salesFrom(LocalDateTime.now())
                         .salesTo(LocalDateTime.now())
+                        .startTime(LocalDateTime.now())
                         .endTime(LocalDateTime.now())
                         .artist(artist1)
                         .build();
@@ -100,12 +101,12 @@ class EventServiceTest {
                 Event.builder()
                         .eventName("test2")
                         .eventImage("/connectable-events/image_0xtest.jpeg")
-                        .startTime(LocalDateTime.now())
                         .description("description2")
                         .contractAddress(CONTRACT_ADDRESS)
                         .contractName("event2")
                         .salesFrom(LocalDateTime.now())
                         .salesTo(LocalDateTime.now())
+                        .startTime(LocalDateTime.now())
                         .endTime(LocalDateTime.now())
                         .artist(artist1)
                         .build();
@@ -114,12 +115,12 @@ class EventServiceTest {
                 Event.builder()
                         .eventName("test3")
                         .eventImage("/connectable-events/image_0xtest.jpeg")
-                        .startTime(LocalDateTime.now())
                         .description("description3")
                         .contractAddress(CONTRACT_ADDRESS)
                         .contractName("event3")
                         .salesFrom(LocalDateTime.now())
                         .salesTo(LocalDateTime.now())
+                        .startTime(LocalDateTime.now())
                         .endTime(LocalDateTime.now())
                         .artist(artist1)
                         .build();
@@ -299,5 +300,24 @@ class EventServiceTest {
 
         assertThat(tickets.get(0).getTokenUri()).isEqualTo(TOKEN_URI);
         assertThat(tickets.get(0).getPrice()).isEqualTo(10000);
+    }
+
+    @DisplayName("현재 구매할 수 있는 이벤트를 조회할 수 있다.")
+    @Test
+    void getListNowAvailable() {
+        // before
+        List<EventResponse> before = eventService.getListNowAvailable();
+        assertThat(before).isEmpty();
+
+        // given
+        Event maxEvent1 = createFutureEventWithEventName(artist1, "maxEvent1");
+        Event maxEvent2 = createFutureEventWithEventName(artist1, "maxEvent2");
+        eventRepository.saveAll(List.of(maxEvent1, maxEvent2));
+
+        // when
+        List<EventResponse> after = eventService.getListNowAvailable();
+
+        // then
+        assertThat(after).hasSize(2);
     }
 }

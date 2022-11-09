@@ -153,6 +153,14 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
     }
 
     @Override
+    public List<Event> findAllNowAvailable() {
+        return queryFactory
+                .selectFrom(event)
+                .where(event.salesTo.after(LocalDateTime.now()))
+                .fetch();
+    }
+
+    @Override
     public List<Event> findAllEventsByArtistId(Long artistId) {
         return queryFactory.selectFrom(event).innerJoin(artist).on(artist.id.eq(artistId)).fetch();
     }

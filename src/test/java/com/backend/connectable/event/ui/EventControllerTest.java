@@ -60,10 +60,10 @@ class EventControllerTest {
                     EVENT_ID_2,
                     "test2",
                     "/connectable-events/image_0xtest.jpeg",
-                    LocalDateTime.now(),
+                    LocalDateTime.now().plusYears(1L),
                     "description2",
-                    LocalDateTime.now(),
-                    LocalDateTime.now());
+                    LocalDateTime.now().plusYears(1L),
+                    LocalDateTime.now().plusYears(1L));
 
     private static final EventDetailResponse EVENT_DETAIL_RESPONSE =
             new EventDetailResponse(
@@ -157,6 +157,23 @@ class EventControllerTest {
                 .andExpect(jsonPath("$[1].name").value("test2"))
                 .andExpect(jsonPath("$[1].description").value("description2"))
                 .andDo(print());
+    }
+
+    @DisplayName("오늘 기점으로 종료가 안된 이벤트를 여러개 조회한다.")
+    @WithMockUser
+    @Test
+    void getEventsListNowAvailable() throws Exception {
+        // given
+        List<EventResponse> mockedEventNowAvailable = List.of(EVENT_RESPONSE_2);
+        given(eventService.getListNowAvailable()).willReturn(mockedEventNowAvailable);
+
+        // expected
+        mockMvc.perform(get("/events/today").contentType(APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$[0]").exists())
+            .andExpect(jsonPath("$[0].name").value("test2"))
+            .andExpect(jsonPath("$[0].description").value("description2"))
+            .andDo(print());
     }
 
     @DisplayName("이벤트 번호를 사용하여 특정 이벤트를 조회한다.")
