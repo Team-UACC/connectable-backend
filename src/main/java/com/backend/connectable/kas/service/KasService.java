@@ -99,4 +99,13 @@ public class KasService {
             List<String> contractAddresses, String userKlaytnAddress) {
         return kasTokenService.findAllTokensOwnedByUser(contractAddresses, userKlaytnAddress);
     }
+
+    @TimeCheck
+    public boolean checkIsTokenHolder(List<String> contractAddresses, String userKlaytnAddress) {
+        return kasTokenService
+                .findAllTokensOwnedByUser(contractAddresses, userKlaytnAddress)
+                .values()
+                .stream()
+                .anyMatch(TokensResponse::hasItem);
+    }
 }

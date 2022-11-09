@@ -52,6 +52,12 @@ public class KasServiceMockSetup {
         setUpMockServerApi(KasMockRequest.GET_TOKENS_OF_USER, KasMockResponse.GET_TOKENS_OF_USER);
         setUpMockServerApi(KasMockRequest.GET_TOKENS_OF_USER2, KasMockResponse.GET_TOKENS_OF_USER2);
         setUpMockServerApi(
+                KasMockRequest.GET_TOKENS_OF_USER_NOT_HOLDING,
+                KasMockResponse.GET_TOKENS_OF_USER_NOT_HOLDING);
+        setUpMockServerApi(
+                KasMockRequest.GET_TOKENS_OF_USER_NOT_HOLDING2,
+                KasMockResponse.GET_TOKENS_OF_USER_NOT_HOLDING2);
+        setUpMockServerApi(
                 KasMockRequest.GET_TOKENS_OF_USER_BY_INVALID_OWNER_ADDRESS,
                 KasMockResponse.BAD_REQUEST_RESPONSE);
         setUpMockServerApi(KasMockRequest.GET_TOKEN_HISTORY, KasMockResponse.GET_TOKEN_HISTORY);

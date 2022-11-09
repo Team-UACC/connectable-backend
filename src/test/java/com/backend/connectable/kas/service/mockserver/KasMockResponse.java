@@ -197,6 +197,16 @@ public class KasMockResponse {
                                     + "  ]\n"
                                     + "}");
 
+    public static HttpResponse GET_TOKENS_OF_USER_NOT_HOLDING =
+            response()
+                    .withContentType(MediaType.APPLICATION_JSON)
+                    .withBody("{\n" + "  \"cursor\": \"\",\n" + "  \"items\": [\n" + "  ]\n" + "}");
+
+    public static HttpResponse GET_TOKENS_OF_USER_NOT_HOLDING2 =
+            response()
+                    .withContentType(MediaType.APPLICATION_JSON)
+                    .withBody("{\n" + "  \"cursor\": \"\",\n" + "  \"items\": [\n" + "  ]\n" + "}");
+
     public static HttpResponse GET_TOKEN_HISTORY =
             response()
                     .withContentType(MediaType.APPLICATION_JSON)

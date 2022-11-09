@@ -13,6 +13,10 @@ public class KasMockRequest {
 
     public static String VALID_CONTRACT_ADDRESS = "0x1234";
     public static String VALID_CONTRACT_ADDRESS2 = "0x1111";
+
+    public static String NO_HOLDER_CONTRACT_ADDRESS = "0x6787";
+    public static String NO_HOLDER_CONTRACT_ADDRESS2 = "0x7656";
+
     public static String INVALID_CONTRACT_ADDRESS = "0x5678";
 
     public static String VALID_TOKEN_ID = "0x1";
@@ -88,6 +92,24 @@ public class KasMockRequest {
                     .withPath(
                             "/contract/"
                                     + VALID_CONTRACT_ADDRESS2
+                                    + "/owner/"
+                                    + VALID_OWNER_ADDRESS);
+
+    public static HttpRequest GET_TOKENS_OF_USER_NOT_HOLDING =
+            request()
+                    .withMethod(GET)
+                    .withPath(
+                            "/contract/"
+                                    + NO_HOLDER_CONTRACT_ADDRESS
+                                    + "/owner/"
+                                    + VALID_OWNER_ADDRESS);
+
+    public static HttpRequest GET_TOKENS_OF_USER_NOT_HOLDING2 =
+            request()
+                    .withMethod(GET)
+                    .withPath(
+                            "/contract/"
+                                    + NO_HOLDER_CONTRACT_ADDRESS2
                                     + "/owner/"
                                     + VALID_OWNER_ADDRESS);
 

@@ -19,7 +19,7 @@ import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class KasServiceTest extends KasServiceMockSetup {
+class KasServiceTest extends KasServiceMockSetup {
 
     @DisplayName("KAS에서 배포한 컨트랙트를 확인할 수 있다.")
     @Test
@@ -279,5 +279,37 @@ public class KasServiceTest extends KasServiceMockSetup {
         assertThat(response.containsKey(contractAddress2)).isTrue();
         assertThat(response.get(contractAddress1)).isNotNull();
         assertThat(response.get(contractAddress2)).isNotNull();
+    }
+
+    @DisplayName("컨트랙트 주소들과 유저의 클레이튼 주소로 홀더인지 검증할 수 있다.")
+    @Test
+    void checkIsTokenHolder() {
+        // given
+        String contractAddress1 = KasMockRequest.VALID_CONTRACT_ADDRESS;
+        String contractAddress2 = KasMockRequest.VALID_CONTRACT_ADDRESS2;
+        List<String> contractAddresses = Arrays.asList(contractAddress1, contractAddress2);
+        String owner = KasMockRequest.VALID_OWNER_ADDRESS;
+
+        // when
+        boolean isHolder = kasService.checkIsTokenHolder(contractAddresses, owner);
+
+        // then
+        assertThat(isHolder).isTrue();
+    }
+
+    @DisplayName("컨트랙트 주소들과 유저의 클레이튼 주소로 홀더가 아닌지 검증할 수 있다.")
+    @Test
+    void checkIsNotTokenHolder() {
+        // given
+        String contractAddress1 = KasMockRequest.NO_HOLDER_CONTRACT_ADDRESS;
+        String contractAddress2 = KasMockRequest.NO_HOLDER_CONTRACT_ADDRESS2;
+        List<String> contractAddresses = Arrays.asList(contractAddress1, contractAddress2);
+        String owner = KasMockRequest.VALID_OWNER_ADDRESS;
+
+        // when
+        boolean isHolder = kasService.checkIsTokenHolder(contractAddresses, owner);
+
+        // then
+        assertThat(isHolder).isFalse();
     }
 }
