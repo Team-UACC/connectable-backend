@@ -14,6 +14,7 @@ import com.backend.connectable.artist.service.ArtistService;
 import com.backend.connectable.artist.ui.dto.ArtistCommentRequest;
 import com.backend.connectable.artist.ui.dto.ArtistCommentResponse;
 import com.backend.connectable.artist.ui.dto.ArtistDetailResponse;
+import com.backend.connectable.artist.ui.dto.ArtistNftHolderResponse;
 import com.backend.connectable.event.ui.dto.EventResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
@@ -164,6 +165,40 @@ class ArtistControllerTest {
                         delete("/artists/{artist-id}/comments?commentId={comment-id}", 1L, 1L)
                                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isNoContent())
+                .andDo(print());
+    }
+
+    @DisplayName("아티스트의 NFT를 소유하고 있다면 isNftHolder=true를 반환한다")
+    @WithUserDetails("0x1111")
+    @Test
+    void isArtistNftOwner() throws Exception {
+        // given & when
+        given(artistService.isArtistNftOwner(any(), any()))
+                .willReturn(ArtistNftHolderResponse.isHolder());
+
+        // then
+        mockMvc.perform(
+                        get("/artists/{artist-id}/owner", ARTIST_RESPONSE_1.getArtistId())
+                                .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.isNftHolder").value(true))
+                .andDo(print());
+    }
+
+    @DisplayName("아티스트의 NFT를 소유하고 있다면 isNftHolder=false를 반환한다")
+    @WithUserDetails("0x1111")
+    @Test
+    void isArtistNotNftOwner() throws Exception {
+        // given & when
+        given(artistService.isArtistNftOwner(any(), any()))
+                .willReturn(ArtistNftHolderResponse.isNotHolder());
+
+        // then
+        mockMvc.perform(
+                        get("/artists/{artist-id}/owner", ARTIST_RESPONSE_1.getArtistId())
+                                .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.isNftHolder").value(false))
                 .andDo(print());
     }
 }
