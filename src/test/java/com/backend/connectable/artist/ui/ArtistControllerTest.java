@@ -10,6 +10,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.backend.connectable.artist.domain.Notice;
+import com.backend.connectable.artist.domain.NoticeStatus;
 import com.backend.connectable.artist.service.ArtistService;
 import com.backend.connectable.artist.ui.dto.ArtistCommentRequest;
 import com.backend.connectable.artist.ui.dto.ArtistCommentResponse;
@@ -35,10 +37,16 @@ class ArtistControllerTest {
     @Autowired private ObjectMapper objectMapper;
     @MockBean private ArtistService artistService;
 
+    private static final Notice NOTICE_1 =
+            new Notice(1L, null, NoticeStatus.EXPOSURE, "타이틀1", "내용1");
+    private static final Notice NOTICE_2 =
+            new Notice(2L, null, NoticeStatus.NON_EXPOSURE, "타이틀2", "내용2");
     private static final ArtistDetailResponse ARTIST_RESPONSE_1 =
-            new ArtistDetailResponse(1L, "artist1", "https://artist1.img");
+            new ArtistDetailResponse(
+                    1L, "artist1", "https://artist1.img", null, null, null, "아티스트1 설명", NOTICE_1);
     private static final ArtistDetailResponse ARTIST_RESPONSE_2 =
-            new ArtistDetailResponse(2L, "artist2", "https://artist2.img");
+            new ArtistDetailResponse(
+                    2L, "artist2", "https://artist2.img", null, null, null, "아티스트2 설명", NOTICE_2);
 
     private static final EventResponse EVENT_RESPONSE_1 =
             new EventResponse(
@@ -67,10 +75,10 @@ class ArtistControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0]").exists())
                 .andExpect(jsonPath("$[1]").exists())
-                .andExpect(jsonPath("$[0].artistId").value(ARTIST_RESPONSE_1.getArtistId()))
-                .andExpect(jsonPath("$[0].artistName").value(ARTIST_RESPONSE_1.getArtistName()))
-                .andExpect(jsonPath("$[1].artistId").value(ARTIST_RESPONSE_2.getArtistId()))
-                .andExpect(jsonPath("$[1].artistName").value(ARTIST_RESPONSE_2.getArtistName()))
+                .andExpect(jsonPath("$[0].id").value(ARTIST_RESPONSE_1.getId()))
+                .andExpect(jsonPath("$[0].name").value(ARTIST_RESPONSE_1.getName()))
+                .andExpect(jsonPath("$[1].id").value(ARTIST_RESPONSE_2.getId()))
+                .andExpect(jsonPath("$[1].name").value(ARTIST_RESPONSE_2.getName()))
                 .andDo(print());
     }
 
@@ -78,16 +86,21 @@ class ArtistControllerTest {
     @Test
     void getArtist() throws Exception {
         // given & when
-        given(artistService.getArtistDetail(ARTIST_RESPONSE_1.getArtistId()))
+        given(artistService.getArtistDetail(ARTIST_RESPONSE_1.getId()))
                 .willReturn(ARTIST_RESPONSE_1);
 
         // then
         mockMvc.perform(
-                        get("/artists/{artist-id}", ARTIST_RESPONSE_1.getArtistId())
+                        get("/artists/{artist-id}", ARTIST_RESPONSE_1.getId())
                                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.artistId").value(ARTIST_RESPONSE_1.getArtistId()))
-                .andExpect(jsonPath("$.artistName").value(ARTIST_RESPONSE_1.getArtistName()))
+                .andExpect(jsonPath("$.id").value(ARTIST_RESPONSE_1.getId()))
+                .andExpect(jsonPath("$.name").value(ARTIST_RESPONSE_1.getName()))
+                .andExpect(
+                        jsonPath("$.notice.title").value(ARTIST_RESPONSE_1.getNotice().getTitle()))
+                .andExpect(
+                        jsonPath("$.notice.contents")
+                                .value(ARTIST_RESPONSE_1.getNotice().getContents()))
                 .andDo(print());
     }
 
@@ -95,12 +108,12 @@ class ArtistControllerTest {
     @Test
     void getArtistEvent() throws Exception {
         // given & when
-        given(artistService.getArtistEvent(ARTIST_RESPONSE_1.getArtistId()))
+        given(artistService.getArtistEvent(ARTIST_RESPONSE_1.getId()))
                 .willReturn(List.of(EVENT_RESPONSE_1));
 
         // then
         mockMvc.perform(
-                        get("/artists/{artist-id}/events", ARTIST_RESPONSE_1.getArtistId())
+                        get("/artists/{artist-id}/events", ARTIST_RESPONSE_1.getId())
                                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0]").exists())
@@ -115,12 +128,12 @@ class ArtistControllerTest {
     @Test
     void getArtistComments() throws Exception {
         // given & when
-        given(artistService.getUndeletedArtistComments(ARTIST_RESPONSE_1.getArtistId()))
+        given(artistService.getUndeletedArtistComments(ARTIST_RESPONSE_1.getId()))
                 .willReturn(List.of(ARTIST_COMMENT_RESPONSE_1, ARTIST_COMMENT_RESPONSE_2));
 
         // then
         mockMvc.perform(
-                        get("/artists/{artist-id}/comments", ARTIST_RESPONSE_1.getArtistId())
+                        get("/artists/{artist-id}/comments", ARTIST_RESPONSE_1.getId())
                                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0]").exists())
@@ -145,7 +158,7 @@ class ArtistControllerTest {
 
         // then
         mockMvc.perform(
-                        post("/artists/{artist-id}/comments", ARTIST_RESPONSE_1.getArtistId())
+                        post("/artists/{artist-id}/comments", ARTIST_RESPONSE_1.getId())
                                 .contentType(APPLICATION_JSON)
                                 .content(artistCommentAsJson))
                 .andExpect(status().isCreated())

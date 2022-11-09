@@ -3,6 +3,7 @@ package com.backend.connectable.artist.service;
 import com.backend.connectable.artist.domain.Artist;
 import com.backend.connectable.artist.domain.Comment;
 import com.backend.connectable.artist.domain.dto.ArtistComment;
+import com.backend.connectable.artist.domain.dto.ArtistDetail;
 import com.backend.connectable.artist.domain.repository.ArtistRepository;
 import com.backend.connectable.artist.domain.repository.CommentRepository;
 import com.backend.connectable.artist.mapper.ArtistMapper;
@@ -41,8 +42,15 @@ public class ArtistService {
     }
 
     public ArtistDetailResponse getArtistDetail(Long artistId) {
-        Artist artist = getArtist(artistId);
-        return ArtistDetailResponse.from(artist);
+        ArtistDetail artistDetail =
+                artistRepository
+                        .findArtistDetailByArtistId(artistId)
+                        .orElseThrow(
+                                () ->
+                                        new ConnectableException(
+                                                HttpStatus.BAD_REQUEST,
+                                                ErrorType.ARTIST_NOT_EXISTS));
+        return ArtistMapper.INSTANCE.artistDetailToResponse(artistDetail);
     }
 
     public List<EventResponse> getArtistEvent(Long artistId) {
