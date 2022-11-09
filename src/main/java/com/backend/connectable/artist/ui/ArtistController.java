@@ -44,7 +44,7 @@ public class ArtistController {
     public ResponseEntity<List<ArtistCommentResponse>> getArtistComments(
             @PathVariable("artist-id") Long artistId) {
         List<ArtistCommentResponse> artistCommentResponses =
-                artistService.getArtistComments(artistId);
+                artistService.getUndeletedArtistComments(artistId);
         return ResponseEntity.ok(artistCommentResponses);
     }
 

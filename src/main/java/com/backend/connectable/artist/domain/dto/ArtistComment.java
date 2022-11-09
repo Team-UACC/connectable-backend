@@ -15,12 +15,19 @@ public class ArtistComment {
     private String nickname;
     private LocalDateTime createdDate;
     private String contents;
+    private boolean isDeleted;
 
     @QueryProjection
-    public ArtistComment(Long id, String nickname, LocalDateTime createdDate, String contents) {
+    public ArtistComment(
+            Long id,
+            String nickname,
+            LocalDateTime createdDate,
+            String contents,
+            boolean isDeleted) {
         this.id = id;
         this.nickname = nickname;
         this.createdDate = createdDate;
         this.contents = contents;
+        this.isDeleted = isDeleted;
     }
 }

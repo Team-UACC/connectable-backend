@@ -5,6 +5,7 @@ import com.backend.connectable.artist.domain.Comment;
 import com.backend.connectable.artist.domain.dto.ArtistComment;
 import com.backend.connectable.artist.domain.repository.ArtistRepository;
 import com.backend.connectable.artist.domain.repository.CommentRepository;
+import com.backend.connectable.artist.mapper.ArtistMapper;
 import com.backend.connectable.artist.ui.dto.ArtistCommentRequest;
 import com.backend.connectable.artist.ui.dto.ArtistCommentResponse;
 import com.backend.connectable.artist.ui.dto.ArtistDetailResponse;
@@ -68,15 +69,22 @@ public class ArtistService {
         commentRepository.save(comment);
     }
 
-    public List<ArtistCommentResponse> getArtistComments(Long artistId) {
-        List<ArtistComment> artistComments = commentRepository.getCommentsByArtistId(artistId);
-        return ArtistCommentResponse.toList(artistComments);
+    public List<ArtistCommentResponse> getUndeletedArtistComments(Long artistId) {
+        List<ArtistComment> artistComments =
+                commentRepository.getCommentsByArtistId(artistId).stream()
+                        .filter(comment -> !comment.isDeleted())
+                        .collect(Collectors.toList());
+        return artistComments.stream()
+                .map(ArtistMapper.INSTANCE::artistCommentToResponse)
+                .collect(Collectors.toList());
     }
 
     @Transactional
     public void deleteComment(ConnectableUserDetails userDetails, Long artistId, Long commentId) {
         Comment comment = getComment(commentId);
-        comment.isCommentAuthor(getUser(userDetails));
+        if (!comment.isCommentAuthor(getUser(userDetails))) {
+            throw new ConnectableException(HttpStatus.UNAUTHORIZED, ErrorType.NOT_A_COMMENT_AUTHOR);
+        }
         commentRepository.deleteComment(artistId, comment.getId());
     }
 

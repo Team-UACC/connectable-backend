@@ -115,7 +115,7 @@ class ArtistControllerTest {
     @Test
     void getArtistComments() throws Exception {
         // given & when
-        given(artistService.getArtistComments(ARTIST_RESPONSE_1.getArtistId()))
+        given(artistService.getUndeletedArtistComments(ARTIST_RESPONSE_1.getArtistId()))
                 .willReturn(List.of(ARTIST_COMMENT_RESPONSE_1, ARTIST_COMMENT_RESPONSE_2));
 
         // then

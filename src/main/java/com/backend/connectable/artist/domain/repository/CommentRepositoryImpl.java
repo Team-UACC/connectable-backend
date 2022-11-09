@@ -27,7 +27,8 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
                                         comment.id,
                                         user.nickname,
                                         comment.createdDate,
-                                        comment.contents))
+                                        comment.contents,
+                                        comment.isDeleted))
                         .from(comment)
                         .innerJoin(user)
                         .on(user.id.eq(comment.user.id))

@@ -1,7 +1,5 @@
 package com.backend.connectable.artist.domain;
 
-import com.backend.connectable.exception.ConnectableException;
-import com.backend.connectable.exception.ErrorType;
 import com.backend.connectable.global.entity.BaseEntity;
 import com.backend.connectable.user.domain.User;
 import java.util.Objects;
@@ -9,7 +7,6 @@ import javax.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.http.HttpStatus;
 
 @Entity
 @Getter
@@ -41,10 +38,8 @@ public class Comment extends BaseEntity {
         this.isDeleted = isDeleted;
     }
 
-    public void isCommentAuthor(User user) {
-        if (!this.user.equals(user)) {
-            throw new ConnectableException(HttpStatus.UNAUTHORIZED, ErrorType.NOT_A_COMMENT_AUTHOR);
-        }
+    public boolean isCommentAuthor(User user) {
+        return this.user.equals(user);
     }
 
     @Override

@@ -123,23 +123,31 @@ class ArtistServiceTest {
 
     @DisplayName("특정 아티스트 페이지에 작성된 코멘트 목록을 조회할 수 있다.")
     @Test
-    void getArtistComments() {
+    void getUndeletedArtistComments() {
         // given
         Comment comment1 =
-                Comment.builder().user(user).artist(artist2).contents("contents1 입니당").build();
+                Comment.builder()
+                        .user(user)
+                        .artist(artist2)
+                        .contents("contents1 입니당")
+                        .isDeleted(true)
+                        .build();
         Comment comment2 =
-                Comment.builder().user(user).artist(artist2).contents("contents2 입니당").build();
+                Comment.builder()
+                        .user(user)
+                        .artist(artist2)
+                        .contents("contents2 입니당")
+                        .isDeleted(false)
+                        .build();
         commentRepository.saveAll(List.of(comment1, comment2));
 
         // when
         List<ArtistCommentResponse> artistComments =
-                artistService.getArtistComments(artist2.getId());
+                artistService.getUndeletedArtistComments(artist2.getId());
 
         // then
-        assertThat(artistComments.get(0).getContents()).isEqualTo(comment1.getContents());
-        assertThat(artistComments.get(0).getWrittenAt()).isEqualTo(comment1.getCreatedDate());
-        assertThat(artistComments.get(1).getContents()).isEqualTo(comment2.getContents());
-        assertThat(artistComments.get(1).getWrittenAt()).isEqualTo(comment2.getCreatedDate());
+        assertThat(artistComments.get(0).getContents()).isEqualTo(comment2.getContents());
+        assertThat(artistComments.get(0).getWrittenAt()).isEqualTo(comment2.getCreatedDate());
     }
 
     @DisplayName("찾을 수 없는 유저일 경우에는 코멘트 등록에 실패한다.")
