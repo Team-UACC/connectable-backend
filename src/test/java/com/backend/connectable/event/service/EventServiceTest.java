@@ -20,14 +20,12 @@ import com.backend.connectable.event.ui.dto.TicketResponse;
 import com.backend.connectable.exception.ConnectableException;
 import com.backend.connectable.exception.ErrorType;
 import com.backend.connectable.kas.service.KasService;
+import com.backend.connectable.kas.service.token.dto.TokenIdentifier;
 import com.backend.connectable.kas.service.token.dto.TokenResponse;
 import com.backend.connectable.kas.service.token.dto.TokensResponse;
 import com.backend.connectable.s3.service.S3Service;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -190,12 +188,12 @@ class EventServiceTest {
         TokenResponse tokenResponse =
                 new TokenResponse("0x1234", "0x5678", "0x1", TOKEN_URI, "0xwelcome");
         TokensResponse tokensResponse = new TokensResponse("eyJjm...ZSJ9", List.of(tokenResponse));
-        Map<String, TokensResponse> tokenResponseMap = new HashMap<>();
-        tokenResponseMap.put(CONTRACT_ADDRESS, tokensResponse);
+        List<TokenIdentifier> tokenIdentifiers =
+                new ArrayList<>(tokensResponse.getTokenIdentifiers());
 
         given(kasService.getToken(any(String.class), any(Integer.class))).willReturn(tokenResponse);
         given(kasService.findAllTokensOwnedByUser(anyList(), any(String.class)))
-                .willReturn(tokenResponseMap);
+                .willReturn(tokenIdentifiers);
     }
 
     @DisplayName("이벤트 목록을 여러개 조회한다.")

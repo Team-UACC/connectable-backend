@@ -15,11 +15,8 @@ import com.backend.connectable.exception.ErrorType;
 import com.backend.connectable.kas.service.KasService;
 import com.backend.connectable.kas.service.token.dto.TokenIdentifier;
 import com.backend.connectable.kas.service.token.dto.TokenResponse;
-import com.backend.connectable.kas.service.token.dto.TokensResponse;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -97,14 +94,8 @@ public class EventService {
 
     public List<Ticket> findTicketByUserAddress(String userKlaytnAddress) {
         List<String> contractAddresses = eventRepository.findAllContractAddresses();
-        Map<String, TokensResponse> userTokens =
-                kasService.findAllTokensOwnedByUser(contractAddresses, userKlaytnAddress);
-
         List<TokenIdentifier> tokenIdentifiers =
-                userTokens.values().stream()
-                        .map(TokensResponse::getTokenIdentifiers)
-                        .flatMap(Collection::stream)
-                        .collect(Collectors.toList());
+                kasService.findAllTokensOwnedByUser(contractAddresses, userKlaytnAddress);
 
         List<Ticket> userTickets = new ArrayList<>();
         for (TokenIdentifier tokenIdentifier : tokenIdentifiers) {

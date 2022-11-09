@@ -1,7 +1,7 @@
 package com.backend.connectable.kas.service;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 import com.backend.connectable.exception.KasException;
 import com.backend.connectable.kas.service.common.dto.TransactionResponse;
@@ -11,11 +11,11 @@ import com.backend.connectable.kas.service.contract.dto.ContractItemsResponse;
 import com.backend.connectable.kas.service.mockserver.KasMockRequest;
 import com.backend.connectable.kas.service.mockserver.KasServiceMockSetup;
 import com.backend.connectable.kas.service.token.dto.TokenHistoriesResponse;
+import com.backend.connectable.kas.service.token.dto.TokenIdentifier;
 import com.backend.connectable.kas.service.token.dto.TokenResponse;
 import com.backend.connectable.kas.service.token.dto.TokensResponse;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -271,14 +271,11 @@ class KasServiceTest extends KasServiceMockSetup {
         String owner = KasMockRequest.VALID_OWNER_ADDRESS;
 
         // when
-        Map<String, TokensResponse> response =
+        List<TokenIdentifier> response =
                 kasService.findAllTokensOwnedByUser(contractAddresses, owner);
 
         // then
-        assertThat(response.containsKey(contractAddress1)).isTrue();
-        assertThat(response.containsKey(contractAddress2)).isTrue();
-        assertThat(response.get(contractAddress1)).isNotNull();
-        assertThat(response.get(contractAddress2)).isNotNull();
+        assertThat(response).isNotEmpty();
     }
 
     @DisplayName("컨트랙트 주소들과 유저의 클레이튼 주소로 홀더인지 검증할 수 있다.")
