@@ -8,7 +8,9 @@ import com.backend.connectable.artist.domain.dto.QArtistComment;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import javax.persistence.EntityManager;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class CommentRepositoryImpl implements CommentRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
@@ -17,7 +19,6 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
-    @Override
     public List<ArtistComment> getCommentsByArtistId(Long artistId) {
         List<ArtistComment> result =
                 queryFactory
@@ -26,7 +27,8 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
                                         comment.id,
                                         user.nickname,
                                         comment.createdDate,
-                                        comment.contents))
+                                        comment.contents,
+                                        comment.isDeleted))
                         .from(comment)
                         .innerJoin(user)
                         .on(user.id.eq(comment.user.id))
@@ -34,5 +36,13 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
                         .fetch();
 
         return result;
+    }
+
+    public void deleteComment(Long artistId, Long commentId) {
+        queryFactory
+                .update(comment)
+                .set(comment.isDeleted, true)
+                .where(comment.id.eq(commentId).and(comment.artist.id.eq(artistId)))
+                .execute();
     }
 }

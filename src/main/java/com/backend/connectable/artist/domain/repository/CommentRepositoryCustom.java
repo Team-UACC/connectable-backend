@@ -6,4 +6,6 @@ import java.util.List;
 public interface CommentRepositoryCustom {
 
     List<ArtistComment> getCommentsByArtistId(Long artistId);
+
+    void deleteComment(Long artistId, Long commentId);
 }

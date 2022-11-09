@@ -1,11 +1,11 @@
 package com.backend.connectable.artist.ui;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -115,7 +115,7 @@ class ArtistControllerTest {
     @Test
     void getArtistComments() throws Exception {
         // given & when
-        given(artistService.getArtistComments(ARTIST_RESPONSE_1.getArtistId()))
+        given(artistService.getUndeletedArtistComments(ARTIST_RESPONSE_1.getArtistId()))
                 .willReturn(List.of(ARTIST_COMMENT_RESPONSE_1, ARTIST_COMMENT_RESPONSE_2));
 
         // then
@@ -149,6 +149,21 @@ class ArtistControllerTest {
                                 .contentType(APPLICATION_JSON)
                                 .content(artistCommentAsJson))
                 .andExpect(status().isCreated())
+                .andDo(print());
+    }
+
+    @DisplayName("작성한 코멘트를 삭제한다.")
+    @WithUserDetails("0x1111")
+    @Test
+    void deleteArtistComment() throws Exception {
+        // given & when
+        doNothing().when(artistService).deleteComment(any(), anyLong(), anyLong());
+
+        // then
+        mockMvc.perform(
+                        delete("/artists/{artist-id}/comments?commentId={comment-id}", 1L, 1L)
+                                .contentType(APPLICATION_JSON))
+                .andExpect(status().isNoContent())
                 .andDo(print());
     }
 }

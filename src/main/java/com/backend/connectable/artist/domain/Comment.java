@@ -27,12 +27,19 @@ public class Comment extends BaseEntity {
 
     @Lob private String contents;
 
+    private boolean isDeleted = Boolean.FALSE;
+
     @Builder
-    public Comment(Long id, Artist artist, User user, String contents) {
+    public Comment(Long id, Artist artist, User user, String contents, boolean isDeleted) {
         this.id = id;
         this.artist = artist;
         this.user = user;
         this.contents = contents;
+        this.isDeleted = isDeleted;
+    }
+
+    public boolean isCommentAuthor(User user) {
+        return this.user.equals(user);
     }
 
     @Override
