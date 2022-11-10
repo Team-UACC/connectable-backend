@@ -12,11 +12,11 @@ public class NoticeResponse {
 
     private String title;
     private String contents;
-    private NoticeStatus noticeStatus;
+    private String noticeStatus;
 
     public NoticeResponse(String title, String contents, NoticeStatus noticeStatus) {
         this.title = title;
         this.contents = contents;
-        this.noticeStatus = noticeStatus;
+        this.noticeStatus = noticeStatus.getStatus();
     }
 }
