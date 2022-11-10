@@ -8,14 +8,38 @@ import lombok.Getter;
 @Getter
 public class ArtistDetailResponse {
 
-    private Long artistId;
-    private String artistName;
-    private String artistImage;
+    private Long id;
+    private String name;
+    private String image;
+    private String twitterUrl;
+    private String instagramUrl;
+    private String webpageUrl;
+    private String description;
+    private NoticeResponse notice;
 
-    public ArtistDetailResponse(Long artistId, String artistName, String artistImage) {
-        this.artistId = artistId;
-        this.artistName = artistName;
-        this.artistImage = artistImage;
+    public ArtistDetailResponse(Long id, String name, String image) {
+        this.id = id;
+        this.name = name;
+        this.image = image;
+    }
+
+    public ArtistDetailResponse(
+            Long id,
+            String name,
+            String image,
+            String twitterUrl,
+            String instagramUrl,
+            String webpageUrl,
+            String description,
+            NoticeResponse notice) {
+        this.id = id;
+        this.name = name;
+        this.image = image;
+        this.twitterUrl = twitterUrl;
+        this.instagramUrl = instagramUrl;
+        this.webpageUrl = webpageUrl;
+        this.description = description;
+        this.notice = notice;
     }
 
     public static ArtistDetailResponse from(Artist artist) {

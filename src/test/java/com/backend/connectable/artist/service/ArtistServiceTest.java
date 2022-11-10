@@ -10,8 +10,11 @@ import static org.mockito.BDDMockito.given;
 
 import com.backend.connectable.artist.domain.Artist;
 import com.backend.connectable.artist.domain.Comment;
+import com.backend.connectable.artist.domain.Notice;
+import com.backend.connectable.artist.domain.NoticeStatus;
 import com.backend.connectable.artist.domain.repository.ArtistRepository;
 import com.backend.connectable.artist.domain.repository.CommentRepository;
+import com.backend.connectable.artist.domain.repository.NoticeRepository;
 import com.backend.connectable.artist.ui.dto.ArtistCommentRequest;
 import com.backend.connectable.artist.ui.dto.ArtistCommentResponse;
 import com.backend.connectable.artist.ui.dto.ArtistDetailResponse;
@@ -43,6 +46,8 @@ class ArtistServiceTest {
     @Autowired ArtistRepository artistRepository;
     @Autowired UserRepository userRepository;
     @Autowired CommentRepository commentRepository;
+    @Autowired NoticeRepository noticeRepository;
+
     @Autowired EventRepository eventRepository;
     @Autowired ArtistService artistService;
     @MockBean KasService kasService;
@@ -61,6 +66,7 @@ class ArtistServiceTest {
 
     @BeforeEach
     void setUp() {
+        noticeRepository.deleteAll();
         eventRepository.deleteAll();
         commentRepository.deleteAll();
         artistRepository.deleteAll();
@@ -89,23 +95,32 @@ class ArtistServiceTest {
 
         // then
         assertThat(artistDetailResponses.size()).isEqualTo(2L);
-        assertThat(artistDetailResponses.get(0).getArtistImage())
-                .isEqualTo(artist1.getArtistImage());
-        assertThat(artistDetailResponses.get(0).getArtistName()).isEqualTo(artist1.getArtistName());
-        assertThat(artistDetailResponses.get(1).getArtistImage())
-                .isEqualTo(artist2.getArtistImage());
-        assertThat(artistDetailResponses.get(1).getArtistName()).isEqualTo(artist2.getArtistName());
+        assertThat(artistDetailResponses.get(0).getImage()).isEqualTo(artist1.getArtistImage());
+        assertThat(artistDetailResponses.get(0).getName()).isEqualTo(artist1.getArtistName());
+        assertThat(artistDetailResponses.get(1).getImage()).isEqualTo(artist2.getArtistImage());
+        assertThat(artistDetailResponses.get(1).getName()).isEqualTo(artist2.getArtistName());
     }
 
     @DisplayName("특정 아티스트의 상세 정보 조회에 성공한다.")
     @Test
     void getArtistDetail() {
         // given & when
+        Notice notice =
+                Notice.builder()
+                        .artist(artist1)
+                        .noticeStatus(NoticeStatus.EXPOSURE)
+                        .title("공지사항1")
+                        .contents("공지사항 1의 내용")
+                        .build();
+        noticeRepository.save(notice);
         ArtistDetailResponse artistDetailResponse = artistService.getArtistDetail(artist1.getId());
 
         // then
-        assertThat(artistDetailResponse.getArtistName()).isEqualTo(artist1.getArtistName());
-        assertThat(artistDetailResponse.getArtistImage()).isEqualTo(artist1.getArtistImage());
+        assertThat(artistDetailResponse.getName()).isEqualTo(artist1.getArtistName());
+        assertThat(artistDetailResponse.getImage()).isEqualTo(artist1.getArtistImage());
+        assertThat(artistDetailResponse.getDescription()).isEqualTo(artist1.getDescription());
+        assertThat(artistDetailResponse.getNotice().getTitle()).isEqualTo(notice.getTitle());
+        assertThat(artistDetailResponse.getNotice().getContents()).isEqualTo(notice.getContents());
     }
 
     @DisplayName("아티스트 페이지에서 방문록을 작성할 수 있다.")
