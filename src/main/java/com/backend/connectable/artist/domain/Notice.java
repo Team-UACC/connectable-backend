@@ -19,6 +19,7 @@ public class Notice extends BaseEntity {
     @JoinColumn(nullable = false)
     private Artist artist;
 
+    @Enumerated(EnumType.STRING)
     private NoticeStatus noticeStatus;
 
     private String title;
