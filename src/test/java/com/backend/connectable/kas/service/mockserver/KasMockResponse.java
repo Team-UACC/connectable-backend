@@ -1,5 +1,6 @@
 package com.backend.connectable.kas.service.mockserver;
 
+import static com.backend.connectable.kas.service.mockserver.KasMockRequest.VALID_OWNER_ADDRESS;
 import static io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST;
 import static io.netty.handler.codec.http.HttpResponseStatus.UNAUTHORIZED;
 import static org.mockserver.model.HttpResponse.response;
@@ -151,7 +152,9 @@ public class KasMockResponse {
                                     + "    {\n"
                                     + "      \"createdAt\": 1608691873,\n"
                                     + "      \"updatedAt\": 1608691873,\n"
-                                    + "      \"owner\": \"0x9eaf20b40e0f1ced5dbba6f5cfb0d3e12b0534f4\",\n"
+                                    + "      \"owner\": \""
+                                    + VALID_OWNER_ADDRESS
+                                    + "\",\n"
                                     + "      \"previousOwner\": \"0x0000000000000000000000000000000000000000\",\n"
                                     + "      \"tokenId\": \"0x1\",\n"
                                     + "      \"tokenUri\": \"https://metastore.kip17.com/0xbe02aba/0x1\",\n"
@@ -160,7 +163,9 @@ public class KasMockResponse {
                                     + "    {\n"
                                     + "      \"createdAt\": 1608690798,\n"
                                     + "      \"updatedAt\": 1608690798,\n"
-                                    + "      \"owner\": \"0x9eaf20b40e0f1ced5dbba6f5cfb0d3e12b0534f4\",\n"
+                                    + "      \"owner\": \""
+                                    + VALID_OWNER_ADDRESS
+                                    + "\",\n"
                                     + "      \"previousOwner\": \"0x0000000000000000000000000000000000000000\",\n"
                                     + "      \"tokenId\": \"0x2\",\n"
                                     + "      \"tokenUri\": \"https://metastore.kip17.com/0xbe02aba/0x1\",\n"
@@ -179,7 +184,9 @@ public class KasMockResponse {
                                     + "    {\n"
                                     + "      \"createdAt\": 1608691873,\n"
                                     + "      \"updatedAt\": 1608691873,\n"
-                                    + "      \"owner\": \"0x9eaf20b40e0f1ced5dbba6f5cfb0d3e12b0534f4\",\n"
+                                    + "      \"owner\": \""
+                                    + VALID_OWNER_ADDRESS
+                                    + "\",\n"
                                     + "      \"previousOwner\": \"0x0000000000000000000000000000000000000000\",\n"
                                     + "      \"tokenId\": \"0x3\",\n"
                                     + "      \"tokenUri\": \"https://metastore.kip17.com/0x1234adfx/0x1\",\n"
@@ -188,7 +195,9 @@ public class KasMockResponse {
                                     + "    {\n"
                                     + "      \"createdAt\": 1608690798,\n"
                                     + "      \"updatedAt\": 1608690798,\n"
-                                    + "      \"owner\": \"0x9eaf20b40e0f1ced5dbba6f5cfb0d3e12b0534f4\",\n"
+                                    + "      \"owner\": \""
+                                    + VALID_OWNER_ADDRESS
+                                    + "\",\n"
                                     + "      \"previousOwner\": \"0x0000000000000000000000000000000000000000\",\n"
                                     + "      \"tokenId\": \"0x4\",\n"
                                     + "      \"tokenUri\": \"https://metastore.kip17.com/0x1234adfx/0x1\",\n"

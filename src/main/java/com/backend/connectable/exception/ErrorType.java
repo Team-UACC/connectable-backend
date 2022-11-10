@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum ErrorType {
+    SECURITY_EXCEPTION("SECURITY-001", "로그인이 필요합니다."),
+
     USER_NOT_FOUND("AUTH-001", "해당 유저를 찾을 수 없습니다."),
     INVALID_TOKEN("AUTH-002", "유효하지 않은 토큰입니다."),
     TOKEN_PAYLOAD_EXTRACTION_FAILURE("AUTH-003", "토큰 페이로드 추출에 실패했습니다"),

@@ -1,7 +1,11 @@
 package com.backend.connectable.artist.ui.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Setter
+@NoArgsConstructor
 @AllArgsConstructor
 public class ArtistNftHolderResponse {
 

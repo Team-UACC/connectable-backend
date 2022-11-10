@@ -56,7 +56,7 @@ class ArtistServiceTest {
     private Event event3;
     private Event event4;
 
-    private final String userKlaytnAddress = "0x1111";
+    private String userKlaytnAddress;
     private final String anotherPersonKlaytnAddress = "0x2222";
 
     @BeforeEach
@@ -67,6 +67,7 @@ class ArtistServiceTest {
         userRepository.deleteAll();
 
         user = createUserMrLee();
+        userKlaytnAddress = user.getKlaytnAddress();
         artist1 = createArtistBigNaughty();
         artist2 = createArtistChoi();
 

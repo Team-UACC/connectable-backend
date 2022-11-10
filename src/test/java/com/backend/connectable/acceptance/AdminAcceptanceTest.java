@@ -62,12 +62,6 @@ class AdminAcceptanceTest extends KasServiceMockSetup {
 
     @Autowired private DatabaseCleanUp databaseCleanUp;
 
-    @BeforeEach
-    public void setUp() {
-        RestAssured.port = port;
-        databaseCleanUp.execute();
-    }
-
     @Value("${jwt.admin-payload}")
     private String adminPayload;
 
@@ -89,6 +83,8 @@ class AdminAcceptanceTest extends KasServiceMockSetup {
 
     @BeforeEach
     void setUpData() {
+        RestAssured.port = port;
+        databaseCleanUp.execute();
         userRepository.saveAll(Arrays.asList(mrLee, joel));
         artistRepository.save(bigNaughty);
         eventRepository.save(bigNaughtyEvent);
