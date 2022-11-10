@@ -169,11 +169,11 @@ class EventControllerTest {
 
         // expected
         mockMvc.perform(get("/events/today").contentType(APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$[0]").exists())
-            .andExpect(jsonPath("$[0].name").value("test2"))
-            .andExpect(jsonPath("$[0].description").value("description2"))
-            .andDo(print());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0]").exists())
+                .andExpect(jsonPath("$[0].name").value("test2"))
+                .andExpect(jsonPath("$[0].description").value("description2"))
+                .andDo(print());
     }
 
     @DisplayName("이벤트 번호를 사용하여 특정 이벤트를 조회한다.")

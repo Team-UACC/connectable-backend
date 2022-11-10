@@ -9,12 +9,14 @@ import com.backend.connectable.artist.mapper.ArtistMapper;
 import com.backend.connectable.artist.ui.dto.ArtistCommentRequest;
 import com.backend.connectable.artist.ui.dto.ArtistCommentResponse;
 import com.backend.connectable.artist.ui.dto.ArtistDetailResponse;
+import com.backend.connectable.artist.ui.dto.ArtistNftHolderResponse;
 import com.backend.connectable.event.domain.Event;
 import com.backend.connectable.event.domain.repository.EventRepository;
 import com.backend.connectable.event.mapper.EventMapper;
 import com.backend.connectable.event.ui.dto.EventResponse;
 import com.backend.connectable.exception.ConnectableException;
 import com.backend.connectable.exception.ErrorType;
+import com.backend.connectable.kas.service.KasService;
 import com.backend.connectable.security.custom.ConnectableUserDetails;
 import com.backend.connectable.user.domain.User;
 import com.backend.connectable.user.domain.repository.UserRepository;
@@ -30,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class ArtistService {
 
+    private final KasService kasService;
     private final ArtistRepository artistRepository;
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
@@ -113,5 +116,21 @@ public class ArtistService {
                         () ->
                                 new ConnectableException(
                                         HttpStatus.BAD_REQUEST, ErrorType.COMMENT_NOT_EXIST));
+    }
+
+    public ArtistNftHolderResponse isArtistNftOwner(
+            ConnectableUserDetails userDetails, Long artistId) {
+        User user = getUser(userDetails);
+        List<String> artistEventContracts =
+                eventRepository.findAllEventsByArtistId(artistId).stream()
+                        .map(Event::getContractAddress)
+                        .collect(Collectors.toList());
+
+        boolean isHolder =
+                kasService.checkIsTokenHolder(artistEventContracts, user.getKlaytnAddress());
+        if (isHolder) {
+            return ArtistNftHolderResponse.isHolder();
+        }
+        return ArtistNftHolderResponse.isNotHolder();
     }
 }

@@ -5,6 +5,8 @@ import static com.backend.connectable.fixture.EventFixture.createEventWithName;
 import static com.backend.connectable.fixture.UserFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 
 import com.backend.connectable.artist.domain.Artist;
 import com.backend.connectable.artist.domain.Comment;
@@ -13,11 +15,13 @@ import com.backend.connectable.artist.domain.repository.CommentRepository;
 import com.backend.connectable.artist.ui.dto.ArtistCommentRequest;
 import com.backend.connectable.artist.ui.dto.ArtistCommentResponse;
 import com.backend.connectable.artist.ui.dto.ArtistDetailResponse;
+import com.backend.connectable.artist.ui.dto.ArtistNftHolderResponse;
 import com.backend.connectable.event.domain.Event;
 import com.backend.connectable.event.domain.repository.EventRepository;
 import com.backend.connectable.event.ui.dto.EventResponse;
 import com.backend.connectable.exception.ConnectableException;
 import com.backend.connectable.exception.ErrorType;
+import com.backend.connectable.kas.service.KasService;
 import com.backend.connectable.security.custom.ConnectableUserDetails;
 import com.backend.connectable.user.domain.User;
 import com.backend.connectable.user.domain.repository.UserRepository;
@@ -29,6 +33,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
@@ -38,10 +43,9 @@ class ArtistServiceTest {
     @Autowired ArtistRepository artistRepository;
     @Autowired UserRepository userRepository;
     @Autowired CommentRepository commentRepository;
-
     @Autowired EventRepository eventRepository;
-
     @Autowired ArtistService artistService;
+    @MockBean KasService kasService;
 
     private User user;
     private Artist artist1;
@@ -52,7 +56,7 @@ class ArtistServiceTest {
     private Event event3;
     private Event event4;
 
-    private final String userKlaytnAddress = "0x1111";
+    private String userKlaytnAddress;
     private final String anotherPersonKlaytnAddress = "0x2222";
 
     @BeforeEach
@@ -63,6 +67,7 @@ class ArtistServiceTest {
         userRepository.deleteAll();
 
         user = createUserMrLee();
+        userKlaytnAddress = user.getKlaytnAddress();
         artist1 = createArtistBigNaughty();
         artist2 = createArtistChoi();
 
@@ -229,5 +234,37 @@ class ArtistServiceTest {
                                         anotherPersonUserDetails, artist2.getId(), comment.getId()))
                 .isInstanceOf(ConnectableException.class)
                 .withFailMessage(ErrorType.NOT_A_COMMENT_AUTHOR.getMessage());
+    }
+
+    @DisplayName("NFT 홀더라면, isHolder=true를 반환한다")
+    @Test
+    void isArtistNftHolder() {
+        // given
+        ConnectableUserDetails connectableUserDetails =
+                new ConnectableUserDetails(userKlaytnAddress);
+        given(kasService.checkIsTokenHolder(any(), any())).willReturn(true);
+
+        // when
+        ArtistNftHolderResponse result =
+                artistService.isArtistNftOwner(connectableUserDetails, artist1.getId());
+
+        // then
+        assertThat(result.getIsNftHolder()).isTrue();
+    }
+
+    @DisplayName("NFT 홀더가 아니라면, isHolder=false를 반환한다")
+    @Test
+    void isArtistNotNftHolder() {
+        // given
+        ConnectableUserDetails connectableUserDetails =
+                new ConnectableUserDetails(userKlaytnAddress);
+        given(kasService.checkIsTokenHolder(any(), any())).willReturn(false);
+
+        // when
+        ArtistNftHolderResponse result =
+                artistService.isArtistNftOwner(connectableUserDetails, artist1.getId());
+
+        // then
+        assertThat(result.getIsNftHolder()).isFalse();
     }
 }

@@ -1,5 +1,6 @@
 package com.backend.connectable.kas.service.mockserver;
 
+import static com.backend.connectable.kas.service.mockserver.KasMockRequest.VALID_OWNER_ADDRESS;
 import static io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST;
 import static io.netty.handler.codec.http.HttpResponseStatus.UNAUTHORIZED;
 import static org.mockserver.model.HttpResponse.response;
@@ -151,18 +152,22 @@ public class KasMockResponse {
                                     + "    {\n"
                                     + "      \"createdAt\": 1608691873,\n"
                                     + "      \"updatedAt\": 1608691873,\n"
-                                    + "      \"owner\": \"0x9eaf20b40e0f1ced5dbba6f5cfb0d3e12b0534f4\",\n"
+                                    + "      \"owner\": \""
+                                    + VALID_OWNER_ADDRESS
+                                    + "\",\n"
                                     + "      \"previousOwner\": \"0x0000000000000000000000000000000000000000\",\n"
-                                    + "      \"tokenId\": \"0x13\",\n"
+                                    + "      \"tokenId\": \"0x1\",\n"
                                     + "      \"tokenUri\": \"https://metastore.kip17.com/0xbe02aba/0x1\",\n"
                                     + "      \"transactionHash\": \"0x3bf8107f39158abf0f2b0dc1ee8ccce9320fbce14899f0021dc4d6ad970c9150\"\n"
                                     + "    },\n"
                                     + "    {\n"
                                     + "      \"createdAt\": 1608690798,\n"
                                     + "      \"updatedAt\": 1608690798,\n"
-                                    + "      \"owner\": \"0x9eaf20b40e0f1ced5dbba6f5cfb0d3e12b0534f4\",\n"
+                                    + "      \"owner\": \""
+                                    + VALID_OWNER_ADDRESS
+                                    + "\",\n"
                                     + "      \"previousOwner\": \"0x0000000000000000000000000000000000000000\",\n"
-                                    + "      \"tokenId\": \"0x12\",\n"
+                                    + "      \"tokenId\": \"0x2\",\n"
                                     + "      \"tokenUri\": \"https://metastore.kip17.com/0xbe02aba/0x1\",\n"
                                     + "      \"transactionHash\": \"0x3857bd481b4a993b4346e1b6c18862bb39ee19401fd3b04101993ce8eed05743\"\n"
                                     + "    }\n"
@@ -179,23 +184,37 @@ public class KasMockResponse {
                                     + "    {\n"
                                     + "      \"createdAt\": 1608691873,\n"
                                     + "      \"updatedAt\": 1608691873,\n"
-                                    + "      \"owner\": \"0x9eaf20b40e0f1ced5dbba6f5cfb0d3e12b0534f4\",\n"
+                                    + "      \"owner\": \""
+                                    + VALID_OWNER_ADDRESS
+                                    + "\",\n"
                                     + "      \"previousOwner\": \"0x0000000000000000000000000000000000000000\",\n"
-                                    + "      \"tokenId\": \"0x13\",\n"
-                                    + "      \"tokenUri\": \"https://metastore.kip17.com/0xbe02aba/0x1\",\n"
+                                    + "      \"tokenId\": \"0x3\",\n"
+                                    + "      \"tokenUri\": \"https://metastore.kip17.com/0x1234adfx/0x1\",\n"
                                     + "      \"transactionHash\": \"0x3bf8107f39158abf0f2b0dc1ee8ccce9320fbce14899f0021dc4d6ad970c9150\"\n"
                                     + "    },\n"
                                     + "    {\n"
                                     + "      \"createdAt\": 1608690798,\n"
                                     + "      \"updatedAt\": 1608690798,\n"
-                                    + "      \"owner\": \"0x9eaf20b40e0f1ced5dbba6f5cfb0d3e12b0534f4\",\n"
+                                    + "      \"owner\": \""
+                                    + VALID_OWNER_ADDRESS
+                                    + "\",\n"
                                     + "      \"previousOwner\": \"0x0000000000000000000000000000000000000000\",\n"
-                                    + "      \"tokenId\": \"0x12\",\n"
-                                    + "      \"tokenUri\": \"https://metastore.kip17.com/0xbe02aba/0x1\",\n"
+                                    + "      \"tokenId\": \"0x4\",\n"
+                                    + "      \"tokenUri\": \"https://metastore.kip17.com/0x1234adfx/0x1\",\n"
                                     + "      \"transactionHash\": \"0x3857bd481b4a993b4346e1b6c18862bb39ee19401fd3b04101993ce8eed05743\"\n"
                                     + "    }\n"
                                     + "  ]\n"
                                     + "}");
+
+    public static HttpResponse GET_TOKENS_OF_USER_NOT_HOLDING =
+            response()
+                    .withContentType(MediaType.APPLICATION_JSON)
+                    .withBody("{\n" + "  \"cursor\": \"\",\n" + "  \"items\": [\n" + "  ]\n" + "}");
+
+    public static HttpResponse GET_TOKENS_OF_USER_NOT_HOLDING2 =
+            response()
+                    .withContentType(MediaType.APPLICATION_JSON)
+                    .withBody("{\n" + "  \"cursor\": \"\",\n" + "  \"items\": [\n" + "  ]\n" + "}");
 
     public static HttpResponse GET_TOKEN_HISTORY =
             response()

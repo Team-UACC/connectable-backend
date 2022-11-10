@@ -4,6 +4,7 @@ import com.backend.connectable.artist.service.ArtistService;
 import com.backend.connectable.artist.ui.dto.ArtistCommentRequest;
 import com.backend.connectable.artist.ui.dto.ArtistCommentResponse;
 import com.backend.connectable.artist.ui.dto.ArtistDetailResponse;
+import com.backend.connectable.artist.ui.dto.ArtistNftHolderResponse;
 import com.backend.connectable.event.ui.dto.EventResponse;
 import com.backend.connectable.security.custom.ConnectableUserDetails;
 import java.util.List;
@@ -64,5 +65,14 @@ public class ArtistController {
             @RequestParam(name = "commentId") Long commentId) {
         artistService.deleteComment(userDetails, artistId, commentId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @GetMapping("/{artist-id}/owner")
+    public ResponseEntity<ArtistNftHolderResponse> isArtistNftOwner(
+            @AuthenticationPrincipal ConnectableUserDetails userDetails,
+            @PathVariable("artist-id") Long artistId) {
+        ArtistNftHolderResponse artistNftHolderResponse =
+                artistService.isArtistNftOwner(userDetails, artistId);
+        return ResponseEntity.ok(artistNftHolderResponse);
     }
 }
