@@ -27,11 +27,10 @@ public class ArtistRepositoryImpl {
                                 new QArtistDetail(
                                         artist.artistImage.as("image"),
                                         artist.artistName.as("name"),
-                                        artist.description.as("artistDescription"),
                                         artist.twitterUrl,
                                         artist.instagramUrl,
                                         artist.webpageUrl,
-                                        artist.description,
+                                        artist.description.as("artisxtDescription"),
                                         notice))
                         .from(artist)
                         .leftJoin(notice)

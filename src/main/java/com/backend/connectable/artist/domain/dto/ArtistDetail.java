@@ -23,7 +23,6 @@ public class ArtistDetail {
     public ArtistDetail(
             String image,
             String name,
-            String artistDescription,
             String twitterUrl,
             String instagramUrl,
             String webpageUrl,
