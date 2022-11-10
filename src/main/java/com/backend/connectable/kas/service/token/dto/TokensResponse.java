@@ -24,4 +24,8 @@ public class TokensResponse {
                 .map(TokenResponse::generateTokenIdentifier)
                 .collect(Collectors.toList());
     }
+
+    public boolean hasItem() {
+        return !items.isEmpty();
+    }
 }
