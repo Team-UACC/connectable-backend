@@ -30,7 +30,7 @@ public class ArtistRepositoryImpl {
                                         artist.twitterUrl,
                                         artist.instagramUrl,
                                         artist.webpageUrl,
-                                        artist.description.as("artisxtDescription"),
+                                        artist.description,
                                         notice))
                         .from(artist)
                         .leftJoin(notice)
