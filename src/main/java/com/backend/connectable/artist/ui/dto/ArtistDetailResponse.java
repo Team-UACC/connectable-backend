@@ -1,7 +1,6 @@
 package com.backend.connectable.artist.ui.dto;
 
 import com.backend.connectable.artist.domain.Artist;
-import com.backend.connectable.artist.domain.Notice;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Getter;
@@ -20,7 +19,7 @@ public class ArtistDetailResponse {
     private String instagramUrl;
     private String webpageUrl;
     private String description;
-    private Notice notice;
+    private NoticeResponse notice;
 
     public ArtistDetailResponse(Long id, String name, String image) {
         this.id = id;
@@ -36,7 +35,7 @@ public class ArtistDetailResponse {
             String instagramUrl,
             String webpageUrl,
             String description,
-            Notice notice) {
+            NoticeResponse notice) {
         this.id = id;
         this.name = name;
         this.image = image;

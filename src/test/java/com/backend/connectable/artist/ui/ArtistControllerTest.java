@@ -10,12 +10,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.backend.connectable.artist.domain.Notice;
 import com.backend.connectable.artist.domain.NoticeStatus;
 import com.backend.connectable.artist.service.ArtistService;
 import com.backend.connectable.artist.ui.dto.ArtistCommentRequest;
 import com.backend.connectable.artist.ui.dto.ArtistCommentResponse;
 import com.backend.connectable.artist.ui.dto.ArtistDetailResponse;
+import com.backend.connectable.artist.ui.dto.NoticeResponse;
 import com.backend.connectable.event.ui.dto.EventResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
@@ -37,10 +37,10 @@ class ArtistControllerTest {
     @Autowired private ObjectMapper objectMapper;
     @MockBean private ArtistService artistService;
 
-    private static final Notice NOTICE_1 =
-            new Notice(1L, null, NoticeStatus.EXPOSURE, "타이틀1", "내용1");
-    private static final Notice NOTICE_2 =
-            new Notice(2L, null, NoticeStatus.NON_EXPOSURE, "타이틀2", "내용2");
+    private static final NoticeResponse NOTICE_1 =
+            new NoticeResponse("타이틀1", "내용1", NoticeStatus.EXPOSURE);
+    private static final NoticeResponse NOTICE_2 =
+            new NoticeResponse("타이틀2", "내용2", NoticeStatus.EXPOSURE);
     private static final ArtistDetailResponse ARTIST_RESPONSE_1 =
             new ArtistDetailResponse(
                     1L, "artist1", "https://artist1.img", null, null, null, "아티스트1 설명", NOTICE_1);
