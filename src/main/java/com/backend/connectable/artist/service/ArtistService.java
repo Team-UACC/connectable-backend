@@ -121,9 +121,10 @@ public class ArtistService {
     public ArtistNftHolderResponse isArtistNftOwner(
             ConnectableUserDetails userDetails, Long artistId) {
         User user = getUser(userDetails);
-        List<Event> artistEvents = eventRepository.findAllEventsByArtistId(artistId);
         List<String> artistEventContracts =
-                artistEvents.stream().map(Event::getContractAddress).collect(Collectors.toList());
+                eventRepository.findAllEventsByArtistId(artistId).stream()
+                        .map(Event::getContractAddress)
+                        .collect(Collectors.toList());
 
         boolean isHolder =
                 kasService.checkIsTokenHolder(artistEventContracts, user.getKlaytnAddress());
