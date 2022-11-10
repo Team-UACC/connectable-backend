@@ -4,7 +4,11 @@ import com.backend.connectable.artist.domain.Artist;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@NoArgsConstructor
+@Setter
 @Getter
 public class ArtistDetailResponse {
 

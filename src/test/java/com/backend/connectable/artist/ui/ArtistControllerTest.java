@@ -15,8 +15,8 @@ import com.backend.connectable.artist.service.ArtistService;
 import com.backend.connectable.artist.ui.dto.ArtistCommentRequest;
 import com.backend.connectable.artist.ui.dto.ArtistCommentResponse;
 import com.backend.connectable.artist.ui.dto.ArtistDetailResponse;
-import com.backend.connectable.artist.ui.dto.NoticeResponse;
 import com.backend.connectable.artist.ui.dto.ArtistNftHolderResponse;
+import com.backend.connectable.artist.ui.dto.NoticeResponse;
 import com.backend.connectable.event.ui.dto.EventResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
@@ -191,7 +191,7 @@ class ArtistControllerTest {
 
         // then
         mockMvc.perform(
-                        get("/artists/{artist-id}/owner", ARTIST_RESPONSE_1.getArtistId())
+                        get("/artists/{artist-id}/owner", ARTIST_RESPONSE_1.getId())
                                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.isNftHolder").value(true))
@@ -208,7 +208,7 @@ class ArtistControllerTest {
 
         // then
         mockMvc.perform(
-                        get("/artists/{artist-id}/owner", ARTIST_RESPONSE_1.getArtistId())
+                        get("/artists/{artist-id}/owner", ARTIST_RESPONSE_1.getId())
                                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.isNftHolder").value(false))
