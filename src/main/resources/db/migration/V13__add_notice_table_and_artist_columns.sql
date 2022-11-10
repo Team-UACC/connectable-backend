@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS `notice` (
     `id` bigint NOT NULL AUTO_INCREMENT,
     `created_date` datetime(6) NOT NULL,
     `modified_date` datetime(6) NOT NULL,
-    `status` varchar(255) DEFAULT NULL,
+    `notice_status` varchar(255) DEFAULT NULL,
     `title` varchar(255) NOT NULL,
     `contents` longtext NOT NULL,
     `artist_id` bigint NOT NULL,
