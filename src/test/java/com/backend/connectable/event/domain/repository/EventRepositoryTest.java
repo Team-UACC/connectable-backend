@@ -1,6 +1,7 @@
 package com.backend.connectable.event.domain.repository;
 
 import static com.backend.connectable.fixture.ArtistFixture.createArtistBigNaughty;
+import static com.backend.connectable.fixture.ArtistFixture.createArtistChoi;
 import static com.backend.connectable.fixture.EventFixture.createEventWithNameAndContractAddress;
 import static com.backend.connectable.fixture.EventFixture.createFutureEventWithEventName;
 import static com.backend.connectable.fixture.TicketFixture.createTicketWithSalesStatus;
@@ -36,9 +37,9 @@ class EventRepositoryTest {
 
     @Autowired ArtistRepository artistRepository;
 
-    Artist bigNaughty = createArtistBigNaughty();
-
     User user = createUserJoel();
+
+    Artist bigNaughty = createArtistBigNaughty();
 
     String bigNaughtyEvent1ContractAddress = "0x1234";
     Event bigNaughtyEvent1 =
@@ -50,13 +51,19 @@ class EventRepositoryTest {
             createEventWithNameAndContractAddress(
                     bigNaughty, "bigNaughty2", bigNaughtyEvent2ContractAddress);
 
+    Artist choi = createArtistChoi();
+
+    Event choiEvent1 = createEventWithNameAndContractAddress(choi, "choi1", "0xabcd");
+    Event choiEvent2 = createEventWithNameAndContractAddress(choi, "choi2", "0xqwer");
+
     @BeforeEach
     void setUp() {
         eventRepository.deleteAll();
         artistRepository.deleteAll();
 
-        artistRepository.save(bigNaughty);
-        eventRepository.saveAll(Arrays.asList(bigNaughtyEvent1, bigNaughtyEvent2));
+        artistRepository.saveAll(List.of(bigNaughty, choi));
+        eventRepository.saveAll(
+                List.of(bigNaughtyEvent1, bigNaughtyEvent2, choiEvent1, choiEvent2));
         userRepository.save(user);
     }
 
@@ -153,7 +160,7 @@ class EventRepositoryTest {
     @DisplayName("아티스트 ID를 통해 아티스트의 이벤트를 조회할 수 있다.")
     @Test
     void findAllEventsByArtistId() {
-        // given && when
+        // given & when
         List<Event> artistEvents = eventRepository.findAllEventsByArtistId(bigNaughty.getId());
 
         // then

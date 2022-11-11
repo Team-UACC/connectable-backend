@@ -162,7 +162,12 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
 
     @Override
     public List<Event> findAllEventsByArtistId(Long artistId) {
-        return queryFactory.selectFrom(event).innerJoin(artist).on(artist.id.eq(artistId)).fetch();
+        return queryFactory
+                .selectFrom(event)
+                .innerJoin(artist)
+                .on(event.artist.id.eq(artist.id))
+                .where(artist.id.eq(artistId))
+                .fetch();
     }
 
     private OrderSpecifier<Integer> eventSortSpecifier() {
