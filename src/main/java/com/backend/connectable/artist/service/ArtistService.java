@@ -63,6 +63,7 @@ public class ArtistService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public void createComment(
             ConnectableUserDetails userDetails,
             Long artistId,
