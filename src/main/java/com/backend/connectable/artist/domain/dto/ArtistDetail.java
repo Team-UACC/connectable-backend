@@ -11,6 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ArtistDetail {
 
+    private Long id;
     private String image;
     private String name;
     private String twitterUrl;
@@ -21,6 +22,7 @@ public class ArtistDetail {
 
     @QueryProjection
     public ArtistDetail(
+            Long id,
             String image,
             String name,
             String twitterUrl,
@@ -28,6 +30,7 @@ public class ArtistDetail {
             String webpageUrl,
             String description,
             Notice notice) {
+        this.id = id;
         this.image = image;
         this.name = name;
         this.twitterUrl = twitterUrl;

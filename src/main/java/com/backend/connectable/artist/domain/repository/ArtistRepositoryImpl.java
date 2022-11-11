@@ -25,6 +25,7 @@ public class ArtistRepositoryImpl {
                 queryFactory
                         .select(
                                 new QArtistDetail(
+                                        artist.id,
                                         artist.artistImage.as("image"),
                                         artist.artistName.as("name"),
                                         artist.twitterUrl,
