@@ -24,6 +24,7 @@ import com.backend.connectable.event.domain.repository.EventRepository;
 import com.backend.connectable.event.ui.dto.EventResponse;
 import com.backend.connectable.exception.ConnectableException;
 import com.backend.connectable.exception.ErrorType;
+import com.backend.connectable.global.util.DateTimeUtil;
 import com.backend.connectable.kas.service.KasService;
 import com.backend.connectable.security.custom.ConnectableUserDetails;
 import com.backend.connectable.user.domain.User;
@@ -167,7 +168,8 @@ class ArtistServiceTest {
 
         // then
         assertThat(artistComments.get(0).getContents()).isEqualTo(comment2.getContents());
-        assertThat(artistComments.get(0).getWrittenAt()).isEqualTo(comment2.getCreatedDate());
+        assertThat(artistComments.get(0).getWrittenAt())
+                .isEqualTo(DateTimeUtil.toEpochMilliSeconds(comment2.getCreatedDate()));
     }
 
     @DisplayName("찾을 수 없는 유저일 경우에는 코멘트 등록에 실패한다.")
