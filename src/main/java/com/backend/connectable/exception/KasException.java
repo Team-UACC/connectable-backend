@@ -7,7 +7,7 @@ public class KasException extends RuntimeException {
 
     private final KasExceptionResponse kasExceptionResponse;
 
-    public KasException(String url, String expectedResponseType) {
-        this.kasExceptionResponse = new KasExceptionResponse(url, expectedResponseType);
+    public KasException(String url, String exceptionMessage) {
+        this.kasExceptionResponse = new KasExceptionResponse(url, exceptionMessage);
     }
 }
