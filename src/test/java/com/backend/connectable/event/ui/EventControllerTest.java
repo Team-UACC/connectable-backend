@@ -40,6 +40,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @MockBean(JpaMetamodelMappingContext.class)
 class EventControllerTest {
 
+    private static final Long ARTIST_ID_1 = 1L;
     private static final Long EVENT_ID_1 = 1L;
     private static final Long EVENT_ID_2 = 2L;
     private static final Long TICKET_ID_1 = 1L;
@@ -70,6 +71,7 @@ class EventControllerTest {
                     EVENT_ID_1,
                     "이씨 콘서트",
                     "https://connectable-events.s3.ap-northeast-2.amazonaws.com/image_0xtest.jpeg",
+                    ARTIST_ID_1,
                     "빅나티",
                     "https://user-images.githubusercontent.com/54073761/179218800-dda72067-3b25-4ca3-b53b-4895c5e49213.jpeg",
                     "이씨 콘서트 at Connectable",
@@ -187,6 +189,7 @@ class EventControllerTest {
         mockMvc.perform(get("/events/{event-id}", EVENT_ID_1).contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.artistName").value("빅나티"))
+                .andExpect(jsonPath("$.artistId").value(ARTIST_ID_1))
                 .andExpect(jsonPath("$.contractAddress").value("0x1234abcd"))
                 .andDo(print());
     }

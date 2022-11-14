@@ -17,6 +17,7 @@ public class EventDetailResponse {
     private Long id;
     private String name;
     private String image;
+    private Long artistId;
     private String artistName;
     private String artistImage;
     private String description;
@@ -40,6 +41,7 @@ public class EventDetailResponse {
             Long id,
             String name,
             String image,
+            Long artistId,
             String artistName,
             String artistImage,
             String description,
@@ -60,6 +62,7 @@ public class EventDetailResponse {
         this.id = id;
         this.name = name;
         this.image = image;
+        this.artistId = artistId;
         this.artistName = artistName;
         this.artistImage = artistImage;
         this.description = description;

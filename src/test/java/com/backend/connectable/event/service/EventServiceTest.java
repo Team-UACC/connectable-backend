@@ -44,10 +44,6 @@ class EventServiceTest {
     private Ticket ticket2;
     private Ticket ticket3;
     private Ticket ticket4;
-    private TicketMetadata ticket1Metadata;
-    private TicketMetadata ticket2Metadata;
-    private TicketMetadata ticket3Metadata;
-    private TicketMetadata ticket4Metadata;
 
     private static final String TOKEN_URI = "tokenUri";
     private static final String CONTRACT_ADDRESS = "0xe99540401ef24aba1b7076ea92c94ec38536c6fb";
@@ -123,22 +119,22 @@ class EventServiceTest {
                         .artist(artist1)
                         .build();
 
-        ticket1Metadata =
+        TicketMetadata ticket1Metadata =
                 s3Service
                         .fetchMetadata(
                                 "https://connectable-events.s3.ap-northeast-2.amazonaws.com/brown-event/json/1.json")
                         .toTicketMetadata();
-        ticket2Metadata =
+        TicketMetadata ticket2Metadata =
                 s3Service
                         .fetchMetadata(
                                 "https://connectable-events.s3.ap-northeast-2.amazonaws.com/brown-event/json/2.json")
                         .toTicketMetadata();
-        ticket3Metadata =
+        TicketMetadata ticket3Metadata =
                 s3Service
                         .fetchMetadata(
                                 "https://connectable-events.s3.ap-northeast-2.amazonaws.com/brown-event/json/3.json")
                         .toTicketMetadata();
-        ticket4Metadata =
+        TicketMetadata ticket4Metadata =
                 s3Service
                         .fetchMetadata(
                                 "https://connectable-events.s3.ap-northeast-2.amazonaws.com/brown-event/json/4.json")
@@ -221,6 +217,7 @@ class EventServiceTest {
         assertThat(eventDetailResponse.getName()).isEqualTo(event1.getEventName());
         assertThat(eventDetailResponse.getContractAddress()).isEqualTo(event1.getContractAddress());
         assertThat(eventDetailResponse.getImage()).isEqualTo(event1.getEventImage());
+        assertThat(eventDetailResponse.getArtistId()).isEqualTo(event1.getArtist().getId());
     }
 
     @DisplayName("종속된 티켓이 없는 이벤트의 상세 조회에 성공한다.")
@@ -232,6 +229,7 @@ class EventServiceTest {
         // then
         assertThat(eventDetailResponse.getId()).isEqualTo(event3.getId());
         assertThat(eventDetailResponse.getName()).isEqualTo(event3.getEventName());
+        assertThat(eventDetailResponse.getArtistId()).isEqualTo(event3.getArtist().getId());
     }
 
     @DisplayName("없는 이벤트 상세를 조회시 예외가 발생한다.")
