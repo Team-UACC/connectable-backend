@@ -7,10 +7,7 @@ import com.backend.connectable.kas.service.contract.dto.ContractDeployResponse;
 import com.backend.connectable.kas.service.contract.dto.ContractItemResponse;
 import com.backend.connectable.kas.service.contract.dto.ContractItemsResponse;
 import com.backend.connectable.kas.service.token.KasTokenService;
-import com.backend.connectable.kas.service.token.dto.TokenHistoriesResponse;
-import com.backend.connectable.kas.service.token.dto.TokenIdentifier;
-import com.backend.connectable.kas.service.token.dto.TokenResponse;
-import com.backend.connectable.kas.service.token.dto.TokensResponse;
+import com.backend.connectable.kas.service.token.dto.*;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -115,5 +112,11 @@ public class KasService {
                 .values()
                 .stream()
                 .anyMatch(TokensResponse::hasItem);
+    }
+
+    @TimeCheck
+    public TokenIdentifierByKlaytnAddress findTokenHoldingStatus(
+            List<String> contractAddresses, List<String> klaytnAddresses) {
+        return kasTokenService.findTokenHoldingStatus(contractAddresses, klaytnAddresses);
     }
 }

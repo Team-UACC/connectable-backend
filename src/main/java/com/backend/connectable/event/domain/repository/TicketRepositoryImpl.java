@@ -4,6 +4,7 @@ import static com.backend.connectable.event.domain.QEvent.event;
 import static com.backend.connectable.event.domain.QTicket.ticket;
 
 import com.backend.connectable.event.domain.Ticket;
+import com.backend.connectable.event.domain.TicketMetadata;
 import com.backend.connectable.event.domain.TicketSalesStatus;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -21,18 +22,15 @@ public class TicketRepositoryImpl implements TicketRepositoryCustom {
     }
 
     public long modifyTicketSalesStatusExpire() {
-        long fetchedRowCount =
-                queryFactory
-                        .update(ticket)
-                        .set(ticket.ticketSalesStatus, TicketSalesStatus.EXPIRED)
-                        .where(
-                                ticket.event.id.in(
-                                        JPAExpressions.select(event.id)
-                                                .from(event)
-                                                .where(event.salesTo.before(LocalDateTime.now()))))
-                        .execute();
-
-        return fetchedRowCount;
+        return queryFactory
+                .update(ticket)
+                .set(ticket.ticketSalesStatus, TicketSalesStatus.EXPIRED)
+                .where(
+                        ticket.event.id.in(
+                                JPAExpressions.select(event.id)
+                                        .from(event)
+                                        .where(event.salesTo.before(LocalDateTime.now()))))
+                .execute();
     }
 
     @Override
@@ -46,6 +44,15 @@ public class TicketRepositoryImpl implements TicketRepositoryCustom {
                                 .eq(eventId)
                                 .and(ticket.ticketSalesStatus.eq(TicketSalesStatus.ON_SALE)))
                 .limit(1)
+                .fetchOne();
+    }
+
+    @Override
+    public TicketMetadata findMetadataByTokenIdAndTokenUri(int tokenId, String tokenUri) {
+        return queryFactory
+                .select(ticket.ticketMetadata)
+                .from(ticket)
+                .where(ticket.tokenId.eq(tokenId).and(ticket.tokenUri.eq(tokenUri)))
                 .fetchOne();
     }
 }
