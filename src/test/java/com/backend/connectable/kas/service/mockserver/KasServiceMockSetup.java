@@ -47,12 +47,24 @@ public class KasServiceMockSetup {
                 KasMockRequest.POST_TOKEN_SEND_BY_INVALID_TOKEN_ID,
                 KasMockResponse.BAD_REQUEST_RESPONSE);
         setUpMockServerApi(KasMockRequest.DELETE_TOKEN, KasMockResponse.DELETE_TOKEN);
-        setUpMockServerApi(KasMockRequest.GET_TOKENS_OF_USER, KasMockResponse.GET_TOKENS_OF_USER);
+        setUpMockServerApi(
+                KasMockRequest.GET_TOKENS_OF_USER_CONTRACT_ADDRESS_1,
+                KasMockResponse.GET_TOKENS_OF_USER);
         setUpMockServerApi(
                 KasMockRequest.GET_TOKENS_OF_USER_BY_INVALID_OWNER_ADDRESS,
                 KasMockResponse.BAD_REQUEST_RESPONSE);
-        setUpMockServerApi(KasMockRequest.GET_TOKENS_OF_USER, KasMockResponse.GET_TOKENS_OF_USER);
-        setUpMockServerApi(KasMockRequest.GET_TOKENS_OF_USER2, KasMockResponse.GET_TOKENS_OF_USER2);
+        setUpMockServerApi(
+                KasMockRequest.GET_TOKENS_OF_USER_CONTRACT_ADDRESS_1,
+                KasMockResponse.GET_TOKENS_OF_USER);
+        setUpMockServerApi(
+                KasMockRequest.GET_TOKENS_OF_USER_CONTRACT_ADDRESS_2,
+                KasMockResponse.GET_TOKENS_OF_USER2);
+        setUpMockServerApi(
+                KasMockRequest.GET_TOKENS_OF_USER2_CONTRACT_ADDRESS_1,
+                KasMockResponse.GET_TOKENS_OF_USER);
+        setUpMockServerApi(
+                KasMockRequest.GET_TOKENS_OF_USER2_CONTRACT_ADDRESS_2,
+                KasMockResponse.GET_TOKENS_OF_USER2);
         setUpMockServerApi(
                 KasMockRequest.GET_TOKENS_OF_USER_NOT_HOLDING,
                 KasMockResponse.GET_TOKENS_OF_USER_NOT_HOLDING);

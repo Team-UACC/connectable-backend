@@ -142,4 +142,33 @@ public class KasTokenService {
         String url = endPointGenerator.tokenByKlaytnAddressUrl(contractAddress, userKlaytnAddress);
         return kasWebClient.getForObject(url, TokensResponse.class);
     }
+
+    public TokenIdentifierByKlaytnAddress findTokenHoldingStatus(
+            List<String> contractAddresses, List<String> klaytnAddresses) {
+        Map<String, TokensResponse> holderStatus = new ConcurrentHashMap<>();
+        CountDownLatch countDownLatch =
+                new CountDownLatch(contractAddresses.size() * klaytnAddresses.size());
+
+        for (String klaytnAddress : klaytnAddresses) {
+            for (String contractAddress : contractAddresses) {
+                Mono<TokensResponse> tokensResponseMono =
+                        findTokensOwnedByUser(contractAddress, klaytnAddress);
+                tokensResponseMono.subscribe(
+                        tokensResponse -> {
+                            if (tokensResponse.hasItem()) {
+                                holderStatus.put(klaytnAddress, tokensResponse);
+                            }
+                            countDownLatch.countDown();
+                        });
+            }
+        }
+
+        try {
+            countDownLatch.await();
+            return TokenIdentifierByKlaytnAddress.of(holderStatus);
+        } catch (InterruptedException e) {
+            throw new ConnectableException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, ErrorType.ASYNC_HANDLING_ERROR);
+        }
+    }
 }
