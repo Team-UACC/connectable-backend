@@ -16,6 +16,7 @@ public class EventDetail {
     private Long id;
     private String eventName;
     private String eventImage;
+    private Long artistId;
     private String artistName;
     private String artistImage;
     private String description;

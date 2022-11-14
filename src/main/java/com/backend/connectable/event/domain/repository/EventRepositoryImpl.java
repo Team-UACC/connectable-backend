@@ -42,6 +42,7 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
                                         event.id,
                                         event.eventName,
                                         event.eventImage,
+                                        artist.id.as("artistId"),
                                         artist.artistName,
                                         artist.artistImage,
                                         event.startTime,
