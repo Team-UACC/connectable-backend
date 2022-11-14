@@ -11,5 +11,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class KasExceptionResponse {
     private String url;
-    private String expectedResponseType;
+    private String exceptionMessage;
 }

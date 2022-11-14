@@ -58,7 +58,9 @@ public enum ErrorType {
     ARTIST_NOT_EXISTS("ARTIST-001", "존재하지 않는 아티스트입니다."),
 
     COMMENT_NOT_EXIST("COMMENT-001", "존재하지 않는 댓글입니다."),
-    NOT_A_COMMENT_AUTHOR("COMMENT-002", "댓글 작성자가 아닙니다.");
+    NOT_A_COMMENT_AUTHOR("COMMENT-002", "댓글 작성자가 아닙니다."),
+
+    UNEXPECTED_SERVER_ERROR("SERVER-001", "서버 관리자에게 문의하세요.");
 
     private final String errorCode;
     private final String message;
