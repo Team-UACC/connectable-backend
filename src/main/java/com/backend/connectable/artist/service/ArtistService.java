@@ -19,6 +19,7 @@ import com.backend.connectable.event.mapper.EventMapper;
 import com.backend.connectable.event.ui.dto.EventResponse;
 import com.backend.connectable.exception.ConnectableException;
 import com.backend.connectable.exception.ErrorType;
+import com.backend.connectable.global.aop.TimeCheck;
 import com.backend.connectable.kas.service.KasService;
 import com.backend.connectable.kas.service.token.dto.TokenIdentifier;
 import com.backend.connectable.kas.service.token.dto.TokenIdentifierByKlaytnAddress;
@@ -87,6 +88,7 @@ public class ArtistService {
         commentRepository.save(comment);
     }
 
+    @TimeCheck
     public List<ArtistCommentResponse> getUndeletedArtistComments(Long artistId) {
         List<ArtistComment> undeletedArtistComments =
                 commentRepository.getCommentsByArtistId(artistId).stream()
