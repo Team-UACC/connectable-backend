@@ -20,22 +20,20 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
     }
 
     public List<ArtistComment> getCommentsByArtistId(Long artistId) {
-        List<ArtistComment> result =
-                queryFactory
-                        .select(
-                                new QArtistComment(
-                                        comment.id,
-                                        user.nickname,
-                                        comment.createdDate,
-                                        comment.contents,
-                                        comment.isDeleted))
-                        .from(comment)
-                        .innerJoin(user)
-                        .on(user.id.eq(comment.user.id))
-                        .where(comment.artist.id.eq(artistId))
-                        .fetch();
-
-        return result;
+        return queryFactory
+                .select(
+                        new QArtistComment(
+                                comment.id,
+                                user.nickname,
+                                user.klaytnAddress,
+                                comment.createdDate,
+                                comment.contents,
+                                comment.isDeleted))
+                .from(comment)
+                .innerJoin(user)
+                .on(user.id.eq(comment.user.id))
+                .where(comment.artist.id.eq(artistId))
+                .fetch();
     }
 
     public void deleteComment(Long artistId, Long commentId) {

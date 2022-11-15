@@ -17,9 +17,11 @@ import com.backend.connectable.artist.ui.dto.ArtistCommentResponse;
 import com.backend.connectable.artist.ui.dto.ArtistDetailResponse;
 import com.backend.connectable.artist.ui.dto.ArtistNftHolderResponse;
 import com.backend.connectable.artist.ui.dto.NoticeResponse;
+import com.backend.connectable.event.domain.TicketMetadata;
 import com.backend.connectable.event.ui.dto.EventResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -59,10 +61,28 @@ class ArtistControllerTest {
                     LocalDateTime.now(),
                     LocalDateTime.now());
 
+    private static final TicketMetadata SAMPLE_TICKET_METADATA =
+            TicketMetadata.builder()
+                    .name("메타데이터")
+                    .description("메타데이터 at Connectable")
+                    .image(
+                            "https://connectable-events.s3.ap-northeast-2.amazonaws.com/ticket_test2.png")
+                    .attributes(
+                            new HashMap<>() {
+                                {
+                                    put("Background", "Yellow");
+                                    put("Artist", "Joel");
+                                    put("Seat", "A5");
+                                }
+                            })
+                    .build();
+
     private static final ArtistCommentResponse ARTIST_COMMENT_RESPONSE_1 =
-            new ArtistCommentResponse("nickname1", "contents1", LocalDateTime.now());
+            new ArtistCommentResponse(
+                    "nickname1", "contents1", LocalDateTime.now(), SAMPLE_TICKET_METADATA);
     private static final ArtistCommentResponse ARTIST_COMMENT_RESPONSE_2 =
-            new ArtistCommentResponse("nickname2", "contents2", LocalDateTime.now());
+            new ArtistCommentResponse(
+                    "nickname2", "contents2", LocalDateTime.now(), SAMPLE_TICKET_METADATA);
 
     @DisplayName("모든 아티스트 조회에 성공한다.")
     @Test
@@ -141,8 +161,20 @@ class ArtistControllerTest {
                 .andExpect(jsonPath("$[1]").exists())
                 .andExpect(jsonPath("$[0].nickname").value(ARTIST_COMMENT_RESPONSE_1.getNickname()))
                 .andExpect(jsonPath("$[0].contents").value(ARTIST_COMMENT_RESPONSE_1.getContents()))
+                .andExpect(
+                        jsonPath("$[0].ticketMetadata.name")
+                                .value(SAMPLE_TICKET_METADATA.getName()))
+                .andExpect(
+                        jsonPath("$[0].ticketMetadata.description")
+                                .value(SAMPLE_TICKET_METADATA.getDescription()))
                 .andExpect(jsonPath("$[1].nickname").value(ARTIST_COMMENT_RESPONSE_2.getNickname()))
                 .andExpect(jsonPath("$[1].contents").value(ARTIST_COMMENT_RESPONSE_2.getContents()))
+                .andExpect(
+                        jsonPath("$[1].ticketMetadata.name")
+                                .value(SAMPLE_TICKET_METADATA.getName()))
+                .andExpect(
+                        jsonPath("$[1].ticketMetadata.description")
+                                .value(SAMPLE_TICKET_METADATA.getDescription()))
                 .andDo(print());
     }
 

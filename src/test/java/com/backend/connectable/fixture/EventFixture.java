@@ -5,6 +5,7 @@ import com.backend.connectable.event.domain.Event;
 import com.backend.connectable.event.domain.SalesOption;
 import com.backend.connectable.kas.service.mockserver.KasMockRequest;
 import java.time.LocalDateTime;
+import org.apache.commons.lang3.RandomStringUtils;
 
 public class EventFixture {
 
@@ -30,11 +31,12 @@ public class EventFixture {
     }
 
     public static Event createEventWithName(Artist artist, String eventName) {
+        String randomContractAddress = RandomStringUtils.randomAlphabetic(8).toLowerCase();
         return Event.builder()
                 .description("콘서트 at Connectable")
                 .salesFrom(LocalDateTime.of(2022, 7, 12, 0, 0))
                 .salesTo(LocalDateTime.of(2022, 7, 30, 0, 0))
-                .contractAddress("0x5555aaaa")
+                .contractAddress(randomContractAddress)
                 .eventName(eventName)
                 .eventImage("EVENT_IMG_URL")
                 .twitterUrl("https://github.com/joelonsw")

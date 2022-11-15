@@ -37,6 +37,7 @@ public enum ErrorType {
     TICKET_METADATA_TO_JSON_FAILURE("TICKET-005", "티켓 메타데이터를 JSON으로 변환하는데 실패했습니다"),
     TICKET_JSON_TO_METADATA_FAILURE("TICKET-006", "JSON을 티켓 메타데이터로 변환하는데 실패했습니다"),
     TICKET_ALREADY_USED("TICKET-007", "이미 입장에 사용된 티켓입니다"),
+    TICKET_METADATA_NOT_FOUND("TICKET-008", "티켓의 메타데이터가 존재하지 않습니다"),
 
     ORDER_TO_PAID_UNAVAILABLE("ORDER-001", "PAID 상태로 변경이 불가합니다."),
     ORDER_TO_UNPAID_UNAVAILABLE("ORDER-002", "UNPAID 상태로 변경이 불가합니다."),

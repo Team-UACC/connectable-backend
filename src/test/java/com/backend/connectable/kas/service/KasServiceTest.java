@@ -10,10 +10,7 @@ import com.backend.connectable.kas.service.contract.dto.ContractItemResponse;
 import com.backend.connectable.kas.service.contract.dto.ContractItemsResponse;
 import com.backend.connectable.kas.service.mockserver.KasMockRequest;
 import com.backend.connectable.kas.service.mockserver.KasServiceMockSetup;
-import com.backend.connectable.kas.service.token.dto.TokenHistoriesResponse;
-import com.backend.connectable.kas.service.token.dto.TokenIdentifier;
-import com.backend.connectable.kas.service.token.dto.TokenResponse;
-import com.backend.connectable.kas.service.token.dto.TokensResponse;
+import com.backend.connectable.kas.service.token.dto.*;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -284,7 +281,7 @@ class KasServiceTest extends KasServiceMockSetup {
         // given
         String contractAddress1 = KasMockRequest.VALID_CONTRACT_ADDRESS;
         String contractAddress2 = KasMockRequest.VALID_CONTRACT_ADDRESS2;
-        List<String> contractAddresses = Arrays.asList(contractAddress1, contractAddress2);
+        List<String> contractAddresses = List.of(contractAddress1, contractAddress2);
         String owner = KasMockRequest.VALID_OWNER_ADDRESS;
 
         // when
@@ -308,5 +305,25 @@ class KasServiceTest extends KasServiceMockSetup {
 
         // then
         assertThat(isHolder).isFalse();
+    }
+
+    @DisplayName("컨트랙트 주소와 클레이튼 주소로, 클레이튼 주소에 따라 들고 있는 토큰 정보를 얻을 수 있다.")
+    @Test
+    void findTokenHoldingStatus() {
+        // given
+        String contractAddress1 = KasMockRequest.VALID_CONTRACT_ADDRESS;
+        String contractAddress2 = KasMockRequest.VALID_CONTRACT_ADDRESS2;
+        List<String> contractAddresses = List.of(contractAddress1, contractAddress2);
+        String owner1 = KasMockRequest.VALID_OWNER_ADDRESS;
+        String owner2 = KasMockRequest.VALID_OWNER_ADDRESS2;
+        List<String> owners = List.of(owner1, owner2);
+
+        // when
+        TokenIdentifierByKlaytnAddress tokenHoldingStatus =
+                kasService.findTokenHoldingStatus(contractAddresses, owners);
+
+        // then
+        assertThat(tokenHoldingStatus.isHolder(owner1)).isTrue();
+        assertThat(tokenHoldingStatus.isHolder(owner2)).isTrue();
     }
 }
