@@ -132,6 +132,7 @@ public class KasTokenService {
             countDownLatch.await();
             return tokensResponses;
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             throw new ConnectableException(
                     HttpStatus.INTERNAL_SERVER_ERROR, ErrorType.ASYNC_HANDLING_ERROR);
         }
@@ -167,6 +168,7 @@ public class KasTokenService {
             countDownLatch.await();
             return TokenIdentifierByKlaytnAddress.of(holderStatus);
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             throw new ConnectableException(
                     HttpStatus.INTERNAL_SERVER_ERROR, ErrorType.ASYNC_HANDLING_ERROR);
         }
