@@ -139,7 +139,8 @@ public class ArtistService {
     private TicketMetadata findTicketMetadata(TokenIdentifier tokenIdentifier) {
         int tokenId = tokenIdentifier.getTokenId();
         String tokenUri = tokenIdentifier.getTokenUri();
-        return ticketRepository.findMetadataByTokenIdAndTokenUri(tokenId, tokenUri);
+        return ticketRepository.findMetadataByTokenIdAndTokenUri(tokenId, tokenUri)
+            .orElseThrow(() -> new ConnectableException(HttpStatus.INTERNAL_SERVER_ERROR, ErrorType.TICKET_METADATA_NOT_FOUND));
     }
 
     @Transactional

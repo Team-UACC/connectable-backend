@@ -9,6 +9,7 @@ import com.backend.connectable.event.domain.TicketSalesStatus;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import javax.persistence.EntityManager;
 import org.springframework.stereotype.Repository;
 
@@ -48,11 +49,11 @@ public class TicketRepositoryImpl implements TicketRepositoryCustom {
     }
 
     @Override
-    public TicketMetadata findMetadataByTokenIdAndTokenUri(int tokenId, String tokenUri) {
-        return queryFactory
+    public Optional<TicketMetadata> findMetadataByTokenIdAndTokenUri(int tokenId, String tokenUri) {
+        return Optional.ofNullable(queryFactory
                 .select(ticket.ticketMetadata)
                 .from(ticket)
                 .where(ticket.tokenId.eq(tokenId).and(ticket.tokenUri.eq(tokenUri)))
-                .fetchOne();
+                .fetchOne());
     }
 }
