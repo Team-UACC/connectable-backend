@@ -1,8 +1,8 @@
 package com.backend.connectable.kas.service.mockserver;
 
 import com.backend.connectable.kas.service.KasService;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.integration.ClientAndServer;
 import org.mockserver.model.HttpRequest;
@@ -18,13 +18,15 @@ public class KasServiceMockSetup {
     public static final int MOCK_SERVER_PORT = 8888;
     public static final String MOCK_SERVER_IP = "localhost";
 
-    private ClientAndServer mockServer;
+    private static ClientAndServer mockServer;
 
     @Autowired protected KasService kasService;
 
-    @BeforeEach
-    void setUpMockServer() {
+    @BeforeAll
+    static void setUpMockServer() {
+        // Mock-Server Setup
         mockServer = ClientAndServer.startClientAndServer(MOCK_SERVER_PORT);
+
         // Contract
         setUpMockServerApi(KasMockRequest.GET_CONTRACTS, KasMockResponse.GET_CONTRACTS);
         setUpMockServerApi(KasMockRequest.POST_CONTRACT, KasMockResponse.POST_CONTRACT);
@@ -45,12 +47,30 @@ public class KasServiceMockSetup {
                 KasMockRequest.POST_TOKEN_SEND_BY_INVALID_TOKEN_ID,
                 KasMockResponse.BAD_REQUEST_RESPONSE);
         setUpMockServerApi(KasMockRequest.DELETE_TOKEN, KasMockResponse.DELETE_TOKEN);
-        setUpMockServerApi(KasMockRequest.GET_TOKENS_OF_USER, KasMockResponse.GET_TOKENS_OF_USER);
+        setUpMockServerApi(
+                KasMockRequest.GET_TOKENS_OF_USER_CONTRACT_ADDRESS_1,
+                KasMockResponse.GET_TOKENS_OF_USER);
         setUpMockServerApi(
                 KasMockRequest.GET_TOKENS_OF_USER_BY_INVALID_OWNER_ADDRESS,
                 KasMockResponse.BAD_REQUEST_RESPONSE);
-        setUpMockServerApi(KasMockRequest.GET_TOKENS_OF_USER, KasMockResponse.GET_TOKENS_OF_USER);
-        setUpMockServerApi(KasMockRequest.GET_TOKENS_OF_USER2, KasMockResponse.GET_TOKENS_OF_USER2);
+        setUpMockServerApi(
+                KasMockRequest.GET_TOKENS_OF_USER_CONTRACT_ADDRESS_1,
+                KasMockResponse.GET_TOKENS_OF_USER);
+        setUpMockServerApi(
+                KasMockRequest.GET_TOKENS_OF_USER_CONTRACT_ADDRESS_2,
+                KasMockResponse.GET_TOKENS_OF_USER2);
+        setUpMockServerApi(
+                KasMockRequest.GET_TOKENS_OF_USER2_CONTRACT_ADDRESS_1,
+                KasMockResponse.GET_TOKENS_OF_USER);
+        setUpMockServerApi(
+                KasMockRequest.GET_TOKENS_OF_USER2_CONTRACT_ADDRESS_2,
+                KasMockResponse.GET_TOKENS_OF_USER2);
+        setUpMockServerApi(
+                KasMockRequest.GET_TOKENS_OF_USER_NOT_HOLDING,
+                KasMockResponse.GET_TOKENS_OF_USER_NOT_HOLDING);
+        setUpMockServerApi(
+                KasMockRequest.GET_TOKENS_OF_USER_NOT_HOLDING2,
+                KasMockResponse.GET_TOKENS_OF_USER_NOT_HOLDING2);
         setUpMockServerApi(
                 KasMockRequest.GET_TOKENS_OF_USER_BY_INVALID_OWNER_ADDRESS,
                 KasMockResponse.BAD_REQUEST_RESPONSE);
@@ -60,14 +80,14 @@ public class KasServiceMockSetup {
                 KasMockResponse.BAD_REQUEST_RESPONSE);
     }
 
-    void setUpMockServerApi(HttpRequest httpRequest, HttpResponse httpResponse) {
+    static void setUpMockServerApi(HttpRequest httpRequest, HttpResponse httpResponse) {
         new MockServerClient(MOCK_SERVER_IP, MOCK_SERVER_PORT)
                 .when(httpRequest)
                 .respond(httpResponse);
     }
 
-    @AfterEach
-    void shutDown() {
+    @AfterAll
+    static void shutDown() {
         mockServer.stop();
     }
 }

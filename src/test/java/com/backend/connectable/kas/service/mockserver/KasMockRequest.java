@@ -13,6 +13,10 @@ public class KasMockRequest {
 
     public static String VALID_CONTRACT_ADDRESS = "0x1234";
     public static String VALID_CONTRACT_ADDRESS2 = "0x1111";
+
+    public static String NO_HOLDER_CONTRACT_ADDRESS = "0x6787";
+    public static String NO_HOLDER_CONTRACT_ADDRESS2 = "0x7656";
+
     public static String INVALID_CONTRACT_ADDRESS = "0x5678";
 
     public static String VALID_TOKEN_ID = "0x1";
@@ -23,6 +27,7 @@ public class KasMockRequest {
     public static String VALID_ALIAS = "alias";
 
     public static String VALID_OWNER_ADDRESS = "0xabcd";
+    public static String VALID_OWNER_ADDRESS2 = "0x8u8u";
     public static String INVALID_OWNER_ADDRESS = "0xefgh";
 
     private static final String GET = "GET";
@@ -73,7 +78,7 @@ public class KasMockRequest {
                     .withMethod(DELETE)
                     .withPath("/contract/" + VALID_CONTRACT_ADDRESS + "/token/" + VALID_TOKEN_ID);
 
-    public static HttpRequest GET_TOKENS_OF_USER =
+    public static HttpRequest GET_TOKENS_OF_USER_CONTRACT_ADDRESS_1 =
             request()
                     .withMethod(GET)
                     .withPath(
@@ -82,12 +87,47 @@ public class KasMockRequest {
                                     + "/owner/"
                                     + VALID_OWNER_ADDRESS);
 
-    public static HttpRequest GET_TOKENS_OF_USER2 =
+    public static HttpRequest GET_TOKENS_OF_USER_CONTRACT_ADDRESS_2 =
             request()
                     .withMethod(GET)
                     .withPath(
                             "/contract/"
                                     + VALID_CONTRACT_ADDRESS2
+                                    + "/owner/"
+                                    + VALID_OWNER_ADDRESS);
+
+    public static HttpRequest GET_TOKENS_OF_USER2_CONTRACT_ADDRESS_1 =
+            request()
+                    .withMethod(GET)
+                    .withPath(
+                            "/contract/"
+                                    + VALID_CONTRACT_ADDRESS
+                                    + "/owner/"
+                                    + VALID_OWNER_ADDRESS2);
+
+    public static HttpRequest GET_TOKENS_OF_USER2_CONTRACT_ADDRESS_2 =
+            request()
+                    .withMethod(GET)
+                    .withPath(
+                            "/contract/"
+                                    + VALID_CONTRACT_ADDRESS2
+                                    + "/owner/"
+                                    + VALID_OWNER_ADDRESS2);
+    public static HttpRequest GET_TOKENS_OF_USER_NOT_HOLDING =
+            request()
+                    .withMethod(GET)
+                    .withPath(
+                            "/contract/"
+                                    + NO_HOLDER_CONTRACT_ADDRESS
+                                    + "/owner/"
+                                    + VALID_OWNER_ADDRESS);
+
+    public static HttpRequest GET_TOKENS_OF_USER_NOT_HOLDING2 =
+            request()
+                    .withMethod(GET)
+                    .withPath(
+                            "/contract/"
+                                    + NO_HOLDER_CONTRACT_ADDRESS2
                                     + "/owner/"
                                     + VALID_OWNER_ADDRESS);
 

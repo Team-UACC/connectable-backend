@@ -5,10 +5,10 @@ import com.backend.connectable.kas.service.common.dto.TransactionResponse;
 import com.backend.connectable.kas.service.contract.dto.ContractDeployResponse;
 import com.backend.connectable.kas.service.contract.dto.ContractItemResponse;
 import com.backend.connectable.kas.service.contract.dto.ContractItemsResponse;
+import com.backend.connectable.kas.service.token.dto.TokenIdentifier;
 import com.backend.connectable.kas.service.token.dto.TokenResponse;
 import com.backend.connectable.kas.service.token.dto.TokensResponse;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.*;
@@ -60,10 +60,12 @@ class KasServiceTestWithTestnet {
 
         Thread.sleep(5000);
 
-        Map<String, TokensResponse> allTokensOfContractAddressesOwnedByUser =
+        List<TokenIdentifier> allTokensOfContractAddressesOwnedByUser =
                 kasService.findAllTokensOwnedByUser(myContractAddresses, poolAddress);
-        for (TokensResponse value : allTokensOfContractAddressesOwnedByUser.values()) {
-            System.out.println(value.getTokenUris());
+        for (TokenIdentifier value : allTokensOfContractAddressesOwnedByUser) {
+            System.out.println(value.getTokenId());
+            System.out.println(value.getTokenUri());
+            System.out.println("-----");
         }
     }
 

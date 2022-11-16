@@ -40,11 +40,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles("local")
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class AdminAcceptanceTest extends KasServiceMockSetup {
 
@@ -62,10 +60,7 @@ class AdminAcceptanceTest extends KasServiceMockSetup {
 
     @Autowired protected OrderRepository orderRepository;
 
-    @BeforeEach
-    public void setUp() {
-        RestAssured.port = port;
-    }
+    @Autowired private DatabaseCleanUp databaseCleanUp;
 
     @Value("${jwt.admin-payload}")
     private String adminPayload;
@@ -88,6 +83,8 @@ class AdminAcceptanceTest extends KasServiceMockSetup {
 
     @BeforeEach
     void setUpData() {
+        RestAssured.port = port;
+        databaseCleanUp.execute();
         userRepository.saveAll(Arrays.asList(mrLee, joel));
         artistRepository.save(bigNaughty);
         eventRepository.save(bigNaughtyEvent);

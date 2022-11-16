@@ -1,5 +1,6 @@
 package com.backend.connectable.event.service;
 
+import static com.backend.connectable.fixture.EventFixture.createFutureEventWithEventName;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,14 +20,12 @@ import com.backend.connectable.event.ui.dto.TicketResponse;
 import com.backend.connectable.exception.ConnectableException;
 import com.backend.connectable.exception.ErrorType;
 import com.backend.connectable.kas.service.KasService;
+import com.backend.connectable.kas.service.token.dto.TokenIdentifier;
 import com.backend.connectable.kas.service.token.dto.TokenResponse;
 import com.backend.connectable.kas.service.token.dto.TokensResponse;
 import com.backend.connectable.s3.service.S3Service;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -45,10 +44,6 @@ class EventServiceTest {
     private Ticket ticket2;
     private Ticket ticket3;
     private Ticket ticket4;
-    private TicketMetadata ticket1Metadata;
-    private TicketMetadata ticket2Metadata;
-    private TicketMetadata ticket3Metadata;
-    private TicketMetadata ticket4Metadata;
 
     private static final String TOKEN_URI = "tokenUri";
     private static final String CONTRACT_ADDRESS = "0xe99540401ef24aba1b7076ea92c94ec38536c6fb";
@@ -86,12 +81,12 @@ class EventServiceTest {
                 Event.builder()
                         .eventName("test1")
                         .eventImage("/connectable-events/image_0xtest.jpeg")
-                        .startTime(LocalDateTime.now())
                         .description("description1")
                         .contractAddress(CONTRACT_ADDRESS)
                         .contractName("event1")
                         .salesFrom(LocalDateTime.now())
                         .salesTo(LocalDateTime.now())
+                        .startTime(LocalDateTime.now())
                         .endTime(LocalDateTime.now())
                         .artist(artist1)
                         .build();
@@ -100,12 +95,12 @@ class EventServiceTest {
                 Event.builder()
                         .eventName("test2")
                         .eventImage("/connectable-events/image_0xtest.jpeg")
-                        .startTime(LocalDateTime.now())
                         .description("description2")
                         .contractAddress(CONTRACT_ADDRESS)
                         .contractName("event2")
                         .salesFrom(LocalDateTime.now())
                         .salesTo(LocalDateTime.now())
+                        .startTime(LocalDateTime.now())
                         .endTime(LocalDateTime.now())
                         .artist(artist1)
                         .build();
@@ -114,32 +109,32 @@ class EventServiceTest {
                 Event.builder()
                         .eventName("test3")
                         .eventImage("/connectable-events/image_0xtest.jpeg")
-                        .startTime(LocalDateTime.now())
                         .description("description3")
                         .contractAddress(CONTRACT_ADDRESS)
                         .contractName("event3")
                         .salesFrom(LocalDateTime.now())
                         .salesTo(LocalDateTime.now())
+                        .startTime(LocalDateTime.now())
                         .endTime(LocalDateTime.now())
                         .artist(artist1)
                         .build();
 
-        ticket1Metadata =
+        TicketMetadata ticket1Metadata =
                 s3Service
                         .fetchMetadata(
                                 "https://connectable-events.s3.ap-northeast-2.amazonaws.com/brown-event/json/1.json")
                         .toTicketMetadata();
-        ticket2Metadata =
+        TicketMetadata ticket2Metadata =
                 s3Service
                         .fetchMetadata(
                                 "https://connectable-events.s3.ap-northeast-2.amazonaws.com/brown-event/json/2.json")
                         .toTicketMetadata();
-        ticket3Metadata =
+        TicketMetadata ticket3Metadata =
                 s3Service
                         .fetchMetadata(
                                 "https://connectable-events.s3.ap-northeast-2.amazonaws.com/brown-event/json/3.json")
                         .toTicketMetadata();
-        ticket4Metadata =
+        TicketMetadata ticket4Metadata =
                 s3Service
                         .fetchMetadata(
                                 "https://connectable-events.s3.ap-northeast-2.amazonaws.com/brown-event/json/4.json")
@@ -189,12 +184,12 @@ class EventServiceTest {
         TokenResponse tokenResponse =
                 new TokenResponse("0x1234", "0x5678", "0x1", TOKEN_URI, "0xwelcome");
         TokensResponse tokensResponse = new TokensResponse("eyJjm...ZSJ9", List.of(tokenResponse));
-        Map<String, TokensResponse> tokenResponseMap = new HashMap<>();
-        tokenResponseMap.put(CONTRACT_ADDRESS, tokensResponse);
+        List<TokenIdentifier> tokenIdentifiers =
+                new ArrayList<>(tokensResponse.getTokenIdentifiers());
 
         given(kasService.getToken(any(String.class), any(Integer.class))).willReturn(tokenResponse);
         given(kasService.findAllTokensOwnedByUser(anyList(), any(String.class)))
-                .willReturn(tokenResponseMap);
+                .willReturn(tokenIdentifiers);
     }
 
     @DisplayName("이벤트 목록을 여러개 조회한다.")
@@ -222,6 +217,7 @@ class EventServiceTest {
         assertThat(eventDetailResponse.getName()).isEqualTo(event1.getEventName());
         assertThat(eventDetailResponse.getContractAddress()).isEqualTo(event1.getContractAddress());
         assertThat(eventDetailResponse.getImage()).isEqualTo(event1.getEventImage());
+        assertThat(eventDetailResponse.getArtistId()).isEqualTo(event1.getArtist().getId());
     }
 
     @DisplayName("종속된 티켓이 없는 이벤트의 상세 조회에 성공한다.")
@@ -233,6 +229,7 @@ class EventServiceTest {
         // then
         assertThat(eventDetailResponse.getId()).isEqualTo(event3.getId());
         assertThat(eventDetailResponse.getName()).isEqualTo(event3.getEventName());
+        assertThat(eventDetailResponse.getArtistId()).isEqualTo(event3.getArtist().getId());
     }
 
     @DisplayName("없는 이벤트 상세를 조회시 예외가 발생한다.")
@@ -299,5 +296,24 @@ class EventServiceTest {
 
         assertThat(tickets.get(0).getTokenUri()).isEqualTo(TOKEN_URI);
         assertThat(tickets.get(0).getPrice()).isEqualTo(10000);
+    }
+
+    @DisplayName("현재 구매할 수 있는 이벤트를 조회할 수 있다.")
+    @Test
+    void getListNowAvailable() {
+        // before
+        List<EventResponse> before = eventService.getListNowAvailable();
+        assertThat(before).isEmpty();
+
+        // given
+        Event maxEvent1 = createFutureEventWithEventName(artist1, "maxEvent1");
+        Event maxEvent2 = createFutureEventWithEventName(artist1, "maxEvent2");
+        eventRepository.saveAll(List.of(maxEvent1, maxEvent2));
+
+        // when
+        List<EventResponse> after = eventService.getListNowAvailable();
+
+        // then
+        assertThat(after).hasSize(2);
     }
 }

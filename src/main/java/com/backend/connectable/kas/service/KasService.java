@@ -1,16 +1,16 @@
 package com.backend.connectable.kas.service;
 
+import com.backend.connectable.global.aop.TimeCheck;
 import com.backend.connectable.kas.service.common.dto.TransactionResponse;
 import com.backend.connectable.kas.service.contract.KasContractService;
 import com.backend.connectable.kas.service.contract.dto.ContractDeployResponse;
 import com.backend.connectable.kas.service.contract.dto.ContractItemResponse;
 import com.backend.connectable.kas.service.contract.dto.ContractItemsResponse;
 import com.backend.connectable.kas.service.token.KasTokenService;
-import com.backend.connectable.kas.service.token.dto.TokenHistoriesResponse;
-import com.backend.connectable.kas.service.token.dto.TokenResponse;
-import com.backend.connectable.kas.service.token.dto.TokensResponse;
+import com.backend.connectable.kas.service.token.dto.*;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -93,8 +93,30 @@ public class KasService {
         return kasTokenService.getTokenHistory(contractAddress, tokenId);
     }
 
-    public Map<String, TokensResponse> findAllTokensOwnedByUser(
+    @TimeCheck
+    public List<TokenIdentifier> findAllTokensOwnedByUser(
             List<String> contractAddresses, String userKlaytnAddress) {
-        return kasTokenService.findAllTokensOwnedByUser(contractAddresses, userKlaytnAddress);
+        return kasTokenService
+                .findAllTokensOwnedByUser(contractAddresses, userKlaytnAddress)
+                .values()
+                .stream()
+                .map(TokensResponse::getTokenIdentifiers)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+    }
+
+    @TimeCheck
+    public boolean checkIsTokenHolder(List<String> contractAddresses, String userKlaytnAddress) {
+        return kasTokenService
+                .findAllTokensOwnedByUser(contractAddresses, userKlaytnAddress)
+                .values()
+                .stream()
+                .anyMatch(TokensResponse::hasItem);
+    }
+
+    @TimeCheck
+    public TokenIdentifierByKlaytnAddress findTokenHoldingStatus(
+            List<String> contractAddresses, List<String> klaytnAddresses) {
+        return kasTokenService.findTokenHoldingStatus(contractAddresses, klaytnAddresses);
     }
 }

@@ -1,7 +1,9 @@
 package com.backend.connectable.exception;
 
-import java.util.Arrays;
+import static com.backend.connectable.exception.ErrorType.UNEXPECTED_SERVER_ERROR;
+
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -21,9 +23,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<KasExceptionResponse> handleKasException(KasException e) {
         KasExceptionResponse kasExceptionResponse = e.getKasExceptionResponse();
         log.error("KAS ERROR URL : " + kasExceptionResponse.getUrl());
-        log.error(
-                "KAS ERROR EXPECTED RETURN TYPE : "
-                        + kasExceptionResponse.getExpectedResponseType());
+        log.error("KAS ERROR EXCEPTION MESSAGE : " + kasExceptionResponse.getExceptionMessage());
         return ResponseEntity.internalServerError().body(kasExceptionResponse);
     }
 
@@ -39,9 +39,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleException(Exception e) {
-        String errorMessage = e.getMessage();
-        Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).forEach(log::error);
-        return ResponseEntity.internalServerError().body(errorMessage);
+    public ResponseEntity<ExceptionResponse> handleException(Exception e) {
+        String unexpectedErrorTrace = ExceptionUtils.getStackTrace(e);
+        log.error(unexpectedErrorTrace);
+        return ResponseEntity.internalServerError()
+                .body(
+                        new ExceptionResponse(
+                                UNEXPECTED_SERVER_ERROR.getErrorCode(),
+                                UNEXPECTED_SERVER_ERROR.getMessage()));
     }
 }

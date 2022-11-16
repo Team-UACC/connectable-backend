@@ -15,4 +15,8 @@ public interface EventRepositoryCustom {
     Optional<EventTicket> findTicketByEventIdAndTicketId(Long eventId, Long ticketId);
 
     List<Event> findAllEventWithOrder();
+
+    List<Event> findAllEventsByArtistId(Long artistId);
+
+    List<Event> findAllNowAvailable();
 }

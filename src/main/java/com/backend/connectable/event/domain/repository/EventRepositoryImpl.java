@@ -42,6 +42,7 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
                                         event.id,
                                         event.eventName,
                                         event.eventImage,
+                                        artist.id.as("artistId"),
                                         artist.artistName,
                                         artist.artistImage,
                                         event.startTime,
@@ -150,6 +151,24 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
                         .fetch();
 
         return result;
+    }
+
+    @Override
+    public List<Event> findAllNowAvailable() {
+        return queryFactory
+                .selectFrom(event)
+                .where(event.salesTo.after(LocalDateTime.now()))
+                .fetch();
+    }
+
+    @Override
+    public List<Event> findAllEventsByArtistId(Long artistId) {
+        return queryFactory
+                .selectFrom(event)
+                .innerJoin(artist)
+                .on(event.artist.id.eq(artist.id))
+                .where(artist.id.eq(artistId))
+                .fetch();
     }
 
     private OrderSpecifier<Integer> eventSortSpecifier() {
