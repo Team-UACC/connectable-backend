@@ -44,6 +44,7 @@ public enum ErrorType {
     ORDER_TO_REFUND_UNAVAILABLE("ORDER-003", "REFUND 상태로 변경이 불가합니다."),
     ORDER_TO_TRANSFER_SUCCESS_UNAVAILABLE("ORDER-004", "TRANSFER SUCCESS 상태로 변경이 불가합니다."),
     ORDER_TO_TRANSFER_FAIL_UNAVAILABLE("ORDER-005", "TRANSFER FAIL 상태로 변경이 불가합니다."),
+    LESS_NUMBER_OF_ORDER_REQUIRED("ORDER-006", "판매 가능한 티켓 수보다 많이 구매 요청을 하였습니다."),
 
     ENTRANCE_ALREADY_DONE("ENTRANCE-001", "입장 처리가 완료된 티켓입니다."),
     ENTRANCE_AUTHORIZATION_NEEDED("ENTRANCE-002", "입장 처리에 대한 권한이 없습니다"),
