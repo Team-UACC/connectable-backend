@@ -9,6 +9,7 @@ import com.backend.connectable.event.domain.TicketSalesStatus;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
 import org.springframework.stereotype.Repository;
@@ -49,11 +50,40 @@ public class TicketRepositoryImpl implements TicketRepositoryCustom {
     }
 
     @Override
-    public Optional<TicketMetadata> findMetadataByTokenIdAndTokenUri(int tokenId, String tokenUri) {
-        return Optional.ofNullable(queryFactory
-                .select(ticket.ticketMetadata)
+    public List<Ticket> findTicketsOnSaleOfEvent(Long eventId, Long requestedCount) {
+        return queryFactory
+                .select(ticket)
                 .from(ticket)
-                .where(ticket.tokenId.eq(tokenId).and(ticket.tokenUri.eq(tokenUri)))
-                .fetchOne());
+                .where(
+                        ticket.event
+                                .id
+                                .eq(eventId)
+                                .and(ticket.ticketSalesStatus.eq(TicketSalesStatus.ON_SALE)))
+                .limit(requestedCount)
+                .fetch();
+    }
+
+    @Override
+    public Long countTicketsOnSaleOfEvent(Long eventId) {
+        return queryFactory
+                .select(ticket)
+                .from(ticket)
+                .where(
+                        ticket.event
+                                .id
+                                .eq(eventId)
+                                .and(ticket.ticketSalesStatus.eq(TicketSalesStatus.ON_SALE)))
+                .stream()
+                .count();
+    }
+
+    @Override
+    public Optional<TicketMetadata> findMetadataByTokenIdAndTokenUri(int tokenId, String tokenUri) {
+        return Optional.ofNullable(
+                queryFactory
+                        .select(ticket.ticketMetadata)
+                        .from(ticket)
+                        .where(ticket.tokenId.eq(tokenId).and(ticket.tokenUri.eq(tokenUri)))
+                        .fetchOne());
     }
 }
