@@ -41,16 +41,6 @@ public class OrderService {
         return OrderResponse.from("success");
     }
 
-    public List<OrderDetailResponse> getOrderDetailList(ConnectableUserDetails userDetails) {
-        String klaytnAddress = userDetails.getKlaytnAddress();
-        List<TicketOrderDetail> orderDetailResponses =
-                orderRepository.getOrderDetailList(klaytnAddress);
-
-        return orderDetailResponses.stream()
-                .map(OrderMapper.INSTANCE::ticketOrderDetailToResponse)
-                .collect(Collectors.toList());
-    }
-
     private User findUser(String klaytnAddress) {
         return userRepository
                 .findByKlaytnAddress(klaytnAddress)
@@ -61,8 +51,7 @@ public class OrderService {
     }
 
     private Order generateOrder(User user, OrderRequest orderRequest) {
-        List<OrderDetail> orderDetails =
-                generateOrderDetails(orderRequest.getTicketIds(), orderRequest.getEventId());
+        List<OrderDetail> orderDetails = generateOrderDetails(orderRequest);
         Order order =
                 Order.builder()
                         .user(user)
@@ -73,28 +62,48 @@ public class OrderService {
         return order;
     }
 
-    private List<OrderDetail> generateOrderDetails(List<Long> ticketIds, Long eventId) {
-        if (checkRandomTicketSelection(ticketIds)) {
-            return generateRandomTicketOrderDetail(eventId);
+    private List<OrderDetail> generateOrderDetails(OrderRequest orderRequest) {
+        if (orderRequest.isRandomTicketSelection()) {
+            return generateRandomTicketsOrderDetail(orderRequest);
         }
+        return generateRequestedTicketsOrderDetail(orderRequest);
+    }
 
+    private List<OrderDetail> generateRandomTicketsOrderDetail(OrderRequest orderRequest) {
+        Long eventId = orderRequest.getEventId();
+        Long requestedCount = orderRequest.getRequestedTicketCount();
+        validateRequestedCount(eventId, requestedCount);
+        List<Ticket> tickets = ticketRepository.findTicketsOnSaleOfEvent(eventId, requestedCount);
+        tickets.forEach(Ticket::toPending);
+        return tickets.stream().map(this::toOrderDetail).collect(Collectors.toList());
+    }
+
+    private void validateRequestedCount(Long eventId, Long requestedCount) {
+        Long onSaleTicketCount = ticketRepository.countTicketsOnSaleOfEvent(eventId);
+        if (requestedCount > onSaleTicketCount) {
+            throw new ConnectableException(
+                    HttpStatus.BAD_REQUEST, ErrorType.LESS_NUMBER_OF_ORDER_REQUIRED);
+        }
+    }
+
+    private List<OrderDetail> generateRequestedTicketsOrderDetail(OrderRequest orderRequest) {
+        List<Long> ticketIds = orderRequest.getTicketIds();
         List<Ticket> tickets = ticketRepository.findAllById(ticketIds);
         tickets.forEach(Ticket::toPending);
         return tickets.stream().map(this::toOrderDetail).collect(Collectors.toList());
     }
 
-    private boolean checkRandomTicketSelection(List<Long> ticketIds) {
-        return ticketIds.contains(0L) && ticketIds.size() == 1;
-    }
-
-    private List<OrderDetail> generateRandomTicketOrderDetail(Long eventId) {
-        Ticket ticket = ticketRepository.findOneOnSaleOfEvent(eventId);
-        ticket.toPending();
-        OrderDetail orderDetail = toOrderDetail(ticket);
-        return List.of(orderDetail);
-    }
-
     private OrderDetail toOrderDetail(Ticket ticket) {
-        return new OrderDetail(OrderStatus.REQUESTED, null, ticket);
+        return OrderDetail.builder().orderStatus(OrderStatus.REQUESTED).ticket(ticket).build();
+    }
+
+    public List<OrderDetailResponse> getOrderDetailList(ConnectableUserDetails userDetails) {
+        String klaytnAddress = userDetails.getKlaytnAddress();
+        List<TicketOrderDetail> orderDetailResponses =
+                orderRepository.getOrderDetailList(klaytnAddress);
+
+        return orderDetailResponses.stream()
+                .map(OrderMapper.INSTANCE::ticketOrderDetailToResponse)
+                .collect(Collectors.toList());
     }
 }

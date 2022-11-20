@@ -30,4 +30,12 @@ public class OrderRequest {
     private Long eventId;
 
     private List<Long> ticketIds;
+
+    public boolean isRandomTicketSelection() {
+        return ticketIds.contains(0L);
+    }
+
+    public Long getRequestedTicketCount() {
+        return (long) ticketIds.size();
+    }
 }
